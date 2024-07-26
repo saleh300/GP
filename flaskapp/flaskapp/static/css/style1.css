@@ -1,0 +1,38 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #d4f1f9;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+.Sign-up {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+.Sign-up h1 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+.Sign-up p {
+    margin-bottom: 2rem;
+    color: #888888;
+}
+.Sign-up button {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    background-color: #71cde1;
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    font-size: 1rem;
+    cursor: pointer;
+}
+.Sign-up button:hover {
+    background-color: #5bb8c9;
+}

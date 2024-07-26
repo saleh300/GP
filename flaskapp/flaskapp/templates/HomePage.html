@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>AOUN</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,900;1,900&family=Ubuntu&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+
+
+<script src="https://kit.fontawesome.com/6503ba7c64.js" crossorigin="anonymous"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+
+    <section id="title">
+      <div class="container-fluid">
+
+      <!-- Nav Bar -->
+
+      <nav class="navbar navbar-expand-lg navbar-dark ">
+        <a class="navbar-brand" href="">AOUN</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#footer">Contact</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#pricing">Tutorial</a>
+            </li>
+          </ul>
+        </div>
+
+      </nav>
+
+      <!-- Title -->
+
+      <div class="row">
+        <div class="col-lg-6">
+          <h1>Aoun help to managing co-op training for students and companies.</h1>
+        </div>
+
+        <div class="title-image-container col-lg-6">
+          <div class="Sign-up">
+            <p>Select button below to continue</p>
+            <a href="{{ url_for('sign_in_student') }}"><button type="button">Sign in for Student</button></a>
+            <a href="{{ url_for('sign_in_faculty') }}"><button type="button">Sign in for Faculty</button></a>
+            <a href="{{ url_for('sign_in_company') }}"><button type="button">Sign in for Company</button></a>
+        </div>
+        </div>
+
+      </div>
+
+  </div>
+  </section>
+
+  <!-- Features -->
+
+  <section id="features">
+
+    <div class="row">
+
+      <div class="features-box col-lg-4">
+        <i class="icon fa-solid fa-circle-check" style="color: #d4f1f9;"></i>
+        <h3>Easy to use.</h3>
+        <p>So easy to use, even your professors will love it.</p>
+      </div>
+      <div class="features-box col-lg-4">
+        <i class="icon fa-solid fa-bullseye" style="color: #d4f1f9;"></i>
+        <h3>Elite Clientele</h3>
+        <p>We partner with top universities and companies to bring you the best opportunities.</p>
+      </div>
+      <div class="features-box col-lg-4">
+        <i class="icon fa-solid fa-heart" style="color: #d4f1f9;"></i>
+        <h3>Guaranteed to work.</h3>
+        <p>Find the perfect co-op training opportunity or get comprehensive support until you do.</p>
+      </div>
+
+
+  </div>
+  </section>
+  <!-- Footer -->
+
+  <footer id="footer">
+
+
+      <i class="soical-icon fa-brands fa-twitter"></i>
+      <i class="soical-icon fa-solid fa-envelope"></i>
+
+
+    <p>© Copyright 2024 AOUN</p>
+
+  </footer>
+
+
+</body>
+
+</html>

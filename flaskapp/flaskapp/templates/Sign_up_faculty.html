@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #d4f1f9;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 300px; 
+            background-color: #ffffff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .container h2 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        .container p {
+            margin-bottom: 2rem;
+            color: #888888;
+        }
+        .container input[type="email"],
+        .container input[type="password"],
+        .container input[type="text"] {
+            width: 90%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+        }
+        .container button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #71cde1;
+            border: none;
+            border-radius: 5px;
+            color: #ffffff;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .container button:hover {
+            background-color: #5bb8c9;
+        }
+        .container .signin {
+            margin-top: 1rem;
+            color: #888888;
+        }
+        .container .signin a {
+            color: #71cde1;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Create An Account</h2>
+        <form>
+            <input type="text" placeholder="First Name" required>
+            <input type="text" placeholder="Last Name" required>
+            <input type="email" placeholder="Email Address" required>
+            <input type="text" placeholder="Faculty ID" required>
+            <input type="password" placeholder="Password" required>
+            <button type="submit">Create Account</button>
+        </form>
+        <div class="signin">
+            Already Have An Account? <a href="{{ url_for('sign_in_faculty') }}">Sign In</a>
+        </div>
+    </div>
+</body>
+</html>
