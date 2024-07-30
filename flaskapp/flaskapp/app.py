@@ -17,6 +17,10 @@ def sign_in_student():
 def sign_up_student():
     return render_template('sign_up_student.html')
 
+@app.route('/HomePage_student')
+def HomePage_student():
+    return render_template('HomePage_student.html')
+
 
 @app.route('/sign_in_faculty')
 def sign_in_faculty():
@@ -33,6 +37,9 @@ def sign_in_company():
 @app.route('/sign_up_company')
 def sign_up_company():
     return render_template('sign_up_company.html')
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
