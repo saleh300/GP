@@ -21,10 +21,6 @@ def sign_up_student():
 def HomePage_student():
     return render_template('HomePage_student.html')
 
-@app.route('/profile')
-def profile():
-    return render_template('profile.html')
-
 
 @app.route('/sign_in_faculty')
 def sign_in_faculty():
