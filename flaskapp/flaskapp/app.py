@@ -9,7 +9,7 @@ def hello():
 
 
 
-@app.route('/sign_in_student')
+@app.route('/sign_in_student', methods=['POST'])
 def sign_in_student():
     return render_template('sign_in_student.html')
 
