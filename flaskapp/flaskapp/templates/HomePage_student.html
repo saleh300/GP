@@ -9,6 +9,8 @@
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <link rel="shortcut icon" href="./images/logo.png">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
 
 
 
@@ -16,185 +18,205 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
-  <style>
 
-
-.form-control:focus {
-    box-shadow: none;
-    border-color: #BA68C8
-}
-
-.profile-button {
-    background: rgb(99, 39, 120);
-    box-shadow: none;
-    border: none
-}
-
-.profile-button:hover {
-    background: #682773
-}
-
-.profile-button:focus {
-    background: #682773;
-    box-shadow: none
-}
-
-.profile-button:active {
-    background: #682773;
-    box-shadow: none
-}
-
-.back:hover {
-    color: #682773;
-    cursor: pointer
-}
-
-.labels {
-    font-size: 11px
-}
-
-.add-experience:hover {
-    background: #BA68C8;
-    color: #fff;
-    cursor: pointer;
-    border: solid 1px #BA68C8
-}
-  </style>
 </head>
 
 <body>
-
-
-    <section id="title">
-      <div class="container-fluid">
-
-      <!-- Nav Bar -->
-
-      <nav class="navbar navbar-expand-lg navbar-dark ">
-        <a class="navbar-brand" href="">AOUN</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="#pricing">Profile</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#footer">Dashborad</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#pricing">opportunities</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#pricing">Appliactions</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#pricing">Doucments</a>
-            </li>
-            
-          </ul>
-        </div>
-
-      </nav>
-
-      <!-- Title -->
-
-      <div class="row">
-        <div class="container rounded bg-white mt-5 mb-5">
-          <div class="row">
-              <div class="col-md-3 border-right">
-                  <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"><span class="font-weight-bold">Edogaru</span><span class="text-black-50">edogaru@mail.com.my</span><span> </span></div>
-              </div>
-              <div class="col-md-5 border-right">
-                  <div class="p-3 py-5">
-                      <div class="d-flex justify-content-between align-items-center mb-3">
-                          <h4 class="text-right">Profile Settings</h4>
-                      </div>
-                      <div class="row mt-2">
-                          <div class="col-md-6"><label class="labels">Name</label><input type="text" class="form-control" placeholder="first name" value=""></div>
-                          <div class="col-md-6"><label class="labels">Surname</label><input type="text" class="form-control" value="" placeholder="surname"></div>
-                      </div>
-                      <div class="row mt-3">
-                          <div class="col-md-12"><label class="labels">Mobile Number</label><input type="text" class="form-control" placeholder="enter phone number" value=""></div>
-                          <div class="col-md-12"><label class="labels">Address Line 1</label><input type="text" class="form-control" placeholder="enter address line 1" value=""></div>
-                          <div class="col-md-12"><label class="labels">Address Line 2</label><input type="text" class="form-control" placeholder="enter address line 2" value=""></div>
-                          <div class="col-md-12"><label class="labels">Postcode</label><input type="text" class="form-control" placeholder="enter address line 2" value=""></div>
-                          <div class="col-md-12"><label class="labels">State</label><input type="text" class="form-control" placeholder="enter address line 2" value=""></div>
-                          <div class="col-md-12"><label class="labels">Area</label><input type="text" class="form-control" placeholder="enter address line 2" value=""></div>
-                          <div class="col-md-12"><label class="labels">Email ID</label><input type="text" class="form-control" placeholder="enter email id" value=""></div>
-                          <div class="col-md-12"><label class="labels">Education</label><input type="text" class="form-control" placeholder="education" value=""></div>
-                      </div>
-                      <div class="row mt-3">
-                          <div class="col-md-6"><label class="labels">Country</label><input type="text" class="form-control" placeholder="country" value=""></div>
-                          <div class="col-md-6"><label class="labels">State/Region</label><input type="text" class="form-control" value="" placeholder="state"></div>
-                      </div>
-                      <div class="mt-5 text-center"><button class="btn btn-primary profile-button" type="button">Save Profile</button></div>
+  <header>
+      <div class="logo" title="University Management System">
+          <img src="{{ url_for('static', filename='images/logo.png') }}"" alt="">
+          <h2>U<span class="danger">M</span>S</h2>
+      </div>
+      <div class="navbar">
+          <a href="index.html" class="active">
+              <span class="material-icons-sharp">home</span>
+              <h3>Home</h3>
+          </a>
+          <a href="timetable.html" onclick="timeTableAll()">
+              <span class="material-icons-sharp">today</span>
+              <h3>Time Table</h3>
+          </a> 
+          <a href="exam.html">
+              <span class="material-icons-sharp">grid_view</span>
+              <h3>Examination</h3>
+          </a>
+          <a href="password.html">
+              <span class="material-icons-sharp">password</span>
+              <h3>Change Password</h3>
+          </a>
+          <a href="#">
+              <span class="material-icons-sharp" onclick="">logout</span>
+              <h3>Logout</h3>
+          </a>
+      </div>
+      <div id="profile-btn">
+          <span class="material-icons-sharp">person</span>
+      </div>
+      <div class="theme-toggler">
+          <span class="material-icons-sharp active">light_mode</span>
+          <span class="material-icons-sharp">dark_mode</span>
+      </div>
+  </header>
+  <div class="container">
+      <aside>
+          <div class="profile">
+              <div class="top">
+                  <div class="profile-photo">
+                      <img src="{{ url_for('static', filename='images/profile-1.jpg') }}" alt="">
+                  </div>
+                  <div class="info">
+                      <p>Hey, <b>Alex</b> </p>
+                      <small class="text-muted">12102030</small>
                   </div>
               </div>
-              <div class="col-md-4">
-                <div class="p-3 py-5">
-                    <div class="d-flex justify-content-between align-items-center experience"><span>Edit Certificate</span><span class="border px-3 p-1 add-experience"><i class="fa fa-plus"></i>&nbsp;Certificate</span></div><br>
-                    <div class="col-md-12"><label class="labels">Certificate</label><input type="text" class="form-control" placeholder="experience" value=""></div> <br>
-                    <div class="col-md-12"><label class="labels">Additional Details</label><input type="text" class="form-control" placeholder="additional details" value=""></div>
-                </div>
-            </div>
-              <div class="col-md-4">
-                  <div class="p-3 py-5">
-                      <div class="d-flex justify-content-between align-items-center experience"><span>Edit Experience</span><span class="border px-3 p-1 add-experience"><i class="fa fa-plus"></i>&nbsp;Experience</span></div><br>
-                      <div class="col-md-12"><label class="labels">Experience in Designing</label><input type="text" class="form-control" placeholder="experience" value=""></div> <br>
-                      <div class="col-md-12"><label class="labels">Additional Details</label><input type="text" class="form-control" placeholder="additional details" value=""></div>
+              <div class="about">
+                  <h5>Course</h5>
+                  <p>BTech. Computer Science & Engineering</p>
+                  <h5>DOB</h5>
+                  <p>29-Feb-2020</p>
+                  <h5>Contact</h5>
+                  <p>1234567890</p>
+                  <h5>Email</h5>
+                  <p>unknown@gmail.com</p>
+                  <h5>Address</h5>
+                  <p>Ghost town Road, New York, America</p>
+              </div>
+              <button class="edit-profile-btn"><a href="{{ url_for('profile') }}">Edit Profile </a></button>
+          </div>
+          
+      </aside>
+
+      <main>
+          <h1>Search for Training</h1>
+          <div class="search-bar">
+              <input type="text" id="searchInput" placeholder="Search for training...">
+          </div>
+          <div class="filter">
+              <label for="categoryFilter">Category:</label>
+              <select id="categoryFilter">
+                  <option value="all">All</option>
+                  <option value="engineering">Engineering</option>
+                  <option value="math">Mathematics</option>
+                  <option value="cs">Computer Science</option>
+                  <option value="db">Database Management</option>
+                  <option value="network">Network Security</option>
+              </select>
+          </div>
+          <div class="search-training">
+              <div class="training-item">
+                  <span class="material-icons-sharp">architecture</span>
+                  <h3>Engineering Graphics</h3>
+                  <h2>12/14</h2>
+                  <div class="progress">
+                      <svg><circle cx="38" cy="38" r="36"></circle></svg>
+                      <div class="number"><p>86%</p></div>
+                  </div>
+                  <small class="text-muted">Last 24 Hours</small>
+              </div>
+              <div class="training-item">
+                  <span class="material-icons-sharp">functions</span>
+                  <h3>Mathematical Engineering</h3>
+                  <h2>27/29</h2>
+                  <div class="progress">
+                      <svg><circle cx="38" cy="38" r="36"></circle></svg>
+                      <div class="number"><p>93%</p></div>
+                  </div>
+                  <small class="text-muted">Last 24 Hours</small>
+              </div>
+              <div class="training-item">
+                  <span class="material-icons-sharp">computer</span>
+                  <h3>Computer Architecture</h3>
+                  <h2>27/30</h2>
+                  <div class="progress">
+                      <svg><circle cx="38" cy="38" r="36"></circle></svg>
+                      <div class="number"><p>81%</p></div>
+                  </div>
+                  <small class="text-muted">Last 24 Hours</small>
+              </div>
+              <div class="training-item">
+                  <span class="material-icons-sharp">dns</span>
+                  <h3>Database Management</h3>
+                  <h2>24/25</h2>
+                  <div class="progress">
+                      <svg><circle cx="38" cy="38" r="36"></circle></svg>
+                      <div class="number"><p>96%</p></div>
+                  </div>
+                  <small class="text-muted">Last 24 Hours</small>
+              </div>
+              <div class="training-item">
+                  <span class="material-icons-sharp">router</span>
+                  <h3>Network Security</h3>
+                  <h2>25/27</h2>
+                  <div class="progress">
+                      <svg><circle cx="38" cy="38" r="36"></circle></svg>
+                      <div class="number"><p>92%</p></div>
+                  </div>
+                  <small class="text-muted">Last 24 Hours</small>
+              </div>
+          </div>
+
+          <div class="timetable" id="timetable">
+              <div>
+                  <span id="prevDay">&lt;</span>
+                  <h2>Documents Timetable</h2>
+                  <span id="nextDay">&gt;</span>
+              </div>
+              <span class="closeBtn" onclick="timeTableAll()">X</span>
+              <table>
+                  <thead>
+                      <tr>
+                          <th>Time</th>
+                          <th>Room No.</th>
+                          <th>Subject</th>
+                          <th></th>
+                      </tr>
+                  </thead>
+                  <tbody></tbody>
+              </table>
+          </div>
+      </main>
+
+      <div class="right">
+          <div class="announcements">
+              <h2>Announcements</h2>
+              <div class="updates">
+                  <div class="message">
+                      <p> <b>Academic</b> Summer training internship with Live Projects.</p>
+                      <small class="text-muted">2 Minutes Ago</small>
+                  </div>
+                  <div class="message">
+                      <p> <b>Co-curricular</b> Global internship opportunity by Student organization.</p>
+                      <small class="text-muted">10 Minutes Ago</small>
+                  </div>
+                  <div class="message">
+                      <p> <b>Examination</b> Instructions for Mid Term Examination.</p>
+                      <small class="text-muted">Yesterday</small>
+                  </div>
+              </div>
+          </div>
+
+          <div class="leaves">
+              <h2>Supervisor & trainer</h2>
+              <div class="teacher">
+                  <div class="profile-photo"><img src="{{ url_for('static', filename='images/profile-2.jpeg') }}" alt=""></div>
+                  <div class="info">
+                      <h3>The Professor</h3>
+                      <small class="text-muted">Full Day</small>
+                  </div>
+              </div>
+              <div class="teacher">
+                  <div class="profile-photo"><img src="{{ url_for('static', filename='images/profile-4.jpg') }}" alt=""></div>
+                  <div class="info">
+                      <h3>Himanshu Jindal</h3>
+                      <small class="text-muted">Full Day</small>
                   </div>
               </div>
           </div>
       </div>
-      </div>
-      </div>
-
-      </div>
-
   </div>
-  </section>
 
-  <!-- Features -->
-
-  <section id="features">
-
-    <div class="row">
-
-      <div class="features-box col-lg-4">
-        <i class="icon fa-solid fa-circle-check" style="color: #d4f1f9;"></i>
-        <h3>Easy to use.</h3>
-        <p>So easy to use, even your professors will love it.</p>
-      </div>
-      <div class="features-box col-lg-4">
-        <i class="icon fa-solid fa-bullseye" style="color: #d4f1f9;"></i>
-        <h3>Elite Clientele</h3>
-        <p>We partner with top universities and companies to bring you the best opportunities.</p>
-      </div>
-      <div class="features-box col-lg-4">
-        <i class="icon fa-solid fa-heart" style="color: #d4f1f9;"></i>
-        <h3>Guaranteed to work.</h3>
-        <p>Find the perfect co-op training opportunity or get comprehensive support until you do.</p>
-      </div>
-
-
-  </div>
-  </section>
-  <!-- Footer -->
-
-  <footer id="footer">
-
-
-      <i class="soical-icon fa-brands fa-twitter"></i>
-      <i class="soical-icon fa-solid fa-envelope"></i>
-
-
-    <p>© Copyright 2024 AOUN</p>
-
-  </footer>
-
-
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/timetable.js') }}"></script>
 </body>
 
 </html>
