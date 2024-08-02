@@ -117,57 +117,65 @@
                     <td class="number text-center">1</td>
                     <td class="image"><img src="{{ url_for('static', filename='images/sdaia_logo.jpeg') }}" alt=""></td>
                     <td class="product"><strong>Sadaia</strong><br>Business anaylst</td>
-                    <td class="rate text-right">3 Months</td>
+                    <td class="duration text-right">3 Months</td>
+                    <td class="status text-right">open</td>
                     <td ><button type="button" class="btn btn-primary">Apply</button></td>
                   </tr>
                   <tr>
                     <td class="number text-center">2</td>
                     <td class="image"><img src="{{ url_for('static', filename='images/sdaia_logo.jpeg') }}" alt=""></td>
                     <td class="product"><strong>Sadaia</strong><br>Business anaylst</td>
-                    <td class="rate text-right">3 Months</td>
+                    <td class="duration text-right">3 Months</td>
+                    <td class="status text-right">close</td>
                     <td ><button type="button" class="btn btn-primary">Apply</button></td>
                   </tr>
                   <tr>
                     <td class="number text-center">3</td>
                     <td class="image"><img src="{{ url_for('static', filename='images/sdaia_logo.jpeg') }}" alt=""></td>
                     <td class="product"><strong>Sadaia</strong><br>Business anaylst</td>
-                    <td class="rate text-right">3 Months</td>
+                    <td class="duration text-right">3 Months</td>
+                    <td class="status text-right">open</td>
                     <td ><button type="button" class="btn btn-primary">Apply</button></td>
                   </tr>
                   <tr>
                     <td class="number text-center">4</td>
                     <td class="image"><img src="{{ url_for('static', filename='images/sdaia_logo.jpeg') }}" alt=""></td>
                     <td class="product"><strong>Sadaia</strong><br>Business anaylst</td>
-                    <td class="rate text-right">3 Months</td>
+                    <td class="duration text-right">3 Months</td>
+                    <td class="status text-right">close</td>
                     <td ><button type="button" class="btn btn-primary">Apply</button></td>
                   </tr>
                   <tr>
                     <td class="number text-center">5</td>
                     <td class="image"><img src="{{ url_for('static', filename='images/sdaia_logo.jpeg') }}" alt=""></td>
                     <td class="product"><strong>Sadaia</strong><br>Business anaylst</td>
-                    <td class="rate text-right">3 Months</td>
+                    <td class="duration text-right">3 Months</td>
+                    <td class="status text-right">open</td>
                     <td ><button type="button" class="btn btn-primary">Apply</button></td>
                   </tr>
                   <tr>
                     <td class="number text-center">6</td>
                     <td class="image"><img src="{{ url_for('static', filename='images/sdaia_logo.jpeg') }}" alt=""></td>
                     <td class="product"><strong>Sadaia</strong><br>Business anaylst</td>
-                    <td class="rate text-right">3 Months</td>
+                    <td id="status" class="duration text-right">3 Months</td>
+                    <td class="status text-right">close</td>
                     <td ><button type="button" class="btn btn-primary">Apply</button></td>
                   </tr>
                   <tr>
                     <td class="number text-center">7</td>
                     <td class="image"><img src="{{ url_for('static', filename='images/sdaia_logo.jpeg') }}" alt=""></td>
                     <td class="product"><strong>Sadaia</strong><br>Business anaylst</td>
-                    <td class="rate text-right">3 Months</td>
+                    <td class="duration text-right">3 Months</td>
+                    <td class="status text-right">open</td>
                     <td ><button type="button" class="btn btn-primary">Apply</button></td>
                   </tr>
                   <tr>
                     <td class="number text-center">8</td>
                     <td class="image"><img src="{{ url_for('static', filename='images/sdaia_logo.jpeg') }}" alt=""></td>
                     <td class="product"><strong>Sadaia</strong><br>Business anaylst</td>
-                    <td class="rate text-right">3 Months</td>
-                    <td ><button type="button" class="btn btn-primary">Apply</button></td>
+                    <td class="duration text-right">3 Months</td>
+                    <td class="status text-right">close</td>
+                    <td ><button type="button" class="btn btn-primary"><a href="{{ url_for('profile') }}">Apply</a></button></td>
                   </tr>
                 </tbody></table>
               </div>
@@ -190,14 +198,6 @@
   </div>
   </section>
 
-
-    
-
-
-  
-
-  
-
   <footer id="footer">
 
 
@@ -209,7 +209,7 @@
 
   </footer>
 
-
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 
 </html>
