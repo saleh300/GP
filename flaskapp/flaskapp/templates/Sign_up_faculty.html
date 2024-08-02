@@ -1,11 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/sign_up.css') }}">
-</head>
+{% extends "sign_up_template.html" %}
+{% block signup %}
 <body>
     <div class="container">
         <h2>Create An Account</h2>
@@ -22,4 +16,4 @@
         </div>
     </div>
 </body>
-</html>
+{% endblock %}
