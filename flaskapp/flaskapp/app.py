@@ -2,13 +2,14 @@ from flask import Flask, render_template, redirect, url_for
 
 app = Flask(__name__)
 
+# homePage section
 @app.route("/")
 def hello():
     return render_template("HomePage.html")
 
 
 
-
+# student section
 @app.route('/sign_in_student')
 def sign_in_student():
     return render_template('sign_in_student.html')
@@ -26,6 +27,8 @@ def profile():
     return render_template('profile.html')
 
 
+
+# faculty section
 @app.route('/sign_in_faculty')
 def sign_in_faculty():
     return render_template('sign_in_faculty.html') 
@@ -34,6 +37,9 @@ def sign_in_faculty():
 def sign_up_faculty():
     return render_template('sign_up_faculty.html')
 
+
+
+# company section
 @app.route('/sign_in_company')
 def sign_in_company():
     return render_template('sign_in_company.html') 
