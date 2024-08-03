@@ -28,6 +28,8 @@ def profile():
 
 
 
+
+
 # faculty section
 @app.route('/sign_in_faculty')
 def sign_in_faculty():
@@ -47,6 +49,7 @@ def sign_in_company():
 @app.route('/sign_up_company')
 def sign_up_company():
     return render_template('sign_up_company.html')
+
 
 
 
