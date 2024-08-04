@@ -60,5 +60,13 @@ a {
     color: white;
 }
 
-
+.custom-card-size {
+    width: 80%; /* Adjust the width */
+    max-width: 200px; /* Max width */
+    height: auto; /* Maintain aspect ratio */
+  }
+  .card-img-top {
+    height: 100px; /* Adjust image height */
+    object-fit: cover; /* Ensure image fits */
+  }
   
