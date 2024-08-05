@@ -70,3 +70,44 @@ a {
     object-fit: cover; /* Ensure image fits */
   }
   
+  .more-details-link {
+    color: grey; /* Set text color to grey */
+    text-decoration: underline; /* Underline the text */
+  }
+  .more-details-link:hover {
+    color: darkgrey; /* Darker grey on hover */
+  }
+
+  /* Styles for the "Apply" button when clicked */
+.btn-applied {
+  background-color: #6c757d; /* Grey background */
+  border-color: #6c757d; /* Grey border */
+  color: #fff; /* White text */
+  cursor: not-allowed; /* Show as disabled */
+}
+
+/* Optional: Style adjustments for button text */
+.btn-applied:disabled {
+  opacity: 0.65; /* Slightly transparent to show disabled state */
+}
+
+/* Ensure the custom card size and other styles work as intended */
+.custom-card-size {
+  width: 80%; /* Adjust the width */
+  max-width: 200px; /* Max width */
+  height: auto; /* Maintain aspect ratio */
+}
+
+.card-img-top {
+  height: 100px; /* Adjust image height */
+  object-fit: cover; /* Ensure image fits */
+}
+
+.more-details-link {
+  color: grey; /* Set text color to grey */
+  text-decoration: underline; /* Underline the text */
+}
+
+.more-details-link:hover {
+  color: darkgrey; /* Darker grey on hover */
+}
