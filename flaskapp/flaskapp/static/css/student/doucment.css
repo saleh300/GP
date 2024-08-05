@@ -1,0 +1,18 @@
+.progress-container {
+    margin-bottom: 20px;
+}
+.progress-bar-custom {
+    transition: width 0.6s ease;
+    background-color: #28a745;
+}
+.accordion-button {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+.accordion-body {
+    padding: 20px;
+    border-top: 1px solid #dee2e6;
+}
+.file-upload {
+    margin-bottom: 15px;
+}

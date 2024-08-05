@@ -43,7 +43,7 @@
               <a class="nav-link" href="{{ url_for('profile') }}">Profile</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#pricing">Documents</a>
+              <a class="nav-link" href="{{ url_for('doucment') }}">Documents</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for('appliaction') }}">Applications</a>
@@ -56,13 +56,14 @@
       <hr class="styled-hr">
 
       <div class="row">
-        <div class="table-responsive">
-            <div class="table-wrapper">
+        <div class="table-responsive" style="background-color: white;">
+            <div class="table-wrapper" style="padding: 20px;">
                 <div class="table-title">
                     <div class="row">
                         <div class="col-xs-5">
-                            <h2>Application <b>Management</b></h2>
+                            <h3><b>Application Management</b></h3>
                         </div>
+                        <hr class="styled-hr">
                     </div>
                 </div>
                 <table class="table table-striped table-hover">

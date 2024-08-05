@@ -30,6 +30,10 @@ def profile():
 def appliaction():
     return render_template('appliaction.html')
 
+@app.route('/doucment')
+def doucment():
+    return render_template('doucment.html')
+
 
 
 
