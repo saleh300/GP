@@ -26,6 +26,10 @@ def HomePage_student():
 def profile():
     return render_template('profile.html')
 
+@app.route('/appliaction')
+def appliaction():
+    return render_template('appliaction.html')
+
 
 
 

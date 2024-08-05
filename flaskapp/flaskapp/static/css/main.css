@@ -124,6 +124,20 @@ body {
   .card {
     margin: 5px;
   }
+
+  .content-section {
+    margin: 20px;
+}
+
+.styled-hr {
+    border: 0;
+    height: 2px; /* Thickness of the line */
+    background-image: linear-gradient(to right, #f0f0f0, #000000, #f0f0f0);
+    margin: 20px 0; /* Spacing above and below the line */
+}
+
+
+
   
   @media (max-width: 1028px) {
     #title {
