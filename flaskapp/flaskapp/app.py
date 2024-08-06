@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 # homePage section
 @app.route("/")
-def hello():
+def HomePage():
     return render_template("HomePage.html")
 
 
@@ -57,6 +57,10 @@ def sign_in_company():
 @app.route('/sign_up_company')
 def sign_up_company():
     return render_template('company/sign_up_company.html')
+
+@app.route('/HomePage_company')
+def HomePage_company():
+    return render_template('company/HomePage_company.html')
 
 
 
