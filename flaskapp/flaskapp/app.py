@@ -36,8 +36,6 @@ def doucment():
 
 
 
-
-
 # faculty section
 @app.route('/sign_in_faculty')
 def sign_in_faculty():
@@ -62,8 +60,17 @@ def sign_up_company():
 def HomePage_company():
     return render_template('company/HomePage_company.html')
 
+@app.route('/offer_COOP')
+def offer_COOP():
+    return render_template('company/offer_COOP.html') 
 
+@app.route('/comp_profile')
+def comp_profile():
+    return render_template('company/comp_profile.html') 
 
+@app.route('/view_documents')
+def view_documents():
+    return render_template('company/view_documents.html') 
 
 
 if __name__ == "__main__":

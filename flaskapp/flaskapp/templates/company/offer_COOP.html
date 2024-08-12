@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>AOUN - Offer a Coop Position</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,900;1,900&family=Ubuntu&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+
+  <script src="https://kit.fontawesome.com/6503ba7c64.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9K+8pyy+4E3ENyW0JW9G6e91R+GXnF8D7zjj1KGrfUqcF/fbM5D" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-oBqDVmMz4fnFO9K+8pyy+4E3ENyW0JW9G6e91R+GXnF8D7zjj1KGrfUqcF/fbM5D" crossorigin="anonymous"></script>
+
+  <!-- Link to the external JavaScript file -->
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</head>
+
+<body>
+
+<section id="title">
+  <div class="container-fluid">
+    <!-- Nav Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <a class="navbar-brand" href="{{ url_for('HomePage') }}">AOUN</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('HomePage_company') }}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('comp_profile') }}">Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('offer_COOP') }}">Offer Coop</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('view_documents') }}">Student Documents</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Title -->
+    <hr class="styled-hr">
+
+    <div class="row">
+      <div class="col-md-12">
+        <h2 class="text-center">Offer a Cooperative Position</h2>
+        <form id="coopForm" class="mt-4" method="POST">
+          <div class="mb-3">
+            <label for="jobTitle" class="form-label">Job Title</label>
+            <input type="text" class="form-control" id="jobTitle" name="jobTitle" required>
+          </div>
+          <div class="mb-3">
+            <label for="location" class="form-label">Location</label>
+            <input type="text" class="form-control" id="location" name="location" required>
+          </div>
+          <div class="mb-3">
+            <label for="duration" class="form-label">Duration</label>
+            <select class="form-select" id="duration" name="duration" required>
+              <option value="less-than-3-months"> Less than 3 Months </option>
+              <option value="3-6-months"> 3-6 Months </option>
+              <option value="over-6-months"> Over 6 Months </option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="work-type" class="form-label">Work Type</label>
+            <select class="form-select" id="work-type" name="work_type" required>
+              <option value="remote">Remote</option>
+              <option value="on-site">On-site</option>
+              <option value="remote-on-site">Remote and On-site</option>
+            </select>
+          </div>          
+          <div class="mb-3">
+            <label for="jobDescription" class="form-label">Job Description</label>
+            <textarea class="form-control" id="jobDescription" name="jobDescription" rows="4" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit Offer</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="footer" class="text-center mt-4">
+  <i class="social-icon fa-brands fa-twitter"></i>
+  <i class="social-icon fa-solid fa-envelope"></i>
+  <p>© Copyright 2024 AOUN</p>
+</footer>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js"></script>
+
+<!-- Link to the external JavaScript file -->
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+</body>
+
+</html>

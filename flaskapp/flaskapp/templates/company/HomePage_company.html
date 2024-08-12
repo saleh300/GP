@@ -3,12 +3,13 @@
 
 <head>
   <meta charset="utf-8">
-  <title>AOUN</title>
+  <title>AOUN - Company Offerings</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,900;1,900&family=Ubuntu&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/company/company_home.css') }}">
 
   <script src="https://kit.fontawesome.com/6503ba7c64.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9K+8pyy+4E3ENyW0JW9G6e91R+GXnF8D7zjj1KGrfUqcF/fbM5D" crossorigin="anonymous"></script>
@@ -34,13 +35,13 @@
             <a class="nav-link" href="{{ url_for('HomePage_company') }}">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="">Profile</a>
+            <a class="nav-link" href="{{ url_for('comp_profile') }}">Profile</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="">offer Co-op</a>
+            <a class="nav-link" href="{{ url_for('offer_COOP') }}">Offer Coop</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="">Student Documents</a>
+            <a class="nav-link" href="{{ url_for('view_documents') }}">Student Documents</a>
           </li>
         </ul>
       </div>
@@ -50,26 +51,88 @@
     <hr class="styled-hr">
     
     <div class="row">
-      
+      <div class="container">
+        <div class="row">
+          <!-- BEGIN SEARCH RESULT -->
+          <div class="col-md-12">
+            <div class="grid search">
+              <div class="grid-body">
+                <div class="row">
+                  <!-- BEGIN FILTERS -->
+                  <div class="col-md-3">
+                    <h2 class="grid-title">Filters</h2>
+                    <hr>
+
+                    <!-- BEGIN FILTER BY CATEGORY -->
+                    <h4>By category:</h4>
+                    <div class="checkbox">
+                      <label><input type="checkbox" class="icheck"> Less than 3 Months </label>
+                    </div>
+                    <div class="checkbox">
+                      <label><input type="checkbox" class="icheck"> 3-6 Months </label>
+                    </div>
+                    <div class="checkbox">
+                      <label><input type="checkbox" class="icheck"> Over 6 Months </label>
+                    </div>
+                    <div class="checkbox">
+                      <label><input type="checkbox" class="icheck"> Remote</label>
+                    </div>
+                    <div class="checkbox">
+                      <label><input type="checkbox" class="icheck"> Onsite</label>
+                    </div>
+                    <!-- END FILTER BY CATEGORY -->
+
+                  </div>
+                  <!-- END FILTERS -->
+                  <!-- BEGIN RESULT -->
+                  <div class="col-md-9">
+                    <hr>
+                    <!-- BEGIN SEARCH INPUT -->
+                    <div class="input-group">
+                      <input type="text" class="form-control" placeholder="Search offerings">
+                      <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button"><i class="fa fa-search"></i></button>
+                      </span>
+                    </div>
+                    <!-- END SEARCH INPUT -->
+                    <p>Showing offerings for {{ company_name }}</p>
+
+                    <div class="padding"></div>
+
+                    <!-- BEGIN TABLE RESULT -->
+                    <div class="container">
+                      <div class="row">
+                        {% for offering in offerings %}
+                        <div class="col-md-3 mb-3">
+                          <div class="card custom-card-size">
+                            <img src="{{ offering.company_logo }}" class="card-img-top" alt="Company Logo">
+                            <div class="card-body">
+                              <h5 class="card-title">{{ offering.position_title }}</h5>
+                              <p class="card-text">{{ offering.description }}</p>
+                              <p class="card-text"><strong>Duration:</strong> {{ offering.duration }}</p>
+                              <p class="card-text"><strong>Status:</strong> {{ offering.status }}</p>
+                              <a href="#" class="more-details-link" data-bs-toggle="modal" data-bs-target="#detailsModal" data-id="{{ offering.id }}">More Details</a>
+                            </div>
+                          </div>
+                        </div>
+                        {% else %}
+                        <p>No offerings available.</p>
+                        {% endfor %}
+                      </div>
+                    </div>
+                    <!-- END TABLE RESULT -->
+                  </div>
+                  <!-- END RESULT -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- END SEARCH RESULT -->
+        </div>
+      </div>
     </div>
   </div>
 </section>
-
-
-
-<footer id="footer">
-  <i class="social-icon fa-brands fa-twitter"></i>
-  <i class="social-icon fa-solid fa-envelope"></i>
-  <p>© Copyright 2024 AOUN</p>
-</footer>
-
-<!-- Bootstrap JS and dependencies -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js"></script>
-
-<!-- Link to the external JavaScript file -->
-<script src="{{ url_for('static', filename='js/app.js') }}"></script>
 
 </body>
 
