@@ -7,6 +7,10 @@ app = Flask(__name__)
 def HomePage():
     return render_template("HomePage.html")
 
+@app.route("/sign_up")
+def sign_up():
+    return render_template("sign_up.html")
+
 
 
 # student section
