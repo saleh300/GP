@@ -10,9 +10,7 @@ def HomePage():
 
 
 # student section
-@app.route('/sign_in_student')
-def sign_in_student():
-    return render_template('student/sign_in_student.html')
+
 
 @app.route('/sign_up_student')
 def sign_up_student():
@@ -37,9 +35,7 @@ def doucment():
 
 
 # faculty section
-@app.route('/sign_in_faculty')
-def sign_in_faculty():
-    return render_template('faculty/sign_in_faculty.html') 
+
 
 @app.route('/sign_up_faculty')
 def sign_up_faculty():
@@ -48,9 +44,7 @@ def sign_up_faculty():
 
 
 # company section
-@app.route('/sign_in_company')
-def sign_in_company():
-    return render_template('company/sign_in_company.html') 
+
 
 @app.route('/sign_up_company')
 def sign_up_company():

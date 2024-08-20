@@ -169,7 +169,7 @@
                                   <thead>
                                       <tr>
                                           <th>#</th>
-                                          <th>Company Name</th>						
+                                          <th>Student Name</th>						
                                           <th>Date applied</th>
                                           <th>Postion</th>
                                           <th>delete</th>
@@ -182,16 +182,90 @@
                                           <td>04/10/2013</td>                        
                                           <td>business Analyst</td>
                                           <td>
-                                              <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE5C9;</i></a>
+                                            <a href="#" class="delete" title="Delete" data-toggle="tooltip"><!-- Link trigger modal -->
+                                              <a href="#" class="text-decoration-underline" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                                  more info
+                                              </a>
+                                              
+                                              <!-- Modal -->
+                                              <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                  <div class="modal-dialog">
+                                                      <div class="modal-content">
+                                                          <div class="modal-header">
+                                                              <h5 class="modal-title" id="staticBackdropLabel">Student profile</h5>
+                                                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                          </div>
+                                                          <div class="modal-body">
+                                                            <div class="profile-container">
+                                                              <img src="{{ url_for('static', filename='images/saleh.jpg') }}" alt="Profile Picture" class="img-fluid rounded-circle mb-3" style="width: 100px;">
+                                                              <h6>Name: John Doe</h6>
+                                                              <p><strong>Email:</strong> johndoe@example.com</p>
+                                                              <p><strong>summary:</strong> John is a software engineer with over 10 years of experience in web development. He specializes in JavaScript frameworks and has a passion for creating user-friendly interfaces.</p>
+                                                              <p><strong>GPA:</strong></p>
+                                                              <p><strong>Experience:</strong></p>
+                                                              <ul>
+                                                                <li></li>
+                                                              </ul>
+                                                              <p><strong>Certificate:</strong></p>
+                                                              <ul>
+                                                                <li></li>
+                                                              </ul>
+                                                          </div>
+                                                          </div>
+                                                          <div class="modal-footer">
+                                                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                              <button type="button" class="btn btn-primary">Understood</button>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </a>
                                           </td>
                                       </tr>
                                       <tr>
                                           <td>2</td>
-                                          <td><img src="{{ url_for('static', filename='images/sdaia_logo.jpeg') }}" class="avatar" alt="Avatar" style="width: 30px; height: 30px;" > Paula Wilson</td>
+                                          <td><img src="{{ url_for('static', filename='images/saleh.jpg') }}" class="avatar" alt="Avatar" style="width: 30px; height: 30px;" > Paula Wilson</td>
                                           <td>05/08/2014</td>                       
                                           <td>business Analyst</td>
                                           <td>
-                                              <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE5C9;</i></a>
+                                            <a href="#" class="delete" title="Delete" data-toggle="tooltip"><!-- Link trigger modal -->
+                                              <a href="#" class="text-decoration-underline" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                                  more info
+                                              </a>
+                                              
+                                              <!-- Modal -->
+                                              <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                  <div class="modal-dialog">
+                                                      <div class="modal-content">
+                                                          <div class="modal-header">
+                                                              <h5 class="modal-title" id="staticBackdropLabel">Student profile</h5>
+                                                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                          </div>
+                                                          <div class="modal-body">
+                                                            <div class="profile-container">
+                                                              <img src="{{ url_for('static', filename='images/saleh.jpg') }}" alt="Profile Picture" class="img-fluid rounded-circle mb-3" style="width: 100px;">
+                                                              <h6>Name: John Doe</h6>
+                                                              <p><strong>Email:</strong> johndoe@example.com</p>
+                                                              <p><strong>summary:</strong> John is a software engineer with over 10 years of experience in web development. He specializes in JavaScript frameworks and has a passion for creating user-friendly interfaces.</p>
+                                                              <p><strong>GPA:</strong></p>
+                                                              <p><strong>Experience:</strong></p>
+                                                              <ul>
+                                                                <li></li>
+                                                              </ul>
+                                                              <p><strong>Certificate:</strong></p>
+                                                              <ul>
+                                                                <li></li>
+                                                              </ul>
+                                                          </div>
+                                                          </div>
+                                                          <div class="modal-footer">
+                                                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                              <button type="button" class="btn btn-primary">Understood</button>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </a>
                                           </td>
                                       </tr>
                                       <tr>
@@ -200,7 +274,44 @@
                                           <td>11/05/2015</td>
                                           <td>business Analyst</td>
                                           <td>
-                                              <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE5C9;</i></a>
+                                            <a href="#" class="delete" title="Delete" data-toggle="tooltip"><!-- Link trigger modal -->
+                                              <a href="#" class="text-decoration-underline" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                                  more info
+                                              </a>
+                                              
+                                              <!-- Modal -->
+                                              <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                  <div class="modal-dialog">
+                                                      <div class="modal-content">
+                                                          <div class="modal-header">
+                                                              <h5 class="modal-title" id="staticBackdropLabel">Student profile</h5>
+                                                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                          </div>
+                                                          <div class="modal-body">
+                                                            <div class="profile-container">
+                                                              <img src="profile-picture.jpg" alt="Profile Picture" class="img-fluid rounded-circle mb-3" style="width: 100px;">
+                                                              <h6>Name: John Doe</h6>
+                                                              <p><strong>Email:</strong> johndoe@example.com</p>
+                                                              <p><strong>summary:</strong> John is a software engineer with over 10 years of experience in web development. He specializes in JavaScript frameworks and has a passion for creating user-friendly interfaces.</p>
+                                                              <p><strong>GPA:</strong></p>
+                                                              <p><strong>Experience:</strong></p>
+                                                              <ul>
+                                                                <li></li>
+                                                              </ul>
+                                                              <p><strong>Certificate:</strong></p>
+                                                              <ul>
+                                                                <li></li>
+                                                              </ul>
+                                                          </div>
+                                                          </div>
+                                                          <div class="modal-footer">
+                                                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                              <button type="button" class="btn btn-primary">Accept</button>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </a>
                                           </td>                        
                                       </tr>
                                       <tr>
@@ -256,7 +367,44 @@
                                           <td>12/08/2017</td>                        
                                           <td>business Analyst</td>
                                           <td>
-                                              <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE5C9;</i></a>
+                                            <a href="#" class="delete" title="Delete" data-toggle="tooltip"><!-- Link trigger modal -->
+                                              <a href="#" class="text-decoration-underline" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                                  more info
+                                              </a>
+                                              
+                                              <!-- Modal -->
+                                              <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                  <div class="modal-dialog">
+                                                      <div class="modal-content">
+                                                          <div class="modal-header">
+                                                              <h5 class="modal-title" id="staticBackdropLabel">Student profile</h5>
+                                                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                          </div>
+                                                          <div class="modal-body">
+                                                            <div class="profile-container">
+                                                              <img src="profile-picture.jpg" alt="Profile Picture" class="img-fluid rounded-circle mb-3" style="width: 100px;">
+                                                              <h6>Name: John Doe</h6>
+                                                              <p><strong>Email:</strong> johndoe@example.com</p>
+                                                              <p><strong>summary:</strong> John is a software engineer with over 10 years of experience in web development. He specializes in JavaScript frameworks and has a passion for creating user-friendly interfaces.</p>
+                                                              <p><strong>GPA:</strong></p>
+                                                              <p><strong>Experience:</strong></p>
+                                                              <ul>
+                                                                <li></li>
+                                                              </ul>
+                                                              <p><strong>Certificate:</strong></p>
+                                                              <ul>
+                                                                <li></li>
+                                                              </ul>
+                                                          </div>
+                                                          </div>
+                                                          <div class="modal-footer">
+                                                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                              <button type="button" class="btn btn-primary">Understood</button>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </a>
                                           </td>
                                       </tr>
                                   </tbody>

@@ -9,26 +9,24 @@ body {
     
   }
   
-  .Sign-up {
+  .Sign-in {
     padding: 2rem;
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     text-align: center;
-    background-image: url(images/login-bg.png);
+    background-color: white;
   }
-  .Sign-up h1 {
-    margin-bottom: 1rem;
+  .Sign-in h1 {
     font-size: 1.5rem;
     font-family: "Montserrat";
   }
-  .Sign-up p {
-    margin-bottom: 2rem;
+  .Sign-in p {
     color: #888888;
   }
-  .Sign-up button {
+  .Sign-in button {
     width: 100%;
     padding: 0.75rem;
-    margin-bottom: 1rem;
+    margin-top: 1rem;
     background-color: #bbeaf7;
     border: none;
     border-radius: 5px;
@@ -36,7 +34,7 @@ body {
     font-size: 1rem;
     cursor: pointer;
   }
-  .Sign-up button:hover {
+  .Sign-in button:hover {
     background-color: #5bb8c9;
   }
   

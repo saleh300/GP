@@ -37,7 +37,7 @@
               <a class="nav-link" href="#footer">Contact</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('appliaction') }}">Tutorial</a>
+              <a class="nav-link" href="">Tutorial</a>
             </li>
           </ul>
         </div>
@@ -53,13 +53,58 @@
         </div>
 
         <div class="title-image-container col-lg-6">
-          <div class="Sign-up">
-            <p>Select button below to continue</p>
-            <a href="{{ url_for('sign_in_student') }}"><button type="button">Sign in for Student</button></a>
-            <a href="{{ url_for('sign_in_faculty') }}"><button type="button">Sign in for Faculty</button></a>
-            <a href="{{ url_for('sign_in_company') }}"><button type="button">Sign in for Company</button></a>
+          <div class="Sign-in">
+            <form id="signInForm">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+              </div>
+              <p style="text-align: left; margin-top: 10px;">Select your role: </p>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="role" id="student" value="student">
+                <label class="form-check-label" for="student">Student</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="role" id="faculty" value="faculty">
+                <label class="form-check-label" for="faculty">Faculty</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="role" id="company" value="company">
+                <label class="form-check-label" for="company">Company</label>
+              </div>
+              <button type="submit" class="btn btn-primary">Sign in</button>
+              <div class="signup" style="text-align: left; margin-top: 15px;">
+                You Don't Have An Account? <a href="">Sign Up</a>
+            </div>
+            </form>
+          </div>
+          
         </div>
-        </div>
+        
+        <script>
+          document.getElementById('signInForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const selectedRole = document.querySelector('input[name="role"]:checked').value;
+            
+            let redirectUrl = '';
+            if (selectedRole === 'student') {
+              redirectUrl = "{{ url_for('HomePage_student') }}";
+            } else if (selectedRole === 'faculty') {
+              redirectUrl = "{{ url_for('sign_up_faculty') }}";
+            } else if (selectedRole === 'company') {
+              redirectUrl = "{{ url_for('HomePage_company') }}";
+            }
+        
+            window.location.href = redirectUrl; // Redirect to the selected page
+          });
+        </script>
+        
+        
+        
 
       </div>
 
