@@ -58,7 +58,16 @@ def HomePage_student():
 def profile():
     student_id = session.get('student').get('StudentID')
     student = Student.query.filter_by(StudentID=student_id).first()
-    return render_template('student/profile.html', student=student)
+
+    if not student:
+        flash('Student not found.')
+        return redirect(url_for('HomePage_student'))
+    
+    certificates = Certificate.query.filter_by(student_id=student_id).all()
+    experiences = Experience.query.filter_by(student_id=student_id).all()
+    projects = Project.query.filter_by(student_id=student_id).all()
+
+    return render_template('student/profile.html', student=student, certificates=certificates, experiences=experiences, projects=projects)
 
 @app.route('/appliaction')
 def appliaction():
@@ -120,12 +129,15 @@ def student_registration():
     return redirect(url_for('HomePage'))
 
 
+
+
 @app.route('/update_profile', methods=['POST'])
 def update_profile():
     student_id = session.get('student').get('StudentID')
     student = Student.query.filter_by(StudentID=student_id).first()
 
     if student:
+        # Update student information
         student.StFName = request.form['StFName']
         student.StLName = request.form['StLName']
         student.StPhNum = request.form['StPhNum']
@@ -135,12 +147,49 @@ def update_profile():
         student.GPA = request.form['GPA']
         student.Interest = request.form['Interest']
 
+        # Handle Certificates
+        cer_name = request.form.get('StuCert')
+        cer_details = request.form.get('CertDet')
+        if cer_name:  # Ensure there is a certificate name provided
+            new_certificate = Certificate(CerName=cer_name, CerDetails=cer_details, student_id=student.StudentID)
+            db.session.add(new_certificate)
+
+        # Handle Projects
+        proj_name = request.form.get('ProjectName')
+        proj_desc = request.form.get('ProjectDescription')
+        if proj_name:  # Ensure there is a project name provided
+            new_project = Project(ProjName=proj_name, ProjDesc=proj_desc, student_id=student.StudentID)
+            db.session.add(new_project)
+
+        # Handle Experiences
+        exp_position = request.form.get('PositionName')
+        exp_company = request.form.get('CompanyName')
+        start_date_str = request.form.get('StartDate')
+        end_date_str = request.form.get('EndDate')
+        currently_working = 'currentlyWorking' in request.form
+
+        if exp_position and exp_company:  # Ensure both position and company are provided
+            # Convert date strings to datetime objects
+            start_date = datetime.strptime(start_date_str, '%Y-%m-%d') if start_date_str else None
+            end_date = datetime.strptime(end_date_str, '%Y-%m-%d') if end_date_str and not currently_working else None
+
+            new_experience = Experience(
+                ExpPosition=exp_position,
+                ExpCompName=exp_company,
+                StartDate=start_date,
+                EndDate=end_date,
+                CurrentlyWorking=currently_working,
+                student_id=student.StudentID
+            )
+            db.session.add(new_experience)
+
         db.session.commit()
         flash('Profile updated successfully!')
     else:
         flash('Error: Profile could not be updated.')
 
     return redirect(url_for('profile'))
+
 
 @app.route('/company_registration', methods=['POST'])
 def company_registration():
@@ -169,7 +218,13 @@ def login():
     if role == 'student':
         user = Student.query.filter_by(StEmail=email).first()
         if user and user.StPassword == password:
-            session['student'] = {'StudentID': user.StudentID}  # Store only StudentID
+             # Store necessary user information in the session
+            session['student'] = {
+                'StudentID': user.StudentID,
+                'StFName': user.StFName,
+                'StLName': user.StLName,
+                'StEmail': user.StEmail
+            }
             return redirect(url_for('HomePage_student'))
         else:
             flash('Invalid credentials for student, please try again.')
