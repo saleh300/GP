@@ -17,6 +17,15 @@ class Student(db.Model):
     Interest = db.Column(db.String(100), nullable=True)
     StPassword = db.Column(db.String(100), nullable=False)
 
+
+     
+    def __repr__(self):
+        return (f'<Student ID: {self.StudentID}, '
+                f'First Name: {self.StFName}, '
+                f'Last Name: {self.StLName}, '
+                f'Email: {self.StEmail}, '
+                f'Password: {self.StPassword}>')
+
     certificates = db.relationship('Certificate', backref='student', lazy=True)
     projects = db.relationship('Project', backref='student', lazy=True)
     applications = db.relationship('Apply', backref='student', lazy=True)

@@ -101,6 +101,11 @@ def submit_student_form():
     )
     db.session.add(new_student)
     db.session.commit()
+
+    # Query the students
+    students = Student.query.all()
+    for student in students:
+        print(student)
  
     # Redirect to a success page or back to the form
     return redirect(url_for('HomePage_student'))
@@ -112,6 +117,9 @@ def submit_company_form():
     Company_email = request.form.get('CoEmail')
     Company_Pass = request.form.get('CoPass')
     Company_file = request.form.get('CoFile') # traning Schedule file
+
+        # Insert into database
+    
 
  
     # Redirect to a success page or back to the form
