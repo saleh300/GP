@@ -49,14 +49,15 @@
 
     <div class="welcome">
       <p>
-        welcome, <strong>
-        {% if student %}
-          {{ student.StFName + " " +student.StLName }}
-        {% else %}
-          No user found.
-        {% endif %}
-      </strong></p>
-    </div>
+          Welcome, <strong>
+          {% if student %}
+              {{ student.StFName }} {{ student.StLName }}
+          {% else %}
+              No user found.
+          {% endif %}
+          </strong>
+      </p>
+  </div>
 
     <!-- Title -->
     <hr class="styled-hr">

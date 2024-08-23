@@ -45,6 +45,16 @@ class Project(db.Model):
     ProjDesc = db.Column(db.Text, nullable=False)
     student_id = db.Column(db.Integer, db.ForeignKey('student.StudentID'), nullable=False)
 
+class Experience(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    ExpPosition = db.Column(db.String(100), nullable=False)
+    ExpCompName = db.Column(db.String(100), nullable=False)
+    StartDate = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    EndDate = db.Column(db.DateTime, nullable=True)
+    CurrentlyWorking = db.Column(db.Boolean, nullable=False, default=False)
+
+    student_id = db.Column(db.Integer, db.ForeignKey('student.StudentID'), nullable=False)
+    student = db.relationship('Student', backref='experiences', lazy=True)
 
 class Opportunity(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -70,6 +80,7 @@ class Company(db.Model):
     CompPass = db.Column(db.String(100), nullable=False)
 
     opportunities = db.relationship('Opportunity', backref='company', lazy=True)
+
 
 
 class Faculty(db.Model):

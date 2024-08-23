@@ -47,6 +47,16 @@
       <!-- Title -->
       <hr class="styled-hr">
 
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+          <div class="alert alert-danger" role="alert">
+              {% for message in messages %}
+                  {{ message }}
+              {% endfor %}
+          </div>
+      {% endif %}
+    {% endwith %}
+
       <div class="row">
         <div class="col-lg-6">
           <h1>Aoun help to managing co-op training for students and companies.</h1>
@@ -54,54 +64,40 @@
 
         <div class="title-image-container col-lg-6">
           <div class="Sign-in">
-            <form id="signInForm">
+            <form id="signInForm" method="POST" action="{{ url_for('login') }}">
               <div class="form-group">
-                <label for="exampleInputEmail1">Email address</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                  <label for="userEmail">Email address</label>
+                  <input type="email" class="form-control" id="userEmail" name="email" placeholder="Enter email" required>
               </div>
               <div class="form-group">
-                <label for="exampleInputPassword1">Password</label>
-                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                  <label for="userPass">Password</label>
+                  <input type="password" class="form-control" id="userPass" name="password" placeholder="Password" required>
               </div>
               <p style="text-align: left; margin-top: 10px;">Select your role: </p>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="role" id="student" value="student">
-                <label class="form-check-label" for="student">Student</label>
+                  <input class="form-check-input" type="radio" name="role" id="roleStudent" value="student" required>
+                  <label class="form-check-label" for="roleStudent">Student</label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="role" id="faculty" value="faculty">
-                <label class="form-check-label" for="faculty">Faculty</label>
+                  <input class="form-check-input" type="radio" name="role" id="roleFaculty" value="faculty" required>
+                  <label class="form-check-label" for="roleFaculty">Faculty</label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="role" id="company" value="company">
-                <label class="form-check-label" for="company">Company</label>
+                  <input class="form-check-input" type="radio" name="role" id="roleCompany" value="company" required>
+                  <label class="form-check-label" for="roleCompany">Company</label>
               </div>
               <button type="submit" class="btn btn-primary">Sign in</button>
               <div class="signup" style="text-align: left; margin-top: 15px;">
-                You Don't Have An Account? <a href="{{ url_for('sign_up') }}">Sign Up</a>
-            </div>
-            </form>
+                  You Don't Have An Account? <a href="{{ url_for('sign_up') }}">Sign Up</a>
+              </div>
+          </form>
+          
+          
           </div>
           
         </div>
         
-        <script>
-          document.getElementById('signInForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const selectedRole = document.querySelector('input[name="role"]:checked').value;
-            
-            let redirectUrl = '';
-            if (selectedRole === 'student') {
-              redirectUrl = "{{ url_for('HomePage_student') }}";
-            } else if (selectedRole === 'faculty') {
-              redirectUrl = "{{ url_for('sign_up_faculty') }}";
-            } else if (selectedRole === 'company') {
-              redirectUrl = "{{ url_for('HomePage_company') }}";
-            }
-        
-            window.location.href = redirectUrl; // Redirect to the selected page
-          });
-        </script>
+       
         
         
         
