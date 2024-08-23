@@ -1,11 +1,14 @@
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from models import Student, Company, db
+
 app = Flask(__name__)
+app.secret_key = 'aoun_for_now'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///aoun.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 
 # Initialize the database with the app
 db.init_app(app)
@@ -36,7 +39,8 @@ def sign_up_student():
 
 @app.route('/HomePage_student')
 def HomePage_student():
-    return render_template('student/HomePage_student.html')
+    student = Student.query.first()
+    return render_template('student/HomePage_student.html', student = student)
 
 @app.route('/profile')
 def profile():
@@ -83,8 +87,8 @@ def view_documents():
 
 
 
-@app.route('/submit_student_form', methods=['POST'])
-def submit_student_form():
+@app.route('/student_registration', methods=['POST'])
+def student_registration():
     # Retrieve data from the form
     first_name = request.form.get('StuFName')
     last_name = request.form.get('StuLName')
@@ -102,6 +106,9 @@ def submit_student_form():
     db.session.add(new_student)
     db.session.commit()
 
+    flash(f"Account created succefuly  for {first_name }")
+
+
     # Query the students
     students = Student.query.all()
     for student in students:
@@ -118,7 +125,7 @@ def submit_company_form():
     Company_Pass = request.form.get('CoPass')
     Company_file = request.form.get('CoFile') # traning Schedule file
 
-        # Insert into database
+    # Insert into database
     
 
  

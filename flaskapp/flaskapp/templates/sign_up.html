@@ -55,7 +55,7 @@
         </form>
 
         <!-- Student Form -->
-        <form id="studentForm" action="{{ url_for('submit_student_form') }}" method="POST"  style="display:none;">
+        <form id="studentForm" action="{{ url_for('student_registration') }}" method="POST"  style="display:none;">
             <input type="text" id="StuFName" name="StuFName" placeholder="First Name" required>
             <input type="text" id="StuLName" name="StuLName" placeholder="Last Name" required>
             <input type="email" id="StuEamil" name="StuEamil" placeholder="Email Address" required>
