@@ -58,7 +58,7 @@ class Experience(db.Model):
 
 class Opportunity(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    OppDuration = db.Column(db.Integer, nullable=False)
+    OppDuration = db.Column(db.String(50), nullable=False)
     OppCity = db.Column(db.String(50), nullable=False)
     OppJobTitle = db.Column(db.String(100), nullable=False)
     OppJobDesc = db.Column(db.Text, nullable=False)

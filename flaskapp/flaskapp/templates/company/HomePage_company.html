@@ -61,6 +61,19 @@
         </p>
     </div>
 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="container mt-4">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
       <!-- Title -->
       <hr class="styled-hr">
 
@@ -81,7 +94,7 @@
                 <div class="modal-body">
                   <div class="col-md-12">
                     <h2 class="text-center">Offer a Cooperative Position</h2>
-                    <form id="coopForm" class="mt-4" method="POST">
+                    <form id="coopForm" class="mt-4" method="POST" action="{{ url_for('offer_coop') }}">
                       <div class="mb-3">
                         <label for="jobTitle" class="form-label">Job Title</label>
                         <input type="text" class="form-control" id="jobTitle" name="jobTitle" required>
@@ -112,6 +125,7 @@
                       </div>
                       <button type="submit" class="btn btn-primary">Submit Offer</button>
                     </form>
+                    
                   </div>
                 </div>
                 <div class="modal-footer">

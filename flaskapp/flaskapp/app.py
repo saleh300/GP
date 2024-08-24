@@ -66,7 +66,8 @@ def sign_up_student():
 @app.route('/HomePage_student')
 def HomePage_student():
     student = session.get('student')
-    return render_template('student/HomePage_student.html', student=student)
+    opportunities = Opportunity.query.all() 
+    return render_template('student/HomePage_student.html', student=student, opportunities=opportunities)
 
 @app.route('/profile')
 def profile():
@@ -104,10 +105,8 @@ def sign_up_company():
 
 @app.route('/HomePage_company')
 def HomePage_company():
-    if 'company' not in session:
-        flash('Please log in to access this page.', 'danger')
-        return redirect(url_for('HomePage'))
-    return render_template('company/HomePage_company.html')
+    company = session.get('company')
+    return render_template('company/HomePage_company.html', company = company)
 
 @app.route('/comp_profile')
 def comp_profile():
@@ -116,6 +115,9 @@ def comp_profile():
 @app.route('/view_documents')
 def view_documents():
     return render_template('company/view_documents.html') 
+
+
+# start student route
 
 @app.route('/student_registration', methods=['POST'])
 def student_registration():
@@ -131,7 +133,8 @@ def student_registration():
         StFName=first_name,
         StLName=last_name,
         StEmail=email,
-        StPassword=password
+        StPassword=password,
+        StudentID = student_id
     )
     db.session.add(new_student)
     db.session.commit()
@@ -206,6 +209,11 @@ def update_profile():
     return redirect(url_for('profile'))
 
 
+# end student route
+
+
+# start company route
+
 @app.route('/company_registration', methods=['POST'])
 def company_registration():
     # Retrieve data from the form
@@ -235,7 +243,43 @@ def company_registration():
 
     return redirect(url_for('HomePage'))
 
+@app.route('/offer_coop', methods=['POST'])
+def offer_coop():
+    # Retrieve data from the form
+    job_title = request.form.get('jobTitle')
+    location = request.form.get('location')
+    duration = request.form.get('duration')
+    job_description = request.form.get('jobDescription')
+    
+    # Assuming company_id is stored in the session, retrieve it
+    company_id = session.get('company').get('CompanyID')
 
+
+
+    # Create a new Opportunity instance
+    new_opportunity = Opportunity(
+        OppDuration=duration,
+        OppCity=location,
+        OppJobTitle=job_title,
+        OppJobDesc=job_description,
+        company_id=company_id
+    )
+
+    # Add and commit the new opportunity to the database
+    db.session.add(new_opportunity)
+    db.session.commit()
+
+    flash('Co-op opportunity offered successfully!', 'success')
+    return redirect(url_for('HomePage_company'))
+
+
+
+
+
+# end company route
+
+
+# strat Login - logout route
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -289,6 +333,8 @@ def logout():
     
     flash('You have been logged out.', 'info')
     return redirect(url_for('HomePage'))
+
+# end Login - logout route
 
 if __name__ == '__main__':
     app.run(debug=True)

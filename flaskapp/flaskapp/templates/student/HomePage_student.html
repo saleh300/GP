@@ -6,7 +6,6 @@
   <title>AOUN</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,900;1,900&family=Ubuntu&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/student/stu_home.css') }}">
@@ -15,8 +14,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9K+8pyy+4E3ENyW0JW9G6e91R+GXnF8D7zjj1KGrfUqcF/fbM5D" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-oBqDVmMz4fnFO9K+8pyy+4E3ENyW0JW9G6e91R+GXnF8D7zjj1KGrfUqcF/fbM5D" crossorigin="anonymous"></script>
 
-  <!-- Link to the external JavaScript file -->
-  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </head>
 
 <body>
@@ -52,15 +49,15 @@
 
     <div class="welcome">
       <p>
-          Welcome, <strong>
-          {% if session['company'] %}
-              {{ session['company']['CompName'] }}
-          {% else %}
-              No user found.
-          {% endif %}
-          </strong>
+        Welcome, <strong>
+        {% if student %}
+            {{ student['StFName'] }} {{ student['StLName'] }}
+        {% else %}
+            No user found.
+        {% endif %}
+        </strong>
       </p>
-  </div>
+    </div>
 
     <!-- Title -->
     <hr class="styled-hr">
@@ -117,110 +114,24 @@
                     <!-- BEGIN TABLE RESULT -->
                     <div class="container">
                       <div class="row">
-                        <!-- Example Card -->
-                        <div class="col-md-3 mb-3" >
-                          <div class="card custom-card-size">
-                            <img src="{{ url_for('static', filename='images/sdaia_logo.jpeg') }}" class="card-img-top" alt="Sadaia Logo">
-                            <div class="card-body">
-                              <h5 class="card-title">Sadaia</h5>
-                              <p class="card-text">Business Analyst</p>
-                              <p class="card-text"><strong>Duration:</strong> 3 Months</p>
-                              <p class="card-text"><strong>Status:</strong> Open</p>
-                              <a href="#" class="more-details-link" data-bs-toggle="modal" data-bs-target="#detailsModal" data-id="1">More Details</a>
-                            </div>
-                          </div>
-                        </div>
-                        <!-- Repeat cards as needed -->
+                        {% for opportunity in opportunities %}
                         <div class="col-md-3 mb-3">
                           <div class="card custom-card-size">
-                            <img src="{{ url_for('static', filename='images/sdaia_logo.jpeg') }}" class="card-img-top" alt="Sadaia Logo">
+                            <img src="{{ url_for('static', filename='images/sdaia_logo.jpeg') }}" class="card-img-top" alt="Company Logo">
                             <div class="card-body">
-                              <h5 class="card-title">Sadaia</h5>
-                              <p class="card-text">Business Analyst</p>
-                              <p class="card-text"><strong>Duration:</strong> 3 Months</p>
+                              <h5 class="card-title">{{ opportunity.company.CompName }}</h5>
+                              <p class="card-text">{{ opportunity.OppJobTitle }}</p>
+                              <p class="card-text"><strong>Duration:</strong> {{ opportunity.OppDuration }} Months</p>
                               <p class="card-text"><strong>Status:</strong> Open</p>
-                              <a href="#" class="more-details-link" data-bs-toggle="modal" data-bs-target="#detailsModal"data-id="2">More Details</a>
+                              <!-- Corrected data-bs-target -->
+                              <a href="#" class="more-details-link" data-bs-toggle="modal" data-bs-target="#detailsModal{{ opportunity.id }}">More Details</a>
                             </div>
                           </div>
                         </div>
-                        <div class="col-md-3 mb-3">
-                          <div class="card custom-card-size">
-                            <img src="{{ url_for('static', filename='images/sdaia_logo.jpeg') }}" class="card-img-top" alt="Sadaia Logo">
-                            <div class="card-body">
-                              <h5 class="card-title">Sadaia</h5>
-                              <p class="card-text">Business Analyst</p>
-                              <p class="card-text"><strong>Duration:</strong> 3 Months</p>
-                              <p class="card-text"><strong>Status:</strong> Open</p>
-                              <a href="#" class="more-details-link" data-bs-toggle="modal" data-bs-target="#detailsModal"data-id="3">More Details</a>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                          <div class="card custom-card-size">
-                            <img src="{{ url_for('static', filename='images/sdaia_logo.jpeg') }}" class="card-img-top" alt="Sadaia Logo">
-                            <div class="card-body">
-                              <h5 class="card-title">Sadaia</h5>
-                              <p class="card-text">Business Analyst</p>
-                              <p class="card-text"><strong>Duration:</strong> 3 Months</p>
-                              <p class="card-text"><strong>Status:</strong> Open</p>
-                              <a href="#" class="more-details-link" data-bs-toggle="modal" data-bs-target="#detailsModal"data-id="4">More Details</a>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <!-- Example Card -->
-                        <div class="col-md-3 mb-3">
-                          <div class="card custom-card-size">
-                            <img src="{{ url_for('static', filename='images/sdaia_logo.jpeg') }}" class="card-img-top" alt="Sadaia Logo">
-                            <div class="card-body">
-                              <h5 class="card-title">Sadaia</h5>
-                              <p class="card-text">Business Analyst</p>
-                              <p class="card-text"><strong>Duration:</strong> 3 Months</p>
-                              <p class="card-text"><strong>Status:</strong> Open</p>
-                              <a href="#" class="more-details-link" data-bs-toggle="modal" data-bs-target="#detailsModal" data-id="5">More Details</a>
-                            </div>
-                          </div>
-                        </div>
-                        <!-- Repeat cards as needed -->
-                        <div class="col-md-3 mb-3">
-                          <div class="card custom-card-size">
-                            <img src="{{ url_for('static', filename='images/sdaia_logo.jpeg') }}" class="card-img-top" alt="Sadaia Logo">
-                            <div class="card-body">
-                              <h5 class="card-title">Sadaia</h5>
-                              <p class="card-text">Business Analyst</p>
-                              <p class="card-text"><strong>Duration:</strong> 3 Months</p>
-                              <p class="card-text"><strong>Status:</strong> Open</p>
-                              <a href="#" class="more-details-link" data-bs-toggle="modal" data-bs-target="#detailsModal" data-id="6">More Details</a>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                          <div class="card custom-card-size">
-                            <img src="{{ url_for('static', filename='images/sdaia_logo.jpeg') }}" class="card-img-top" alt="Sadaia Logo">
-                            <div class="card-body">
-                              <h5 class="card-title">Sadaia</h5>
-                              <p class="card-text">Business Analyst</p>
-                              <p class="card-text"><strong>Duration:</strong> 3 Months</p>
-                              <p class="card-text"><strong>Status:</strong> Open</p>
-                              <a href="#" class="more-details-link" data-bs-toggle="modal" data-bs-target="#detailsModal"data-id="7">More Details</a>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                          <div class="card custom-card-size">
-                            <img src="{{ url_for('static', filename='images/sdaia_logo.jpeg') }}" class="card-img-top" alt="Sadaia Logo">
-                            <div class="card-body">
-                              <h5 class="card-title">Sadaia</h5>
-                              <p class="card-text">Business Analyst</p>
-                              <p class="card-text"><strong>Duration:</strong> 3 Months</p>
-                              <p class="card-text"><strong>Status:</strong> Open</p>
-                              <a href="#" class="more-details-link" data-bs-toggle="modal" data-bs-target="#detailsModal"data-id="8">More Details</a>
-                            </div>
-                          </div>
-                        </div>
+                        {% endfor %}
                       </div>
                     </div>
+                    
                     <!-- END TABLE RESULT -->
 
                   </div>
@@ -235,43 +146,29 @@
   </div>
 </section>
 
-<!-- Modal for More Details -->
-<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+<!-- Modals for More Details -->
+{% for opportunity in opportunities %}
+<div class="modal fade" id="detailsModal{{ opportunity.id }}" tabindex="-1" aria-labelledby="detailsModalLabel{{ opportunity.id }}" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="detailsModalLabel">Job Details</h5>
+        <h5 class="modal-title" id="detailsModalLabel{{ opportunity.id }}">Job Details</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <!-- Content for job details goes here -->
-        <p><strong>Job Title:</strong> Business Analyst</p>
-        <p><strong>Description:</strong> Business Analyst role involving market research, analysis, and project management.</p>
-        <p><strong>Responsibilities:</strong></p>
-        <ul>
-            <li>Work with stakeholders to gather and document requirements.</li>
-            <li>Analyze business processes and suggest improvements.</li>
-            <li>Collaborate with teams to design effective solutions.</li>
-            <li>Create and maintain project documentation.</li>
-        </ul>
-        
-        <p><strong>Qualifications:</strong></p>
-        <ul>
-            <li>Bachelor's degree in a relevant field.</li>
-            <li>1+ years of experience as a Business Analyst.</li>
-            <li>Strong analytical and communication skills.</li>
-        </ul>
-        <p><strong>Duration:</strong> 3 Months</p>
+        <p><strong>Job Title:</strong> {{ opportunity.OppJobTitle }}</p>
+        <p><strong>Description:</strong> {{ opportunity.OppJobDesc }}</p>
+        <p><strong>Duration:</strong> {{ opportunity.OppDuration }} Months</p>
         <p><strong>Status:</strong> Open</p>
-        <!-- Add more detailed content as needed -->
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <a href="#" class="btn btn-primary apply-btn" data-id="">Apply</a>
+        <a href="#" class="btn btn-primary apply-btn" data-id="{{ opportunity.id }}">Apply</a>
       </div>
     </div>
   </div>
 </div>
+{% endfor %}
 
 <footer id="footer">
   <i class="social-icon fa-brands fa-twitter"></i>
