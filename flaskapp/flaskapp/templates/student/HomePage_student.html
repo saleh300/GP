@@ -52,14 +52,14 @@
 
     <div class="welcome">
       <p>
-        Welcome, <strong>
-        {% if student %}
-            {{ student['StFName'] }} {{ student['StLName'] }}
-        {% else %}
-            No user found.
-        {% endif %}
-        </strong>
-    </p>
+          Welcome, <strong>
+          {% if session['company'] %}
+              {{ session['company']['CompName'] }}
+          {% else %}
+              No user found.
+          {% endif %}
+          </strong>
+      </p>
   </div>
 
     <!-- Title -->

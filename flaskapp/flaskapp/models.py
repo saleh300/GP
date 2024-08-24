@@ -79,7 +79,12 @@ class Company(db.Model):
     CompPic = db.Column(db.String(200), nullable=True)
     CompPass = db.Column(db.String(100), nullable=False)
 
+    # New columns
+    CompFile = db.Column(db.String(100), nullable=False)
+    verify = db.Column(db.Boolean, nullable=True, default=False)
+
     opportunities = db.relationship('Opportunity', backref='company', lazy=True)
+
 
 
 

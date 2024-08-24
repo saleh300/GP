@@ -1,5 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request, flash, session
 from flask_sqlalchemy import SQLAlchemy
+import os
+from werkzeug.utils import secure_filename
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_migrate import Migrate
@@ -12,6 +14,13 @@ app.secret_key = 'aoun_for_now'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///aoun.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+# Upload folder configuration
+app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'uploads')  # Use os.getcwd() to get the current working directory
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  
+
+# Ensure the uploads folder exists
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
 
 
 # Initialize the database with the app
@@ -95,6 +104,9 @@ def sign_up_company():
 
 @app.route('/HomePage_company')
 def HomePage_company():
+    if 'company' not in session:
+        flash('Please log in to access this page.', 'danger')
+        return redirect(url_for('HomePage'))
     return render_template('company/HomePage_company.html')
 
 @app.route('/comp_profile')
@@ -200,16 +212,29 @@ def company_registration():
     Company_name = request.form.get('CoName')
     Company_email = request.form.get('CoEmail')
     Company_Pass = request.form.get('CoPass')
-    Company_file = request.form.get('CoFile') # training Schedule file
+    Company_file = request.files.get('CoFile')  # Use request.files to handle file uploads
 
-    # Insert into database (logic not shown in your original code)
-    # Insert into database
-    new_student = Student(
-        CompName=Company_name,
-        CompEmail=Company_email,
-        CompPass=Company_Pass,
-        StPassword=Company_file
-    )
+    if Company_file:
+        filename = secure_filename(Company_file.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        Company_file.save(file_path)
+
+        # Insert into the database
+        new_company = Company(
+            CompName=Company_name,
+            CompEmail=Company_email,
+            CompPass=Company_Pass,
+            CompFile=filename
+        )
+        db.session.add(new_company)
+        db.session.commit()
+
+        flash(f"Account created successfully for {Company_name}", 'success')
+    else:
+        flash("Error: File upload failed or no file provided.", 'danger')
+
+    return redirect(url_for('HomePage'))
+
 
 
 @app.route('/login', methods=['POST'])
@@ -221,7 +246,7 @@ def login():
     if role == 'student':
         user = Student.query.filter_by(StEmail=email).first()
         if user and user.StPassword == password:
-             # Store necessary user information in the session
+            # Store necessary user information in the session
             session['student'] = {
                 'StudentID': user.StudentID,
                 'StFName': user.StFName,
@@ -233,12 +258,20 @@ def login():
             flash('Invalid credentials for student, please try again.')
             return redirect(url_for('HomePage'))
 
-
-
     elif role == 'company':
         user = Company.query.filter_by(CompEmail=email).first()
         if user and user.CompPass == password:
-            return redirect(url_for('HomePage_company'))
+            if user.verify:
+                # Store necessary user information in the session (if needed)
+                session['company'] = {
+                    'CompanyID': user.id,
+                    'CompName': user.CompName,
+                    'CompEmail': user.CompEmail
+                }
+                return redirect(url_for('HomePage_company'))
+            else:
+                flash('Your account is under review. Please wait for verification.', 'warning')
+                return redirect(url_for('HomePage'))
         else:
             flash('Invalid credentials for company, please try again.')
             return redirect(url_for('HomePage'))
@@ -247,12 +280,15 @@ def login():
         flash('Invalid role selected.')
         return redirect(url_for('HomePage'))
 
+
 @app.route('/logout')
 def logout():
-    session.pop('student', None)  # Remove student data from session
+    # Remove student and company data from the session
+    session.pop('student', None)
+    session.pop('company', None)
+    
     flash('You have been logged out.', 'info')
     return redirect(url_for('HomePage'))
-
 
 if __name__ == '__main__':
     app.run(debug=True)

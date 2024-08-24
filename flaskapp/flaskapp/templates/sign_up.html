@@ -35,14 +35,16 @@
         </select>
         
         <!-- Company Form -->
-        <form id="companyForm" action="{{ url_for('company_registration') }}"  style="display:none;" method="POST">
-            <input type="text" id="CoName" placeholder="Company Name" required>
-            <input type="email" id="CoEmail" placeholder="Email Address" required>
-            <input type="password" id="CoPass" placeholder="Password" required>
+        <form id="companyForm" action="{{ url_for('company_registration') }}" style="display:none;" method="POST" enctype="multipart/form-data">
+            <input type="text" id="CoName" name="CoName" placeholder="Company Name" required>
+            <input type="email" id="CoEmail" name="CoEmail" placeholder="Email Address" required>
+            <input type="password" id="CoPass" name="CoPass" placeholder="Password" required>
             <p class="training">Training Schedule File:</p>
-            <input type="file" id="CoFile" required>
+            <input type="file" id="CoFile" name="CoFile" required>
             <button type="submit">Create Account</button>
         </form>
+
+
         
         <!-- Faculty Form -->
         <form id="facultyForm" style="display:none;">
