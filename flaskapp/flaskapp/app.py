@@ -2,6 +2,7 @@ from flask import Flask, render_template, redirect, url_for, request, flash, ses
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+from flask_migrate import Migrate
 from datetime import datetime
 from models import db, Student, Certificate, Project, Opportunity, Company, Faculty, Apply, Assigned, Experience
 
@@ -11,8 +12,12 @@ app.secret_key = 'aoun_for_now'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///aoun.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+
+
 # Initialize the database with the app
 db.init_app(app)
+
+migrate = Migrate(app, db)
 
 # Create tables (run once)
 with app.app_context():
@@ -69,6 +74,7 @@ def profile():
 
     return render_template('student/profile.html', student=student, certificates=certificates, experiences=experiences, projects=projects)
 
+
 @app.route('/appliaction')
 def appliaction():
     return render_template('student/appliaction.html')
@@ -118,12 +124,9 @@ def student_registration():
     db.session.add(new_student)
     db.session.commit()
 
-    flash(f"Account created successfully for {first_name}")
+    flash(f"Account created successfully for {first_name}",  'success')
 
-    # Query the students
-    students = Student.query.all()
-    for student in students:
-        print(student)
+
  
     # Redirect to a success page or back to the form
     return redirect(url_for('HomePage'))
@@ -184,9 +187,9 @@ def update_profile():
             db.session.add(new_experience)
 
         db.session.commit()
-        flash('Profile updated successfully!')
+        flash('Profile updated successfully!', 'success')
     else:
-        flash('Error: Profile could not be updated.')
+        flash('Error: Profile could not be updated.', 'danger')
 
     return redirect(url_for('profile'))
 
@@ -243,6 +246,12 @@ def login():
     else:
         flash('Invalid role selected.')
         return redirect(url_for('HomePage'))
+
+@app.route('/logout')
+def logout():
+    session.pop('student', None)  # Remove student data from session
+    flash('You have been logged out.', 'info')
+    return redirect(url_for('HomePage'))
 
 
 if __name__ == '__main__':

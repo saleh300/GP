@@ -4,30 +4,19 @@
 <head>
   <meta charset="utf-8">
   <title>AOUN</title>
-
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,900;1,900&family=Ubuntu&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/student/stu_profile.css') }}">
-
-
-
-
-<script src="https://kit.fontawesome.com/6503ba7c64.js" crossorigin="anonymous"></script>
-
+  <script src="https://kit.fontawesome.com/6503ba7c64.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
 </head>
 
 <body>
-
-
-    <section id="title">
-      <div class="container-fluid">
-
+  <section id="title">
+    <div class="container-fluid">
       <!-- Nav Bar -->
-
       <nav class="navbar navbar-expand-lg navbar-dark ">
         <a class="navbar-brand" href="{{ url_for('HomePage') }}">AOUN</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,190 +25,226 @@
         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('HomePage_student') }}">Home</a>
-              </li>
+              <a class="nav-link" href="{{ url_for('HomePage_student') }}">Home</a>
+            </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('profile') }}">Profile</a>
-              </li>
-
-              <li class="nav-item">
-                  <a class="nav-link" href="{{ url_for('doucment') }}">Documents</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="{{ url_for('appliaction') }}">Appliactions</a>
+              <a class="nav-link" href="{{ url_for('profile') }}">Profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('doucment') }}">Documents</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('appliaction') }}">Appliactions</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('logout') }}"><i class="fa-solid fa-right-from-bracket" style="color: #000000;"></i>
+                </a>
               </li>
           </ul>
         </div>
-
       </nav>
 
       <!-- Title -->
       <hr class="styled-hr">
+      <!-- Flash Message -->
+      <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="alert alert-{{ messages[0][0] }} alert-dismissible fade show" role="alert">
+          {{ messages[0][1] }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        {% endwith %}
+      </div>
 
       <div class="row">
         <div class="container rounded bg-white mt-5 mb-5">
           <form method="POST" action="{{ url_for('update_profile') }}">
             <div class="row">
-                <div class="col-md-3 border-right">
-                    <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                        <img class="rounded-circle mt-5" width="150px" src="{{ url_for('static', filename='images/' + student.StPic) }}">
-                        <span class="font-weight-bold">{{ student.StFName }}</span>
-                        <span class="text-black-50">{{ student.StEmail }}</span>
-                    </div>
+              <div class="col-md-3 border-right">
+                <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                  <img class="rounded-circle mt-5" width="150px" src="{{ url_for('static', filename='images/' + student.StPic) }}">
+                  <span class="font-weight-bold">{{ student.StFName }}</span>
+                  <span class="text-black-50">{{ student.StEmail }}</span>
                 </div>
-                <div class="col-md-5 border-right">
-                    <div class="p-3 py-5">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h4 class="text-right">Profile Settings</h4>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-6">
-                                <label class="labels">First Name</label>
-                                <input type="text" name="StFName" class="form-control" placeholder="First Name" value="{{ student.StFName }}" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="labels">Last Name</label>
-                                <input type="text" name="StLName" class="form-control" placeholder="Last Name" value="{{ student.StLName }}" required>
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-md-12">
-                                <label class="labels">Student ID</label>
-                                <input type="text" name="StudentID" class="form-control" placeholder="Student ID" value="{{ student.StudentID }}" readonly>
-                            </div>
-                            <div class="col-md-12">
-                                <label class="labels">Mobile Number</label>
-                                <input type="text" name="StPhNum" class="form-control" placeholder="Mobile Number" value="{{ student.StPhNum }}">
-                            </div>
-                            <div class="col-md-12">
-                                <label class="labels">City</label>
-                                <input type="text" name="StCity" class="form-control" placeholder="City" value="{{ student.StCity }}">
-                            </div>
-                            <div class="col-md-12">
-                                <label class="labels">Email</label>
-                                <input type="email" name="StEmail" class="form-control" placeholder="Email" value="{{ student.StEmail }}" required>
-                            </div>
-                            <div class="col-md-12">
-                                <label class="labels">Major</label>
-                                <input type="text" name="Major" class="form-control" placeholder="Major" value="{{ student.Major }}">
-                            </div>
-                            <div class="col-md-12">
-                                <label class="labels">GPA</label>
-                                <input type="text" name="GPA" class="form-control" placeholder="GPA" value="{{ student.GPA }}">
-                            </div>
-                            <div class="col-md-12">
-                                <label class="labels">Interest</label>
-                                <input type="text" name="Interest" class="form-control" placeholder="Interest" value="{{ student.Interest }}">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                  <!-- Certificates Section -->
-                  <div class="p-3 py-5">
-                      <div class="d-flex justify-content-between align-items-center experience">
-                          <span>Edit Certificates</span>
-                          <span class="border px-3 p-1 add-experience">
-                              <i class="fa fa-plus"></i>&nbsp;Certificate
-                          </span>
-                      </div>
-                      <br>
-                      <div class="col-md-12">
-                          <label class="labels">Certificate Name</label>
-                          <input type="text" name="StuCert" class="form-control" placeholder="Certificate" value="">
-                      </div>
-                      <br>
-                      <div class="col-md-12">
-                          <label class="labels">Additional Details</label>
-                          <input type="text" name="CertDet" class="form-control" placeholder="Additional details" value="">
-                      </div>
-                  </div>
-              
-                  <!-- Experience Section -->
-                  <div class="p-3 py-5">
-                      <div class="d-flex justify-content-between align-items-center experience">
-                          <span>Edit Experience</span>
-                          <span class="border px-3 p-1 add-experience">
-                              <i class="fa fa-plus"></i>&nbsp;Experience
-                          </span>
-                      </div>
-                      <br>
-                      <div class="col-md-12">
-                          <label class="labels">Position Name</label>
-                          <input type="text" name="PositionName" class="form-control" placeholder="Position Name" value="">
-                      </div>
-                      <div class="col-md-12">
-                          <label class="labels">Company Name</label>
-                          <input type="text" name="CompanyName" class="form-control" placeholder="Company Name" value="">
-                      </div>
-                      <div class="col-md-6">
-                          <label class="labels">Start Date</label>
-                          <input type="date" name="StartDate" class="form-control" placeholder="Start Date" value="">
-                      </div>
-                      <div class="col-md-6">
-                          <label class="labels">End Date</label>
-                          <input type="date" name="EndDate" class="form-control" placeholder="End Date" value="">
-                      </div>
-                      <div class="col-md-6">
-                          <div class="form-check">
-                              <label class="form-check-label" for="currentlyWorking">Or currently working</label>
-                              <input type="checkbox" name="currentlyWorking" class="form-check-input" id="currentlyWorking">
-                          </div>
-                      </div>
-                  </div>
-              
-                  <!-- Projects Section -->
-                  <div class="p-3 py-5">
-                      <div class="d-flex justify-content-between align-items-center experience">
-                          <span>Edit Projects</span>
-                          <span class="border px-3 p-1 add-project">
-                              <i class="fa fa-plus"></i>&nbsp;Projects
-                          </span>
-                      </div>
-                      <br>
-                      <div class="col-md-12">
-                          <label class="labels">Project Name</label>
-                          <input type="text" name="ProjectName" class="form-control" placeholder="Project Name" value="">
-                      </div>
-                      <br>
-                      <div class="col-md-12">
-                          <label class="labels">Project Description</label>
-                          <input type="text" name="ProjectDescription" class="form-control" placeholder="Project Description" value="">
-                      </div>
-                  </div>
               </div>
-              
-                <div class="mt-5 text-center">
-                    <button class="btn btn-primary profile-button" type="submit">Save Profile</button>
+              <div class="col-md-5 border-right">
+                <div class="p-3 py-5">
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-right">Profile Settings</h4>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-md-6">
+                      <label class="labels">First Name</label>
+                      <input type="text" name="StFName" class="form-control" placeholder="First Name" value="{{ student.StFName or '' }}" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="labels">Last Name</label>
+                      <input type="text" name="StLName" class="form-control" placeholder="Last Name" value="{{ student.StLName or '' }}" required>
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-md-12">
+                      <label class="labels">Student ID</label>
+                      <input type="text" name="StudentID" class="form-control" placeholder="Student ID" value="{{ student.StudentID or '' }}" readonly>
+                    </div>
+                    <div class="col-md-12">
+                      <label class="labels">Mobile Number</label>
+                      <input type="text" name="StPhNum" class="form-control" placeholder="Mobile Number" value="{{ student.StPhNum or '' }}">
+                    </div>
+                    <div class="col-md-12">
+                      <label class="labels">City</label>
+                      <input type="text" name="StCity" class="form-control" placeholder="City" value="{{ student.StCity or '' }}">
+                    </div>
+                    <div class="col-md-12">
+                      <label class="labels">Email</label>
+                      <input type="email" name="StEmail" class="form-control" placeholder="Email" value="{{ student.StEmail or '' }}" required>
+                    </div>
+                    <div class="col-md-12">
+                      <label class="labels">Major</label>
+                      <input type="text" name="Major" class="form-control" placeholder="Major" value="{{ student.Major or '' }}">
+                    </div>
+                    <div class="col-md-12">
+                      <label class="labels">GPA</label>
+                      <input type="text" name="GPA" class="form-control" placeholder="GPA" value="{{ student.GPA or '' }}">
+                    </div>
+                    <div class="col-md-12">
+                      <label class="labels">Interest</label>
+                      <input type="text" name="Interest" class="form-control" placeholder="Interest" value="{{ student.Interest or '' }}">
+                    </div>
+                  </div>
                 </div>
+              </div>
+              <div class="col-md-4">
+                <!-- Certificates Section -->
+                <div class="p-3 py-5">
+                  <div class="d-flex justify-content-between align-items-center experience">
+                    <span>Edit Certificates</span>
+                    <span class="border px-3 p-1 add-experience">
+                      <i class="fa fa-plus"></i>&nbsp;Certificate
+                    </span>
+                  </div>
+                  <br>
+                  <div class="col-md-12">
+                    <label class="labels">Certificate Name</label>
+                    <input type="text" name="StuCert" class="form-control" placeholder="Certificate" value="">
+                  </div>
+                  <br>
+                  <div class="col-md-12">
+                    <label class="labels">Additional Details</label>
+                    <input type="text" name="CertDet" class="form-control" placeholder="Additional details" value="">
+                  </div>
+
+                  <!-- Display Certificates -->
+                  {% if certificates %}
+                  <h5 class="mt-3">Your Certificates</h5>
+                  <ul class="list-group">
+                    {% for certificate in certificates %}
+                    <li class="list-group-item">
+                      <strong>{{ certificate.CerName }}</strong><br>
+                      <small>{{ certificate.CerDetails }}</small>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                  {% endif %}
+                </div>
+
+                <!-- Experience Section -->
+                <div class="p-3 py-5">
+                  <div class="d-flex justify-content-between align-items-center experience">
+                    <span>Edit Experience</span>
+                    <span class="border px-3 p-1 add-experience">
+                      <i class="fa fa-plus"></i>&nbsp;Experience
+                    </span>
+                  </div>
+                  <br>
+                  <div class="col-md-12">
+                    <label class="labels">Position Name</label>
+                    <input type="text" name="PositionName" class="form-control" placeholder="Position Name" value="">
+                  </div>
+                  <div class="col-md-12">
+                    <label class="labels">Company Name</label>
+                    <input type="text" name="CompanyName" class="form-control" placeholder="Company Name" value="">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="labels">Start Date</label>
+                    <input type="date" name="StartDate" class="form-control" placeholder="Start Date" value="">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="labels">End Date</label>
+                    <input type="date" name="EndDate" class="form-control" placeholder="End Date" value="">
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-check">
+                      <label class="form-check-label" for="currentlyWorking">Or currently working</label>
+                      <input type="checkbox" name="currentlyWorking" class="form-check-input" id="currentlyWorking">
+                    </div>
+                  </div>
+
+                  <!-- Display Experiences -->
+                  {% if experiences %}
+                  <h5 class="mt-3">Your Experiences</h5>
+                  <ul class="list-group">
+                    {% for experience in experiences %}
+                    <li class="list-group-item">
+                      <strong>{{ experience.ExpPosition }}</strong> at <strong>{{ experience.ExpCompName }}</strong><br>
+                      <small>From: {{ experience.StartDate.strftime('%Y-%m-%d') }} To: {{ experience.EndDate.strftime('%Y-%m-%d') if experience.EndDate else 'Currently working' }}</small>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                  {% endif %}
+                </div>
+
+                <!-- Projects Section -->
+                <div class="p-3 py-5">
+                  <div class="d-flex justify-content-between align-items-center experience">
+                    <span>Edit Projects</span>
+                    <span class="border px-3 p-1 add-project">
+                      <i class="fa fa-plus"></i>&nbsp;Projects
+                    </span>
+                  </div>
+                  <br>
+                  <div class="col-md-12">
+                    <label class="labels">Project Name</label>
+                    <input type="text" name="ProjectName" class="form-control" placeholder="Project Name" value="">
+                  </div>
+                  <br>
+                  <div class="col-md-12">
+                    <label class="labels">Project Description</label>
+                    <input type="text" name="ProjectDescription" class="form-control" placeholder="Project Description" value="">
+                  </div>
+
+                  <!-- Display Projects -->
+                  {% if projects %}
+                  <h5 class="mt-3">Your Projects</h5>
+                  <ul class="list-group">
+                    {% for project in projects %}
+                    <li class="list-group-item">
+                      <strong>{{ project.ProjName }}</strong><br>
+                      <small>{{ project.ProjDesc }}</small>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="mt-5 text-center">
+                <button class="btn btn-primary profile-button" type="submit">Save Profile</button>
+              </div>
             </div>
-        </form>
-        
-        
-            
+          </form>
         </div>
-        
-        </div>
-        </div>
-
       </div>
-
-  </div>
+    </div>
   </section>
 
-  
   <footer id="footer">
-
-
-      <i class="soical-icon fa-brands fa-twitter"></i>
-      <i class="soical-icon fa-solid fa-envelope"></i>
-
-
+    <i class="soical-icon fa-brands fa-twitter"></i>
+    <i class="soical-icon fa-solid fa-envelope"></i>
     <p>© Copyright 2024 AOUN</p>
-
   </footer>
-
-
 </body>
 
 </html>
