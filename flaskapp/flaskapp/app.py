@@ -105,6 +105,37 @@ def doucment():
 def sign_up_faculty():
     return render_template('faculty/sign_up_faculty.html')
 
+@app.route('/faculty/homepage')
+def faculty_homepage():
+    if 'faculty' not in session:
+        flash('Please log in to access the faculty portal.', 'warning')
+        return redirect(url_for('login'))
+    return render_template('faculty/faculty_homepage.html')
+
+@app.route('/faculty/profile')
+def faculty_profile():
+    if 'faculty' not in session:
+        flash('Please log in to access the faculty portal.', 'warning')
+        return redirect(url_for('login'))
+    # Fetch faculty details from the database if needed
+    return render_template('faculty/faculty_profile.html')
+
+@app.route('/faculty/students')
+def faculty_students():
+    if 'faculty' not in session:
+        flash('Please log in to access the faculty portal.', 'warning')
+        return redirect(url_for('login'))
+    # Fetch the list of students or relevant data
+    return render_template('faculty/faculty_students.html')
+
+@app.route('/faculty/documents')
+def faculty_documents():
+    if 'faculty' not in session:
+        flash('Please log in to access the faculty portal.', 'warning')
+        return redirect(url_for('login'))
+    # Fetch documents or relevant data
+    return render_template('faculty/faculty_documents.html')
+
 # company section
 @app.route('/sign_up_company')
 def sign_up_company():
@@ -264,6 +295,28 @@ def company_registration():
 
     return redirect(url_for('HomePage'))
 
+@app.route('/update_company_profile', methods=['POST'])
+def update_company_profile():
+    company_id = session.get('company').get('CompanyID')
+    company = Company.query.filter_by(id=company_id).first()
+
+    if company:
+        # Update company information
+        company.CompName = request.form['CompName']
+        company.CompEmail = request.form['CompEmail']
+        company.CompCity = request.form['CompCity']
+        company.CompNum = request.form['CompNum']  # Corrected this line
+        company.CompWebsite = request.form['CompWebsite']
+        company.CompIndustry = request.form['CompIndustry']
+
+        db.session.commit()
+        flash('Company profile updated successfully!', 'success')
+    else:
+        flash('Error: Company profile could not be updated.', 'danger')
+
+    return redirect(url_for('comp_profile'))
+
+
 @app.route('/offer_coop', methods=['POST'])
 def offer_coop():
     # Retrieve data from the form
@@ -322,11 +375,42 @@ def add_trainer():
     flash(f"Trainer {first_name} {last_name} added successfully!", 'success')
 
     # Redirect to a success page or back to the form
-    return redirect(url_for('HomePage_company'))
+    return redirect(url_for('comp_profile'))
 
 
 
 #-------------------------> end company route <--------------------------------- 
+
+#-------------------------> start faculty route <--------------------------------- 
+
+@app.route('/register-faculty', methods=['POST'])
+def register_faculty():
+    if request.method == 'POST':
+        try:
+            # Get form data
+            FacFName = request.form['FacFName']
+            FacLName = request.form['FacLName']
+            FacEmail = request.form['FacEmail']
+            FacID = request.form['FacID']
+            FacPass = request.form['FacPass']
+
+            # Create a new Faculty object
+            new_faculty = Faculty(FacID=FacID, FacFName=FacFName, FacLName=FacLName, FacEmail=FacEmail, FacPass=FacPass)
+
+            print(new_faculty)  # For debugging
+
+            # Add to the database
+            db.session.add(new_faculty)
+            db.session.commit()
+
+            flash('Faculty account created successfully!', 'success')
+            return redirect(url_for('HomePage'))
+        
+        except Exception as e:
+            db.session.rollback()
+            print(f'Error: {str(e)}')  # For debugging
+            flash(f'An error occurred: {str(e)}', 'danger')
+            return redirect(url_for('HomePage'))
 
 
 #-------------------------> strat Login - logout route <--------------------------------- 
@@ -383,9 +467,25 @@ def login():
         else:
             flash('Invalid credentials for trainer, please try again.')
             return redirect(url_for('HomePage'))
+
+    elif role == 'faculty':  # Handle Faculty login
+        user = Faculty.query.filter_by(FacEmail=email).first()
+        if user and user.FacPass == password:
+            session['faculty'] = {
+                'FacID': user.FacID,
+                'FacFName': user.FacFName,
+                'FacLName': user.FacLName,
+                'FacEmail': user.FacEmail
+            }
+            return redirect(url_for('faculty_homepage'))  # You'll need to create this route and template
+        else:
+            flash('Invalid credentials for faculty, please try again.')
+            return redirect(url_for('HomePage'))
+
     else:
         flash('Invalid role selected.')
         return redirect(url_for('HomePage'))
+
 
 
 @app.route('/logout')
@@ -394,6 +494,7 @@ def logout():
     session.pop('student', None)
     session.pop('company', None)
     session.pop('trainer', None)
+    session.pop('faculty', None)
     
     flash('You have been logged out.', 'info')
     return redirect(url_for('HomePage'))

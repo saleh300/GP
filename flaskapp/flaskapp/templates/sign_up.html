@@ -46,15 +46,16 @@
 
 
         
-        <!-- Faculty Form -->
-        <form id="facultyForm" style="display:none;">
-            <input type="text" placeholder="First Name" required>
-            <input type="text" placeholder="Last Name" required>
-            <input type="email" placeholder="Email Address" required>
-            <input type="text" placeholder="Faculty ID" required>
-            <input type="password" placeholder="Password" required>
+    <!-- Faculty Form -->
+        <form id="facultyForm" method="POST" action="/register-faculty" style="display:none;">
+            <input type="text" name="FacFName" placeholder="First Name" required>
+            <input type="text" name="FacLName" placeholder="Last Name" required>
+            <input type="email" name="FacEmail" placeholder="Email Address" required>
+            <input type="text" name="FacID" placeholder="Faculty ID" required>
+            <input type="password" name="FacPass" placeholder="Password" required>
             <button type="submit">Create Account</button>
         </form>
+
 
         <!-- Student Form -->
         <form id="studentForm" action="{{ url_for('student_registration') }}" method="POST"  style="display:none;">
