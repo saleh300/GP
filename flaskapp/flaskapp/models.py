@@ -17,9 +17,10 @@ class Student(db.Model):
     Major = db.Column(db.String(50), nullable=True)
     Interest = db.Column(db.String(100), nullable=True)
     StPassword = db.Column(db.String(100), nullable=False)
+    
+    faculty_id = db.Column(db.Integer, db.ForeignKey('faculty.FacID'), nullable=True)  # Foreign key to Faculty
+    faculty = db.relationship('Faculty', backref='students')  # Relationship to Faculty
 
-
-     
     def __repr__(self):
         return (f'<Student ID: {self.StudentID}, '
                 f'First Name: {self.StFName}, '
@@ -30,6 +31,7 @@ class Student(db.Model):
     certificates = db.relationship('Certificate', backref='student', lazy=True)
     projects = db.relationship('Project', backref='student', lazy=True)
     applications = db.relationship('Apply', backref='student', lazy=True)
+
 
 
 class Certificate(db.Model):
@@ -136,3 +138,26 @@ class Assigned(db.Model):
     faculty = db.relationship('Faculty', backref='faculty_assigned', lazy=True)  # Renamed backref
     trainer = db.relationship('Trainer', backref='trainer_assignments', lazy=True)  # Renamed backref
     opportunity = db.relationship('Opportunity', backref='opportunity_assigned', lazy=True)  # Renamed backref
+
+class Document(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    doc_name = db.Column(db.String(100), nullable=False)
+    doc_path = db.Column(db.String(200), nullable=False)  # Path to the uploaded file
+    upload_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    approved_by_trainer = db.Column(db.Boolean, nullable=False, default=False)
+    approved_date = db.Column(db.DateTime, nullable=True)
+    
+    student_id = db.Column(db.Integer, db.ForeignKey('student.StudentID'), nullable=False)
+    trainer_id = db.Column(db.Integer, db.ForeignKey('trainer.TrainerID'), nullable=False)
+    faculty_id = db.Column(db.Integer, db.ForeignKey('faculty.FacID'), nullable=True)
+    
+    # Relationships
+    student = db.relationship('Student', backref='documents', lazy=True)
+    trainer = db.relationship('Trainer', backref='trainer_documents', lazy=True)
+    faculty = db.relationship('Faculty', backref='faculty_documents', lazy=True)
+
+    def __repr__(self):
+        return (f'<Document ID: {self.id}, '
+                f'Document Name: {self.doc_name}, '
+                f'Uploaded By: {self.student_id}, '
+                f'Approved By Trainer: {self.approved_by_trainer}>')

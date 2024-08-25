@@ -114,23 +114,31 @@
                     <!-- BEGIN TABLE RESULT -->
                     <div class="container">
                       <div class="row">
-                        {% for opportunity in opportunities %}
-                        <div class="col-md-3 mb-3">
-                          <div class="card custom-card-size">
-                            <img src="{{ url_for('static', filename='images/sdaia_logo.jpeg') }}" class="card-img-top" alt="Company Logo">
-                            <div class="card-body">
-                              <h5 class="card-title">{{ opportunity.company.CompName }}</h5>
-                              <p class="card-text">{{ opportunity.OppJobTitle }}</p>
-                              <p class="card-text"><strong>Duration:</strong> {{ opportunity.OppDuration }} Months</p>
-                              <p class="card-text"><strong>Status:</strong> Open</p>
-                              <!-- Corrected data-bs-target -->
-                              <a href="#" class="more-details-link" data-bs-toggle="modal" data-bs-target="#detailsModal{{ opportunity.id }}">More Details</a>
+                        {% if opportunities %}
+                          {% for opportunity in opportunities %}
+                            <div class="col-md-3 mb-3">
+                              <div class="card custom-card-size">
+                                <img src="{{ url_for('static', filename='images/sdaia_logo.jpeg') }}" class="card-img-top" alt="Company Logo">
+                                <div class="card-body">
+                                  <h5 class="card-title">{{ opportunity.company.CompName }}</h5>
+                                  <p class="card-text">{{ opportunity.OppJobTitle }}</p>
+                                  <p class="card-text"><strong>Duration:</strong> {{ opportunity.OppDuration }} Months</p>
+                                  <p class="card-text"><strong>Status:</strong> Open</p>
+                                  <a href="#" class="more-details-link" data-bs-toggle="modal" data-bs-target="#detailsModal{{ opportunity.id }}">More Details</a>
+                                </div>
+                              </div>
+                            </div>
+                          {% endfor %}
+                        {% else %}
+                          <div class="col-12">
+                            <div class="alert alert-warning text-center">
+                              No opportunities available at the moment.
                             </div>
                           </div>
-                        </div>
-                        {% endfor %}
+                        {% endif %}
                       </div>
                     </div>
+                    
                     
                     <!-- END TABLE RESULT -->
 

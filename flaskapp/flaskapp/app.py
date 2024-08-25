@@ -6,7 +6,10 @@ from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_migrate import Migrate
 from datetime import datetime
-from models import db, Student, Certificate, Project, Opportunity, Company, Faculty, Apply, Assigned, Experience, Trainer
+from models import db, Student, Certificate, Project, Opportunity, Company, Faculty, Apply, Assigned, Experience, Trainer, Document
+from flask_admin.form import SecureForm
+from wtforms import SelectField
+
 
 app = Flask(__name__)
 app.secret_key = 'aoun_for_now'
@@ -38,8 +41,36 @@ with app.app_context():
 # Initialize Flask-Admin
 admin = Admin(app, name='Aoun Admin', template_mode='bootstrap3')
 
+
+
+
+
+
+
+class StudentAdminView(ModelView):
+    form_columns = [
+        'StudentID', 'StFName', 'StLName', 'StEmail', 
+        'StPhNum', 'StCity', 'GPA', 'StPic', 'Major', 
+        'Interest', 'StPassword', 'faculty_id'
+    ]
+    
+    def scaffold_form(self):
+        form_class = super(StudentAdminView, self).scaffold_form()
+        form_class.faculty_id = SelectField('Faculty', coerce=int)
+        return form_class
+
+    def create_form(self, obj=None):
+        form = super(StudentAdminView, self).create_form(obj)
+        form.faculty_id.choices = [(f.FacID, f"{f.FacFName} {f.FacLName}") for f in Faculty.query.all()]
+        return form
+
+    def edit_form(self, obj=None):
+        form = super(StudentAdminView, self).edit_form(obj)
+        form.faculty_id.choices = [(f.FacID, f"{f.FacFName} {f.FacLName}") for f in Faculty.query.all()]
+        return form
+    
 # Add views for your models
-admin.add_view(ModelView(Student, db.session))
+admin.add_view(StudentAdminView(Student, db.session))
 admin.add_view(ModelView(Certificate, db.session))
 admin.add_view(ModelView(Experience, db.session))
 admin.add_view(ModelView(Project, db.session))
@@ -49,8 +80,7 @@ admin.add_view(ModelView(Faculty, db.session))
 admin.add_view(ModelView(Apply, db.session))
 admin.add_view(ModelView(Assigned, db.session))
 admin.add_view(ModelView(Trainer, db.session))
-
-
+admin.add_view(ModelView(Document, db.session))
 
 
 
@@ -114,6 +144,7 @@ def faculty_homepage():
 
 @app.route('/faculty/profile')
 def faculty_profile():
+    
     if 'faculty' not in session:
         flash('Please log in to access the faculty portal.', 'warning')
         return redirect(url_for('login'))

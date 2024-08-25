@@ -51,15 +51,16 @@
 
       <div class="welcome">
         <p>
-          Welcome, <strong>
-          {% if session['faculty'] %}
-            {{ session['faculty']['FacultyName'] }}
-          {% else %}
-            No user found.
-          {% endif %}
-          </strong>
+            Welcome, <strong>
+            {% if faculty %}
+                {{ faculty.FacultyName }}
+            {% else %}
+                No user found.
+            {% endif %}
+            </strong>
         </p>
-      </div>
+    </div>
+    
 
       {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
