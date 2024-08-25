@@ -65,7 +65,27 @@ class Opportunity(db.Model):
 
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)
     applications = db.relationship('Apply', backref='opportunity', lazy=True)
-    assignments = db.relationship('Assigned', backref='opportunity', lazy=True)
+    assignments = db.relationship('Assigned', backref='opportunity_assignments', lazy=True)  # Renamed backref
+
+
+
+class Trainer(db.Model):
+    TrainerID = db.Column(db.Integer, primary_key=True)
+    TraFName = db.Column(db.String(100), nullable=False)
+    TraLName = db.Column(db.String(100), nullable=False)
+    TraEmail = db.Column(db.String(100), unique=True, nullable=False)
+    TraPass = db.Column(db.String(100), nullable=False)
+    
+    # Relationship with Company (assuming a trainer is assigned by a company)
+    company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)
+    assigned_company = db.relationship('Company', backref='trainers', lazy=True)
+    
+    def __repr__(self):
+        return (f'<Trainer ID: {self.TrainerID}, '
+                f'First Name: {self.TraFName}, '
+                f'Last Name: {self.TraLName}, '
+                f'Email: {self.TraEmail}, '
+                f'Company ID: {self.company_id}>')
 
 
 class Company(db.Model):
@@ -78,12 +98,11 @@ class Company(db.Model):
     CompIndustry = db.Column(db.String(100), nullable=True)
     CompPic = db.Column(db.String(200), nullable=True)
     CompPass = db.Column(db.String(100), nullable=False)
-
-    # New columns
     CompFile = db.Column(db.String(100), nullable=False)
     verify = db.Column(db.Boolean, nullable=True, default=False)
 
     opportunities = db.relationship('Opportunity', backref='company', lazy=True)
+    # trainers backref is already defined in the Trainer model
 
 
 
@@ -95,7 +114,8 @@ class Faculty(db.Model):
     FacEmail = db.Column(db.String(100), nullable=False)
     FacPass = db.Column(db.String(100), nullable=False)
 
-    assignments = db.relationship('Assigned', backref='faculty', lazy=True)
+    assignments = db.relationship('Assigned', backref='faculty_assignments', lazy=True)  # Renamed backref
+
 
 
 class Apply(db.Model):
@@ -106,7 +126,13 @@ class Apply(db.Model):
 
 class Assigned(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    faculty_id = db.Column(db.Integer, db.ForeignKey('faculty.FacID'), nullable=False)
+    student_id = db.Column(db.Integer, db.ForeignKey('student.StudentID'), nullable=False)
+    faculty_id = db.Column(db.Integer, db.ForeignKey('faculty.FacID'), nullable=True)
+    trainer_id = db.Column(db.Integer, db.ForeignKey('trainer.TrainerID'), nullable=True)
     opportunity_id = db.Column(db.Integer, db.ForeignKey('opportunity.id'), nullable=False)
 
-
+    # Relationships
+    student = db.relationship('Student', backref='student_assignments', lazy=True)  # Renamed backref
+    faculty = db.relationship('Faculty', backref='faculty_assigned', lazy=True)  # Renamed backref
+    trainer = db.relationship('Trainer', backref='trainer_assignments', lazy=True)  # Renamed backref
+    opportunity = db.relationship('Opportunity', backref='opportunity_assigned', lazy=True)  # Renamed backref

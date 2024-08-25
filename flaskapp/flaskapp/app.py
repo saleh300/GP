@@ -6,7 +6,7 @@ from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_migrate import Migrate
 from datetime import datetime
-from models import db, Student, Certificate, Project, Opportunity, Company, Faculty, Apply, Assigned, Experience
+from models import db, Student, Certificate, Project, Opportunity, Company, Faculty, Apply, Assigned, Experience, Trainer
 
 app = Flask(__name__)
 app.secret_key = 'aoun_for_now'
@@ -28,6 +28,9 @@ db.init_app(app)
 
 migrate = Migrate(app, db)
 
+
+
+
 # Create tables (run once)
 with app.app_context():
     db.create_all()
@@ -45,6 +48,10 @@ admin.add_view(ModelView(Company, db.session))
 admin.add_view(ModelView(Faculty, db.session))
 admin.add_view(ModelView(Apply, db.session))
 admin.add_view(ModelView(Assigned, db.session))
+admin.add_view(ModelView(Trainer, db.session))
+
+
+
 
 
 # homePage section
@@ -110,14 +117,27 @@ def HomePage_company():
 
 @app.route('/comp_profile')
 def comp_profile():
-    return render_template('company/comp_profile.html') 
+    company_id = session.get('company').get('CompanyID')
+    company = Company.query.get(company_id)
+    
+    if not company:
+        flash('Company not found.')
+        return redirect(url_for('HomePage_company'))
+    
+    trainers = Trainer.query.filter_by(company_id=company_id).all()
+    return render_template('company/comp_profile.html',  company=company, trainers=trainers) 
+
+@app.route('/HomePage_trainer')
+def company_trainer():
+    return render_template('company/trainer.html') 
 
 @app.route('/view_documents')
 def view_documents():
     return render_template('company/view_documents.html') 
 
 
-# start student route
+
+#-------------------------> start student route <--------------------------------- 
 
 @app.route('/student_registration', methods=['POST'])
 def student_registration():
@@ -209,10 +229,11 @@ def update_profile():
     return redirect(url_for('profile'))
 
 
-# end student route
+#-------------------------> end student route <--------------------------------- 
 
 
-# start company route
+
+#-------------------------> start company route <---------------------------------
 
 @app.route('/company_registration', methods=['POST'])
 def company_registration():
@@ -274,12 +295,41 @@ def offer_coop():
 
 
 
+@app.route('/add_trainer', methods=['POST'])
+def add_trainer():
+    # Retrieve data from the form
+    first_name = request.form.get('TraFName')
+    last_name = request.form.get('TraLName')
+    email = request.form.get('TraEmail')
+    password = request.form.get('TraPass')
+    
+    # Assuming company_id is stored in the session, retrieve it
+    company_id = session.get('company').get('CompanyID')
+
+    # Insert into database
+    new_trainer = Trainer(
+        TraFName=first_name,
+        TraLName=last_name,
+        TraEmail=email,
+        TraPass=password,
+        company_id=company_id
+    )
+    
+    # Add and commit the new trainer to the database
+    db.session.add(new_trainer)
+    db.session.commit()
+
+    flash(f"Trainer {first_name} {last_name} added successfully!", 'success')
+
+    # Redirect to a success page or back to the form
+    return redirect(url_for('HomePage_company'))
 
 
-# end company route
+
+#-------------------------> end company route <--------------------------------- 
 
 
-# strat Login - logout route
+#-------------------------> strat Login - logout route <--------------------------------- 
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -319,7 +369,20 @@ def login():
         else:
             flash('Invalid credentials for company, please try again.')
             return redirect(url_for('HomePage'))
-
+    
+    elif role == 'Trainer':  # Handle Trainer login
+        user = Trainer.query.filter_by(TraEmail=email).first()
+        if user and user.TraPass == password:
+            session['trainer'] = {
+                'TrainerID': user.TrainerID,
+                'TraFName': user.TraFName,
+                'TraLName': user.TraLName,
+                'TraEmail': user.TraEmail
+            }
+            return redirect(url_for('company_trainer'))  # You'll need to create this route and template
+        else:
+            flash('Invalid credentials for trainer, please try again.')
+            return redirect(url_for('HomePage'))
     else:
         flash('Invalid role selected.')
         return redirect(url_for('HomePage'))
@@ -330,11 +393,12 @@ def logout():
     # Remove student and company data from the session
     session.pop('student', None)
     session.pop('company', None)
+    session.pop('trainer', None)
     
     flash('You have been logged out.', 'info')
     return redirect(url_for('HomePage'))
 
-# end Login - logout route
+#-------------------------> end Login - logout route <--------------------------------- 
 
 if __name__ == '__main__':
     app.run(debug=True)

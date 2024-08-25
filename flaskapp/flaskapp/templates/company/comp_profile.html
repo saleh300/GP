@@ -49,54 +49,104 @@
         <div class="row">
           <div class="col-md-3 border-right">
             <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-              <img class="rounded-circle mt-5" width="150px" src="https://via.placeholder.com/150" alt="Company Logo">
-              <span class="font-weight-bold">Company Name</span>
-              <span class="text-black-50">contact@company.com</span>
-              <span> </span>
+                <img class="rounded-circle mt-5" width="150px" src="https://via.placeholder.com/150" alt="Company Logo">
+                <span class="font-weight-bold">Company Name</span>
+                <span class="text-black-50">contact@company.com</span>
             </div>
-          </div>
-          <div class="col-md-5 border-right">
-            <div class="p-3 py-5">
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4 class="text-right">Company Information</h4>
-              </div>
-              <div class="row mt-2">
-                <div class="col-md-12">
-                  <label class="labels">Company Name</label>
-                  <input type="text" class="form-control" placeholder="Company Name" value="" required>
-                </div>
-                <div class="col-md-12">
-                  <label class="labels">Address</label>
-                  <input type="text" class="form-control" placeholder="Address" value="" required>
-                </div>
-                <div class="col-md-12">
-                  <label class="labels">Contact Number</label>
-                  <input type="text" class="form-control" placeholder="Contact Number" value="" required>
-                </div>
-                <div class="col-md-12">
-                  <label class="labels">Email</label>
-                  <input type="text" class="form-control" placeholder="Email" value="">
-                </div>
-                <div class="col-md-12">
-                  <label class="labels">Website</label>
-                  <input type="text" class="form-control" placeholder="Website" value="">
-                </div>
-                <div class="col-md-12">
-                  <label class="labels">Industry</label>
-                  <select class="form-control">
-                    <option value="">Select Industry</option>
-                    <option value="tech">Technology</option>
-                    <option value="finance">Finance</option>
-                    <!-- Add more options as needed -->
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="mt-5 text-center">
-            <button class="btn btn-primary profile-button" type="button">Save Profile</button>
-          </div>
         </div>
+
+          <div class="col-md-8 border-right">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-right">Company Information</h4>
+                </div>
+                <form >
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <label class="labels">Company Name</label>
+                            <input type="text" class="form-control" name="CompName" placeholder="Company Name" value="{{ company.CompName }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="labels">Address</label>
+                            <input type="text" class="form-control" name="CompAddress" placeholder="Address" value="{{ company.CompCity }}" required>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <label class="labels">Contact Number</label>
+                            <input type="text" class="form-control" name="CompNum" placeholder="Contact Number" value="{{ company.CompNum }}" required>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <label class="labels">Email</label>
+                            <input type="email" class="form-control" name="CompEmail" placeholder="Email" value="{{ company.CompEmail }}">
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <label class="labels">Website</label>
+                            <input type="text" class="form-control" name="CompWebsite" placeholder="Website" value="{{ company.CompWebsite }}">
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <label class="labels">Industry</label>
+                            <select class="form-control" name="CompIndustry">
+                                <option value="tech" {% if company.CompIndustry == 'tech' %}selected{% endif %}>Technology</option>
+                                <option value="finance" {% if company.CompIndustry == 'finance' %}selected{% endif %}>Finance</option>
+                                <!-- Add more options as needed -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-center">
+                        <button class="btn btn-primary profile-button" type="submit">Save Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+              <hr class="styled-hr">
+
+        <div class="col-md-4">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center experience">
+                    <h4 class="text-right">Trainers</h4>
+                    <span class="border px-3 p-1 add-experience">
+                        <i class="fa fa-plus"></i>&nbsp;Add Trainer
+                    </span>
+                </div>
+                <form action="{{ url_for('add_trainer') }}" method="POST">
+                    <div class="col-md-12">
+                        <label class="labels">First Name</label>
+                        <input type="text" name="TraFName" class="form-control" placeholder="First Name" value="" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="labels">Last Name</label>
+                        <input type="text" name="TraLName" class="form-control" placeholder="Last Name" value="" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="labels">Email</label>
+                        <input type="email" name="TraEmail" class="form-control" placeholder="Email" value="" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="labels">Password</label>
+                        <input type="password" name="TraPass" class="form-control" placeholder="Password" value="" required>
+                    </div>
+                    <div class="mt-3 text-center">
+                        <button class="btn btn-primary profile-button" type="submit">Add Trainer</button>
+                    </div>
+                </form>
+                <hr>
+                <!-- Display Trainers -->
+                {% if trainers %}
+                <h5 class="mt-3">Assigned Trainers</h5>
+                <ul class="list-group">
+                    {% for trainer in trainers %}
+                    <li class="list-group-item">
+                        <strong>{{ trainer.TraFName }} {{ trainer.TraLName }}</strong><br>
+                        <small>{{ trainer.TraEmail }}</small>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>No trainers assigned yet.</p>
+                {% endif %}
+            </div>
+        </div>
+        
       </div>
     </div>
   </section>
