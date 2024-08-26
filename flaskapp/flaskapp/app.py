@@ -124,7 +124,21 @@ def profile():
 
 @app.route('/appliaction')
 def appliaction():
-    return render_template('student/appliaction.html')
+    student_id = session.get('student').get('StudentID')
+    applications = Apply.query.filter_by(student_id=student_id).all()
+
+    applied_opportunities = []
+    for application in applications:
+        opportunity = Opportunity.query.get(application.opportunity_id)
+        company = Company.query.get(opportunity.company_id)
+        applied_opportunities.append({
+            'company': company,
+            'opportunity': opportunity,
+            'applied_date': application.applied_date,
+            'status': 'Awaiting Response'  # Or fetch the actual status if available
+        })
+
+    return render_template('student/appliaction.html', applied_opportunities=applied_opportunities)
 
 @app.route('/doucment')
 def doucment():
@@ -172,10 +186,48 @@ def faculty_documents():
 def sign_up_company():
     return render_template('company/sign_up_company.html')
 
+from datetime import datetime
+
 @app.route('/HomePage_company')
 def HomePage_company():
-    company = session.get('company')
-    return render_template('company/HomePage_company.html', company = company)
+    company_id = session.get('company').get('CompanyID')
+    company = Company.query.get(company_id)
+
+    if not company:
+        flash('Company not found.', 'danger')
+        return redirect(url_for('HomePage'))
+
+    # Get all opportunities posted by this company
+    opportunities = Opportunity.query.filter_by(company_id=company_id).all()
+
+    # Get all applications for those opportunities along with related students
+    applications = (
+        db.session.query(Apply, Student, Opportunity)
+        .join(Student, Apply.student_id == Student.StudentID)
+        .join(Opportunity, Apply.opportunity_id == Opportunity.id)
+        .filter(Opportunity.company_id == company_id)
+        .all()
+    )
+
+    # Prepare the data to pass to the template
+    applied_students = [
+        {
+            'student': application.Student,
+            'opportunity': application.Opportunity,
+            'applied_date': application.Apply.applied_date,
+            'status': application.Apply.status,
+            'application': application.Apply
+        }
+        for application in applications
+    ]
+
+    # Fetch trainers for the company
+    trainers = Trainer.query.filter_by(company_id=company_id).all()
+
+    # Fetch students who have applied for opportunities in this company
+    students = Student.query.filter(Student.applications.any(Apply.opportunity_id.in_([o.id for o in opportunities]))).all()
+
+    return render_template('company/HomePage_company.html', company=company, applied_students=applied_students, trainers=trainers, students=students)
 
 @app.route('/comp_profile')
 def comp_profile():
@@ -290,6 +342,37 @@ def update_profile():
 
     return redirect(url_for('profile'))
 
+@app.route('/apply/<int:opportunity_id>', methods=['POST'])
+def apply_opportunity(opportunity_id):
+    student_id = request.form.get('student_id')
+    
+    # Check if the student has already applied to this opportunity
+    existing_application = Apply.query.filter_by(student_id=student_id, opportunity_id=opportunity_id).first()
+    
+    if existing_application:
+        flash('You have already applied to this opportunity.', 'warning')
+    else:
+        # Create a new Apply object
+        new_application = Apply(student_id=student_id, opportunity_id=opportunity_id)
+        
+        # Add and commit the new application to the database
+        db.session.add(new_application)
+        db.session.commit()
+        
+        flash('Application submitted successfully!', 'success')
+    
+    return redirect(url_for('HomePage_student'))
+
+@app.route('/delete_application/<int:application_id>', methods=['POST'])
+def delete_application(application_id):
+    application = Apply.query.get(application_id)
+    if application:
+        db.session.delete(application)
+        db.session.commit()
+        flash('Application deleted successfully.', 'success')
+    else:
+        flash('Application not found.', 'danger')
+    return redirect(url_for('appliaction'))
 
 #-------------------------> end student route <--------------------------------- 
 
@@ -408,7 +491,41 @@ def add_trainer():
     # Redirect to a success page or back to the form
     return redirect(url_for('comp_profile'))
 
+@app.route('/assign_trainer', methods=['POST'])
+def assign_trainer_directly():
+    student_id = request.form.get('student_id')
+    trainer_id = request.form.get('trainer_id')
 
+    # Find the student and trainer in the database
+    student = Student.query.get(student_id)
+    trainer = Trainer.query.get(trainer_id)
+
+    if student and trainer:
+        # Assuming you have a relationship or a mechanism to assign the trainer to the student
+        student.trainer_id = trainer_id
+        db.session.commit()
+        flash('Trainer assigned successfully!', 'success')
+    else:
+        flash('Failed to assign trainer. Please try again.', 'danger')
+
+    return redirect(url_for('HomePage_company'))
+
+
+@app.route('/accept_student/<int:apply_id>', methods=['POST'])
+def accept_student(apply_id):
+    application = Apply.query.get_or_404(apply_id)
+    application.status = 'Accepted'
+    db.session.commit()
+    flash('Student has been accepted.', 'success')
+    return redirect(url_for('HomePage_company'))  # Adjust this redirect as needed
+
+@app.route('/reject_student/<int:apply_id>', methods=['POST'])
+def reject_student(apply_id):
+    application = Apply.query.get_or_404(apply_id)
+    application.status = 'Rejected'
+    db.session.commit()
+    flash('Student has been rejected.', 'warning')
+    return redirect(url_for('HomePage_company'))  # Adjust this redirect as needed
 
 #-------------------------> end company route <--------------------------------- 
 
@@ -532,5 +649,7 @@ def logout():
 
 #-------------------------> end Login - logout route <--------------------------------- 
 
+
 if __name__ == '__main__':
+ 
     app.run(debug=True)

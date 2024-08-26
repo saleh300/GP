@@ -61,6 +61,15 @@
 
     <!-- Title -->
     <hr class="styled-hr">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+          <div class="alert alert-success" role="alert">
+              {% for message in messages %}
+                  {{ message }}
+              {% endfor %}
+          </div>
+      {% endif %}
+    {% endwith %}
     
     <div class="row">
       <div class="container">
@@ -155,6 +164,7 @@
 </section>
 
 <!-- Modals for More Details -->
+<!-- Modals for More Details -->
 {% for opportunity in opportunities %}
 <div class="modal fade" id="detailsModal{{ opportunity.id }}" tabindex="-1" aria-labelledby="detailsModalLabel{{ opportunity.id }}" aria-hidden="true">
   <div class="modal-dialog">
@@ -171,12 +181,17 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <a href="#" class="btn btn-primary apply-btn" data-id="{{ opportunity.id }}">Apply</a>
+        <!-- Form for applying to the opportunity -->
+        <form action="{{ url_for('apply_opportunity', opportunity_id=opportunity.id) }}" method="POST">
+          <input type="hidden" name="student_id" value="{{ student['StudentID'] }}">
+          <button type="submit" class="btn btn-primary apply-btn">Apply</button>
+        </form>
       </div>
     </div>
   </div>
 </div>
 {% endfor %}
+
 
 <footer id="footer">
   <i class="social-icon fa-brands fa-twitter"></i>

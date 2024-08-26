@@ -17,20 +17,14 @@ class Student(db.Model):
     Major = db.Column(db.String(50), nullable=True)
     Interest = db.Column(db.String(100), nullable=True)
     StPassword = db.Column(db.String(100), nullable=False)
-    
-    faculty_id = db.Column(db.Integer, db.ForeignKey('faculty.FacID'), nullable=True)  # Foreign key to Faculty
-    faculty = db.relationship('Faculty', backref='students')  # Relationship to Faculty
 
-    def __repr__(self):
-        return (f'<Student ID: {self.StudentID}, '
-                f'First Name: {self.StFName}, '
-                f'Last Name: {self.StLName}, '
-                f'Email: {self.StEmail}, '
-                f'Password: {self.StPassword}>')
+    faculty_id = db.Column(db.Integer, db.ForeignKey('faculty.FacID'), nullable=True)
+    faculty = db.relationship('Faculty', backref='students')
 
     certificates = db.relationship('Certificate', backref='student', lazy=True)
     projects = db.relationship('Project', backref='student', lazy=True)
-    applications = db.relationship('Apply', backref='student', lazy=True)
+    experiences = db.relationship('Experience', backref='student_experiences', lazy=True)
+    applications = db.relationship('Apply', backref='applied_student', lazy=True)  # Match the renamed backref
 
 
 
@@ -56,7 +50,7 @@ class Experience(db.Model):
     CurrentlyWorking = db.Column(db.Boolean, nullable=False, default=False)
 
     student_id = db.Column(db.Integer, db.ForeignKey('student.StudentID'), nullable=False)
-    student = db.relationship('Student', backref='experiences', lazy=True)
+    student = db.relationship('Student', backref='student_experiences')  # Renamed backref
 
 class Opportunity(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -66,8 +60,7 @@ class Opportunity(db.Model):
     OppJobDesc = db.Column(db.Text, nullable=False)
 
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)
-    applications = db.relationship('Apply', backref='opportunity', lazy=True)
-    assignments = db.relationship('Assigned', backref='opportunity_assignments', lazy=True)  # Renamed backref
+    applications = db.relationship('Apply', backref='applied_opportunities')  # Ensure consistency with renamed backref
 
 
 
@@ -120,10 +113,16 @@ class Faculty(db.Model):
 
 
 
+
 class Apply(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey('student.StudentID'), nullable=False)
     opportunity_id = db.Column(db.Integer, db.ForeignKey('opportunity.id'), nullable=False)
+    applied_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    status = db.Column(db.String(20), nullable=False, default='Pending')
+
+    student = db.relationship('Student', backref='applications_apply')  # Renamed backref
+    opportunity = db.relationship('Opportunity', backref='applied_opportunities')
 
 
 class Assigned(db.Model):
