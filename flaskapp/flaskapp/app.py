@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, flash, session
+from flask import Flask, render_template, redirect, send_from_directory, url_for, request, flash, session
 from flask_sqlalchemy import SQLAlchemy
 import os
 from werkzeug.utils import secure_filename
@@ -33,10 +33,11 @@ migrate = Migrate(app, db)
 
 
 
+from sqlalchemy import Column, String, text
+from sqlalchemy.exc import OperationalError
 
-# Create tables (run once)
-with app.app_context():
-    db.create_all()
+
+
 
 # Initialize Flask-Admin
 admin = Admin(app, name='Aoun Admin', template_mode='bootstrap3')
@@ -82,7 +83,9 @@ admin.add_view(ModelView(Assigned, db.session))
 admin.add_view(ModelView(Trainer, db.session))
 admin.add_view(ModelView(Document, db.session))
 
-
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 # homePage section
 @app.route("/")
@@ -591,7 +594,6 @@ def upload_document():
 
     student_id = session['student']['StudentID']
     
-    # Assuming you have an Assigned model that links students to trainers
     assignment = Assigned.query.filter_by(student_id=student_id).first()
     
     if not assignment or not assignment.trainer_id:
@@ -618,7 +620,8 @@ def upload_document():
             doc_name=filename,
             doc_path=file_path,
             student_id=student_id,
-            trainer_id=trainer_id
+            trainer_id=trainer_id,
+            status='Completed'  # Set the status to Completed when uploaded
         )
         db.session.add(new_document)
         db.session.commit()
@@ -631,9 +634,13 @@ def upload_document():
 
 
 
+
 def allowed_file(filename):
     ALLOWED_EXTENSIONS = {'pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'}
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+
 
 @app.route('/approve_document/<int:doc_id>', methods=['POST'])
 def approve_document(doc_id):

@@ -62,18 +62,21 @@
         <div class="container mt-5" style="padding: 20px;">
             <!-- Progress Bar -->
             <div class="progress-container">
-                <h3><label for="fileProgress" class="form-label">File Submission Progress</label></h3>
-                <div class="progress">
-                    <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
-                  </div>
-            </div>
+              <h3><label for="fileProgress" class="form-label">File Submission Progress</label></h3>
+              <div class="progress">
+                  <div class="progress-bar" role="progressbar" style="width: {{ progress_percentage }}%;" aria-valuenow="{{ progress_percentage }}" aria-valuemin="0" aria-valuemax="100">{{ progress_percentage }}%</div>
+              </div>
+          </div>
             <hr class="styled-hr">
             <!-- Accordion for File Submissions -->
             <div class="accordion" id="accordionFlushExample">
               <div class="accordion-item">
                   <h2 class="accordion-header" id="flush-headingOne">
                       <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="true" aria-controls="flush-collapseOne">
-                          Week 1 Report
+                          Week 1 Report 
+                          {% if student_documents and student_documents[0].status == 'Completed' %}
+                              - Completed
+                          {% endif %}
                       </button>
                   </h2>
                   <div id="flush-collapseOne" class="accordion-collapse collapse show" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
@@ -83,13 +86,16 @@
                                   <label for="week1Report" class="form-label">Upload Week 1 Report</label>
                                   <input class="form-control" type="file" id="week1Report" name="document">
                               </div>
-                              <button type="submit" class="btn btn-primary">Submit Report</button>
+                              <button type="submit" class="btn btn-primary" {% if student_documents and student_documents[0].status == 'Completed' %} disabled {% endif %}>Submit Report</button>
                           </form>
                       </div>
                   </div>
               </div>
               <!-- Repeat for other weeks if needed -->
+               
           </div>
+          
+            
           
           
           
