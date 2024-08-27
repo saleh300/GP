@@ -37,9 +37,6 @@
               <a class="nav-link" href="{{ url_for('faculty_profile') }}">Profile</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('faculty_students') }}">Students</a>
-            </li>
-            <li class="nav-item">
               <a class="nav-link" href="{{ url_for('faculty_documents') }}">Documents</a>
             </li>
             <li class="nav-item">
@@ -50,16 +47,26 @@
       </nav>
 
       <div class="welcome">
-        <p>
-            Welcome, <strong>
-            {% if faculty %}
-                {{ faculty.FacultyName }}
-            {% else %}
-                No user found.
-            {% endif %}
-            </strong>
-        </p>
+        <p>Welcome, <strong>{{ faculty.FacFName }} {{ faculty.FacLName }}</strong></p>
     </div>
+    
+    <hr class="styled-hr">
+    
+    <!-- Assigned Students Section -->
+    <h3>Assigned Students</h3>
+    {% if assigned_students %}
+        <ul class="list-group">
+            {% for student in assigned_students %}
+                <li class="list-group-item">
+                    {{ student.StFName }} {{ student.StLName }} - {{ student.Major }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No students assigned yet.</p>
+    {% endif %}
+    
+    
     
 
       {% with messages = get_flashed_messages(with_categories=true) %}

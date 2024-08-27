@@ -37,9 +37,6 @@
               <a class="nav-link" href="{{ url_for('faculty_profile') }}">Profile</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('faculty_students') }}">Students</a>
-            </li>
-            <li class="nav-item">
               <a class="nav-link" href="{{ url_for('faculty_documents') }}">Documents</a>
             </li>
             <li class="nav-item">
@@ -77,8 +74,22 @@
       <!-- Sections -->
       <hr class="styled-hr">
 
-      
-
+      <div class="container mt-4">
+        <h3>Approved Documents</h3>
+        <div class="list-group">
+          {% if approved_documents %}
+            {% for doc in approved_documents %}
+              <a href="{{ url_for('uploaded_file', filename=doc.doc_path) }}" class="list-group-item list-group-item-action">
+                <h5 class="mb-1">{{ doc.doc_name }}</h5>
+                <small>Approved on {{ doc.approved_date.strftime('%Y-%m-%d') }} by {{ doc.trainer.TraFName }} {{ doc.trainer.TraLName }}</small><br>
+                <small>Student: {{ doc.student.StFName }} {{ doc.student.StLName }}</small>
+              </a>
+            {% endfor %}
+          {% else %}
+            <p>No approved documents available.</p>
+          {% endif %}
+        </div>
+      </div>
     </div>
   </section>
 

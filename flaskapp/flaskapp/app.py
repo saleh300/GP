@@ -10,7 +10,6 @@ from models import db, Student, Certificate, Project, Opportunity, Company, Facu
 from flask_admin.form import SecureForm
 from wtforms import SelectField
 
-
 app = Flask(__name__)
 app.secret_key = 'aoun_for_now'
 
@@ -25,26 +24,18 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
     os.makedirs(app.config['UPLOAD_FOLDER'])
 
-
 # Initialize the database with the app
 db.init_app(app)
 
 migrate = Migrate(app, db)
-
-
-
-from sqlalchemy import Column, String, text
-from sqlalchemy.exc import OperationalError
-
-
-
 
 # Initialize Flask-Admin
 admin = Admin(app, name='Aoun Admin', template_mode='bootstrap3')
 
 
 
-
+from sqlalchemy import Column, String, text
+from sqlalchemy.exc import OperationalError
 
 
 
@@ -161,38 +152,6 @@ def doucment():
 @app.route('/sign_up_faculty')
 def sign_up_faculty():
     return render_template('faculty/sign_up_faculty.html')
-
-@app.route('/faculty/homepage')
-def faculty_homepage():
-    if 'faculty' not in session:
-        flash('Please log in to access the faculty portal.', 'warning')
-        return redirect(url_for('login'))
-    return render_template('faculty/faculty_homepage.html')
-
-@app.route('/faculty/profile')
-def faculty_profile():
-    
-    if 'faculty' not in session:
-        flash('Please log in to access the faculty portal.', 'warning')
-        return redirect(url_for('login'))
-    # Fetch faculty details from the database if needed
-    return render_template('faculty/faculty_profile.html')
-
-@app.route('/faculty/students')
-def faculty_students():
-    if 'faculty' not in session:
-        flash('Please log in to access the faculty portal.', 'warning')
-        return redirect(url_for('login'))
-    # Fetch the list of students or relevant data
-    return render_template('faculty/faculty_students.html')
-
-@app.route('/faculty/documents')
-def faculty_documents():
-    if 'faculty' not in session:
-        flash('Please log in to access the faculty portal.', 'warning')
-        return redirect(url_for('login'))
-    # Fetch documents or relevant data
-    return render_template('faculty/faculty_documents.html')
 
 # company section
 @app.route('/sign_up_company')
@@ -687,6 +646,91 @@ def register_faculty():
             print(f'Error: {str(e)}')  # For debugging
             flash(f'An error occurred: {str(e)}', 'danger')
             return redirect(url_for('HomePage'))
+        
+@app.route('/faculty/profile')
+def faculty_profile():
+    if 'faculty' not in session:
+        flash('Please log in to access the faculty portal.', 'warning')
+        return redirect(url_for('login'))
+    
+    # Retrieve faculty information from the session
+    faculty_id = session['faculty']['FacID']
+    
+    # Fetch the faculty member's details from the database
+    faculty = Faculty.query.get(faculty_id)
+    
+    if not faculty:
+        flash('Faculty not found.', 'danger')
+        return redirect(url_for('faculty_homepage'))
+    
+    # Render the profile template with the faculty details
+    return render_template('faculty/faculty_profile.html', faculty=faculty)
+
+@app.route('/faculty_homepage')
+def faculty_homepage():
+    if 'faculty' not in session:
+        flash('Please log in to access the faculty portal.', 'warning')
+        return redirect(url_for('login'))
+
+    faculty_id = session['faculty']['FacID']
+    
+    # Fetch the faculty member's details from the database
+    faculty = Faculty.query.get(faculty_id)
+    
+    if not faculty:
+        flash('Faculty member not found.', 'danger')
+        return redirect(url_for('login'))
+
+    # Query to fetch assigned students
+    assigned_students = (
+        db.session.query(Student)
+        .join(Assigned, Assigned.student_id == Student.StudentID)
+        .filter(Assigned.faculty_id == faculty_id)
+        .all()
+    )
+
+    return render_template('faculty/faculty_homepage.html', faculty=faculty, assigned_students=assigned_students)
+
+@app.route('/update_faculty_profile', methods=['POST'])
+def update_faculty_profile():
+    if 'faculty' not in session:
+        flash('Please log in to update your profile.', 'warning')
+        return redirect(url_for('login'))
+
+    faculty_id = session['faculty']['FacID']
+    faculty = Faculty.query.get(faculty_id)
+
+    if faculty:
+        faculty.FacFName = request.form['FacFName']
+        faculty.FacLName = request.form['FacLName']
+        faculty.FacEmail = request.form['FacEmail']
+
+        db.session.commit()
+        flash('Profile updated successfully!', 'success')
+    else:
+        flash('Error: Faculty not found.', 'danger')
+
+    return redirect(url_for('faculty_profile'))
+
+@app.route('/faculty/documents')
+def faculty_documents():
+    if 'faculty' not in session:
+        flash('Please log in to access the faculty portal.', 'warning')
+        return redirect(url_for('login'))
+
+    faculty_id = session['faculty']['FacID']
+
+    # Fetch documents that have been approved by the trainer for students supervised by this faculty
+    approved_documents = (
+        db.session.query(Document)
+        .join(Student, Document.student_id == Student.StudentID)
+        .join(Assigned, Assigned.student_id == Student.StudentID)
+        .filter(Assigned.faculty_id == faculty_id, Document.approved_by_trainer == True)
+        .all()
+    )
+
+    return render_template('faculty/faculty_documents.html', approved_documents=approved_documents)
+
 
 
 #-------------------------> strat Login - logout route <--------------------------------- 
@@ -777,7 +821,8 @@ def logout():
 
 #-------------------------> end Login - logout route <--------------------------------- 
 
-
 if __name__ == '__main__':
- 
     app.run(debug=True)
+
+
+
