@@ -101,51 +101,63 @@
           <hr class="styled-hr">
 
           <div class="col-md-4">
-              <div class="p-3 py-5">
-                  <div class="d-flex justify-content-between align-items-center experience">
-                      <h4 class="text-right">Trainers</h4>
-                      <span class="border px-3 p-1 add-experience">
-                          <i class="fa fa-plus"></i>&nbsp;Add Trainer
-                      </span>
-                  </div>
-                  <form action="{{ url_for('add_trainer') }}" method="POST">
-                      <div class="col-md-12">
-                          <label class="labels">First Name</label>
-                          <input type="text" name="TraFName" class="form-control" placeholder="First Name" value="" required>
-                      </div>
-                      <div class="col-md-12">
-                          <label class="labels">Last Name</label>
-                          <input type="text" name="TraLName" class="form-control" placeholder="Last Name" value="" required>
-                      </div>
-                      <div class="col-md-12">
-                          <label class="labels">Email</label>
-                          <input type="email" name="TraEmail" class="form-control" placeholder="Email" value="" required>
-                      </div>
-                      <div class="col-md-12">
-                          <label class="labels">Password</label>
-                          <input type="password" name="TraPass" class="form-control" placeholder="Password" value="" required>
-                      </div>
-                      <div class="mt-3 text-center">
-                          <button class="btn btn-primary profile-button" type="submit">Add Trainer</button>
-                      </div>
-                  </form>
-                  <hr>
-                  <!-- Display Trainers -->
-                  {% if trainers %}
-                  <h5 class="mt-3">Assigned Trainers</h5>
-                  <ul class="list-group">
-                      {% for trainer in trainers %}
-                      <li class="list-group-item">
-                          <strong>{{ trainer.TraFName }} {{ trainer.TraLName }}</strong><br>
-                          <small>{{ trainer.TraEmail }}</small>
-                      </li>
-                      {% endfor %}
-                  </ul>
-                  {% else %}
-                  <p>No trainers assigned yet.</p>
-                  {% endif %}
-              </div>
-          </div>
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center experience">
+                    <h4 class="text-right">Trainers</h4>
+                    <span class="border px-3 p-1 add-experience">
+                        <i class="fa fa-plus"></i>&nbsp;Add Trainer
+                    </span>
+                </div>
+                <form action="{{ url_for('add_trainer') }}" method="POST">
+                    <div class="col-md-12">
+                        <label class="labels">First Name</label>
+                        <input type="text" name="TraFName" class="form-control" placeholder="First Name" value="" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="labels">Last Name</label>
+                        <input type="text" name="TraLName" class="form-control" placeholder="Last Name" value="" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="labels">Email</label>
+                        <input type="email" name="TraEmail" class="form-control" placeholder="Email" value="" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="labels">Password</label>
+                        <input type="password" name="TraPass" class="form-control" placeholder="Password" value="" required>
+                    </div>
+                    <div class="mt-3 text-center">
+                        <button class="btn btn-primary profile-button" type="submit">Add Trainer</button>
+                    </div>
+                </form>
+                <hr>
+                <!-- Display Trainers -->
+                {% if trainers %}
+                <h5 class="mt-3">Assigned Trainers</h5>
+                <ul class="list-group">
+                    {% for trainer in trainers %}
+                    <li class="list-group-item">
+                        <strong>{{ trainer.TraFName }} {{ trainer.TraLName }}</strong><br>
+                        <small>{{ trainer.TraEmail }}</small>
+                        <!-- Show students assigned to this trainer -->
+                        {% if trainer.trainer_assignments %}
+                        <h6 class="mt-2">Assigned Students:</h6>
+                        <ul>
+                            {% for assignment in trainer.trainer_assignments %}
+                            <li>{{ assignment.student.StFName }} {{ assignment.student.StLName }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p>No students assigned yet.</p>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>No trainers assigned yet.</p>
+                {% endif %}
+            </div>
+        </div>
+        
         
         </div>
       </div>

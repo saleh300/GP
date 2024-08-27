@@ -70,61 +70,29 @@
             <hr class="styled-hr">
             <!-- Accordion for File Submissions -->
             <div class="accordion" id="accordionFlushExample">
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="flush-headingOne">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="true" aria-controls="flush-collapseOne">
-                            Week 1 Report
-                        </button>
-                    </h2>
-                    <div id="flush-collapseOne" class="accordion-collapse collapse show" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                        <div class="accordion-body">
-                            <form>
-                                <div class="file-upload" style="margin-bottom: 15px;">
-                                    <label for="week1Report" class="form-label">Upload Week 1 Report</label>
-                                    <input class="form-control" type="file" id="week1Report">
-                                </div>
-                                <button type="submit" class="btn btn-primary">Submit Report</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="flush-headingTwo">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                            Week 2 Report
-                        </button>
-                    </h2>
-                    <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-                        <div class="accordion-body">
-                            <form>
-                                <div class="file-upload" style="margin-bottom: 15px;">
-                                    <label for="week2Report" class="form-label">Upload Week 2 Report</label>
-                                    <input class="form-control" type="file" id="week2Report">
-                                </div>
-                                <button type="submit" class="btn btn-primary">Submit Report</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="flush-headingThree">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-                            Week 3 Report
-                        </button>
-                    </h2>
-                    <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
-                        <div class="accordion-body">
-                            <form>
-                                <div class="file-upload" style="margin-bottom: 15px;">
-                                    <label for="week3Report" class="form-label">Upload Week 3 Report</label>
-                                    <input class="form-control" type="file" id="week3Report">
-                                </div>
-                                <button type="submit" class="btn btn-primary">Submit Report</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
+              <div class="accordion-item">
+                  <h2 class="accordion-header" id="flush-headingOne">
+                      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="true" aria-controls="flush-collapseOne">
+                          Week 1 Report
+                      </button>
+                  </h2>
+                  <div id="flush-collapseOne" class="accordion-collapse collapse show" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                      <div class="accordion-body">
+                          <form action="{{ url_for('upload_document') }}" method="POST" enctype="multipart/form-data">
+                              <div class="file-upload" style="margin-bottom: 15px;">
+                                  <label for="week1Report" class="form-label">Upload Week 1 Report</label>
+                                  <input class="form-control" type="file" id="week1Report" name="document">
+                              </div>
+                              <button type="submit" class="btn btn-primary">Submit Report</button>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+              <!-- Repeat for other weeks if needed -->
+          </div>
+          
+          
+          
         </div>
     
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>

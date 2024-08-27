@@ -71,9 +71,13 @@ class Trainer(db.Model):
     TraEmail = db.Column(db.String(100), unique=True, nullable=False)
     TraPass = db.Column(db.String(100), nullable=False)
     
-    # Relationship with Company (assuming a trainer is assigned by a company)
+    # Relationship with the Company
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)
     assigned_company = db.relationship('Company', backref='trainers', lazy=True)
+    
+    # Relationship with Assigned (Student Assignments)
+    trainer_assignments = db.relationship('Assigned', backref='assigned_trainer', lazy=True)
+
     
     def __repr__(self):
         return (f'<Trainer ID: {self.TrainerID}, '
@@ -133,10 +137,10 @@ class Assigned(db.Model):
     opportunity_id = db.Column(db.Integer, db.ForeignKey('opportunity.id'), nullable=False)
 
     # Relationships
-    student = db.relationship('Student', backref='student_assignments', lazy=True)  # Renamed backref
-    faculty = db.relationship('Faculty', backref='faculty_assigned', lazy=True)  # Renamed backref
-    trainer = db.relationship('Trainer', backref='trainer_assignments', lazy=True)  # Renamed backref
-    opportunity = db.relationship('Opportunity', backref='opportunity_assigned', lazy=True)  # Renamed backref
+    student = db.relationship('Student', backref='student_assignments', lazy=True)
+    faculty = db.relationship('Faculty', backref='faculty_assigned', lazy=True)
+    trainer = db.relationship('Trainer', lazy=True)
+    opportunity = db.relationship('Opportunity', backref='opportunity_assigned', lazy=True)
 
 class Document(db.Model):
     id = db.Column(db.Integer, primary_key=True)

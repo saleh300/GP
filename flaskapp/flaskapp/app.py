@@ -135,14 +135,24 @@ def appliaction():
             'company': company,
             'opportunity': opportunity,
             'applied_date': application.applied_date,
-            'status': 'Awaiting Response'  # Or fetch the actual status if available
+            'status': application.status  # Make sure this is correctly fetched
         })
 
     return render_template('student/appliaction.html', applied_opportunities=applied_opportunities)
 
 @app.route('/doucment')
 def doucment():
-    return render_template('student/doucment.html')
+    if 'student' not in session:
+        flash('You must be logged in as a student to view documents.', 'danger')
+        return redirect(url_for('login'))
+
+    student_id = session['student']['StudentID']
+    
+    # Fetch the student's documents from the database
+    student_documents = Document.query.filter_by(student_id=student_id).all()
+
+    return render_template('student/doucment.html', student_documents=student_documents)
+
 
 # faculty section
 @app.route('/sign_up_faculty')
@@ -243,7 +253,22 @@ def comp_profile():
 
 @app.route('/HomePage_trainer')
 def company_trainer():
-    return render_template('company/trainer.html') 
+    if 'trainer' not in session:
+        flash('You must be logged in as a trainer to view this page.', 'danger')
+        return redirect(url_for('login'))
+
+    trainer_id = session['trainer']['TrainerID']
+    
+    # Fetch all students assigned to this trainer
+    assigned_students = db.session.query(Student).join(Assigned).filter(Assigned.trainer_id == trainer_id).all()
+    
+    # Fetch all documents assigned to this trainer that have not yet been approved
+    documents_to_approve = Document.query.filter_by(trainer_id=trainer_id, approved_by_trainer=False).all()
+
+    return render_template('company/trainer.html', students=assigned_students, documents=documents_to_approve)
+
+
+
 
 @app.route('/view_documents')
 def view_documents():
@@ -516,8 +541,10 @@ def accept_student(apply_id):
     application = Apply.query.get_or_404(apply_id)
     application.status = 'Accepted'
     db.session.commit()
-    flash('Student has been accepted.', 'success')
-    return redirect(url_for('HomePage_company'))  # Adjust this redirect as needed
+
+    # Redirect to the trainer assignment page
+    return redirect(url_for('assign_trainer', apply_id=apply_id))
+ # Adjust this redirect as needed
 
 @app.route('/reject_student/<int:apply_id>', methods=['POST'])
 def reject_student(apply_id):
@@ -527,7 +554,101 @@ def reject_student(apply_id):
     flash('Student has been rejected.', 'warning')
     return redirect(url_for('HomePage_company'))  # Adjust this redirect as needed
 
+@app.route('/assign_trainer/<int:apply_id>', methods=['GET', 'POST'])
+def assign_trainer(apply_id):
+    application = Apply.query.get_or_404(apply_id)
+    company = Company.query.get(application.opportunity.company_id)
+
+    # Get the list of trainers for this company
+    trainers = Trainer.query.filter_by(company_id=company.id).all()
+
+    if request.method == 'POST':
+        trainer_id = request.form.get('trainer_id')
+        if trainer_id:
+            # Assign the selected trainer to the student
+            new_assignment = Assigned(
+                student_id=application.student_id,
+                faculty_id=None,  # Assign the faculty if needed
+                trainer_id=trainer_id,
+                opportunity_id=application.opportunity_id
+            )
+            db.session.add(new_assignment)
+            db.session.commit()
+
+            flash('Trainer assigned successfully!', 'success')
+            return redirect(url_for('HomePage_company'))
+        else:
+            flash('Please select a trainer.', 'danger')
+
+    return render_template('company/assign_trainer.html', application=application, trainers=trainers)
+
 #-------------------------> end company route <--------------------------------- 
+@app.route('/upload_document', methods=['POST'])
+def upload_document():
+    if 'student' not in session:
+        flash('You must be logged in as a student to upload documents.', 'danger')
+        return redirect(url_for('login'))
+
+    student_id = session['student']['StudentID']
+    
+    # Assuming you have an Assigned model that links students to trainers
+    assignment = Assigned.query.filter_by(student_id=student_id).first()
+    
+    if not assignment or not assignment.trainer_id:
+        flash('No trainer assigned to you. Please contact your administrator.', 'danger')
+        return redirect(url_for('doucment'))
+
+    trainer_id = assignment.trainer_id
+
+    if 'document' not in request.files:
+        flash('No file part', 'danger')
+        return redirect(request.url)
+
+    file = request.files['document']
+    if file.filename == '':
+        flash('No selected file', 'danger')
+        return redirect(request.url)
+
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(file_path)
+
+        new_document = Document(
+            doc_name=filename,
+            doc_path=file_path,
+            student_id=student_id,
+            trainer_id=trainer_id
+        )
+        db.session.add(new_document)
+        db.session.commit()
+
+        flash('Document uploaded successfully.', 'success')
+        return redirect(url_for('doucment'))
+
+    flash('File type not allowed.', 'danger')
+    return redirect(url_for('doucment'))
+
+
+
+def allowed_file(filename):
+    ALLOWED_EXTENSIONS = {'pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'}
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/approve_document/<int:doc_id>', methods=['POST'])
+def approve_document(doc_id):
+    if 'trainer' not in session:
+        flash('You must be logged in as a trainer to approve documents.', 'danger')
+        return redirect(url_for('login'))
+
+    document = Document.query.get_or_404(doc_id)
+    document.approved_by_trainer = True
+    document.approved_date = datetime.utcnow()
+
+    db.session.commit()
+    flash('Document approved successfully.', 'success')
+    return redirect(url_for('company_trainer'))
+
 
 #-------------------------> start faculty route <--------------------------------- 
 
