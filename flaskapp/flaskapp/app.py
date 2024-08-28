@@ -34,8 +34,7 @@ admin = Admin(app, name='Aoun Admin', template_mode='bootstrap3')
 
 
 
-from sqlalchemy import Column, String, text
-from sqlalchemy.exc import OperationalError
+
 
 
 
