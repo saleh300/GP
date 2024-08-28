@@ -610,9 +610,16 @@ def approve_document(doc_id):
     document.approved_by_trainer = True
     document.approved_date = datetime.utcnow()
 
+    # Find the faculty supervising the student
+    assignment = Assigned.query.filter_by(student_id=document.student_id).first()
+    if assignment:
+        document.faculty_id = assignment.faculty_id
+
     db.session.commit()
     flash('Document approved successfully.', 'success')
     return redirect(url_for('company_trainer'))
+
+
 
 
 #-------------------------> start faculty route <--------------------------------- 
@@ -680,15 +687,11 @@ def faculty_homepage():
         flash('Faculty member not found.', 'danger')
         return redirect(url_for('login'))
 
-    # Query to fetch assigned students
-    assigned_students = (
-        db.session.query(Student)
-        .join(Assigned, Assigned.student_id == Student.StudentID)
-        .filter(Assigned.faculty_id == faculty_id)
-        .all()
-    )
+    # Query to fetch assigned students based on the faculty_id in the Student model
+    assigned_students = Student.query.filter_by(faculty_id=faculty_id).all()
 
     return render_template('faculty/faculty_homepage.html', faculty=faculty, assigned_students=assigned_students)
+
 
 @app.route('/update_faculty_profile', methods=['POST'])
 def update_faculty_profile():
@@ -719,17 +722,18 @@ def faculty_documents():
 
     faculty_id = session['faculty']['FacID']
 
-    # Fetch documents that have been approved by the trainer for students supervised by this faculty
+    # Fetch documents approved by the trainer for students supervised by this faculty
     approved_documents = (
         db.session.query(Document)
-        .join(Student, Document.student_id == Student.StudentID)
-        .join(Assigned, Assigned.student_id == Student.StudentID)
-        .filter(Assigned.faculty_id == faculty_id, Document.approved_by_trainer == True)
+        .filter_by(faculty_id=faculty_id, approved_by_trainer=True)
         .all()
     )
 
-    return render_template('faculty/faculty_documents.html', approved_documents=approved_documents)
+    # Debugging output
+    for doc in approved_documents:
+        print(f"Document ID: {doc.id}, Document Name: {doc.doc_name}, Faculty ID: {doc.faculty_id}")
 
+    return render_template('faculty/faculty_documents.html', approved_documents=approved_documents)
 
 
 #-------------------------> strat Login - logout route <--------------------------------- 

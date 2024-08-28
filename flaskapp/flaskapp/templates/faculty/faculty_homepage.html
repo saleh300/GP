@@ -58,7 +58,9 @@
         <ul class="list-group">
             {% for student in assigned_students %}
                 <li class="list-group-item">
-                    {{ student.StFName }} {{ student.StLName }} - {{ student.Major }}
+                    <strong>ID:</strong> {{ student.StudentID }} - 
+                    <strong>Name:</strong> {{ student.StFName }} {{ student.StLName }} - 
+                    <strong>Major:</strong> {{ student.Major }}
                 </li>
             {% endfor %}
         </ul>
@@ -66,9 +68,6 @@
         <p>No students assigned yet.</p>
     {% endif %}
     
-    
-    
-
       {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         <div class="container mt-4">

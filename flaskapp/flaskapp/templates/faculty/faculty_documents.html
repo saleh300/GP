@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Faculty Portal - AOUN</title>
+  <title>Approved Documents - AOUN</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,900;1,900&family=Ubuntu&display=swap" rel="stylesheet">
 
@@ -45,19 +45,24 @@
           </ul>
         </div>
       </nav>
+      <hr class="styled-hr">
 
-      <div class="welcome">
-        <p>
-          Welcome, <strong>
-          {% if session['faculty'] %}
-            {{ session['faculty']['FacultyName'] }}
-          {% else %}
-            No user found.
-          {% endif %}
-          </strong>
-        </p>
-      </div>
-
+      <h3>Approved Documents</h3>
+      {% if approved_documents %}
+          <ul class="list-group">
+              {% for document in approved_documents %}
+                  <li class="list-group-item">
+                      <strong>{{ document.student.StFName }} {{ document.student.StLName }}:</strong> 
+                      {{ document.doc_name }} - 
+                      <a href="{{ url_for('uploaded_file', filename=document.doc_name) }}" target="_blank">View Document</a>
+                  </li>
+              {% endfor %}
+          </ul>
+      {% else %}
+          <p>No approved documents found.</p>
+      {% endif %}
+      
+      
       {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         <div class="container mt-4">
@@ -74,22 +79,6 @@
       <!-- Sections -->
       <hr class="styled-hr">
 
-      <div class="container mt-4">
-        <h3>Approved Documents</h3>
-        <div class="list-group">
-          {% if approved_documents %}
-            {% for doc in approved_documents %}
-              <a href="{{ url_for('uploaded_file', filename=doc.doc_path) }}" class="list-group-item list-group-item-action">
-                <h5 class="mb-1">{{ doc.doc_name }}</h5>
-                <small>Approved on {{ doc.approved_date.strftime('%Y-%m-%d') }} by {{ doc.trainer.TraFName }} {{ doc.trainer.TraLName }}</small><br>
-                <small>Student: {{ doc.student.StFName }} {{ doc.student.StLName }}</small>
-              </a>
-            {% endfor %}
-          {% else %}
-            <p>No approved documents available.</p>
-          {% endif %}
-        </div>
-      </div>
     </div>
   </section>
 
