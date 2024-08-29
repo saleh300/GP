@@ -47,20 +47,20 @@
       </nav>
       <hr class="styled-hr">
 
-      <h3>Approved Documents</h3>
       {% if approved_documents %}
-          <ul class="list-group">
-              {% for document in approved_documents %}
-                  <li class="list-group-item">
-                      <strong>{{ document.student.StFName }} {{ document.student.StLName }}:</strong> 
-                      {{ document.doc_name }} - 
-                      <a href="{{ url_for('uploaded_file', filename=document.doc_name) }}" target="_blank">View Document</a>
-                  </li>
-              {% endfor %}
-          </ul>
-      {% else %}
-          <p>No approved documents found.</p>
-      {% endif %}
+    <ul class="list-group">
+        {% for document in approved_documents %}
+            <li class="list-group-item">
+                <strong>{{ document.student.StFName }} {{ document.student.StLName }}:</strong> 
+                {{ document.doc_name }} - 
+                <a href="{{ url_for('uploaded_file', filename=document.doc_name) }}" target="_blank">View Document</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No approved documents found.</p>
+{% endif %}
+
       
       
       {% with messages = get_flashed_messages(with_categories=true) %}

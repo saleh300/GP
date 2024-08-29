@@ -477,24 +477,43 @@ def add_trainer():
     # Redirect to a success page or back to the form
     return redirect(url_for('comp_profile'))
 
-@app.route('/assign_trainer', methods=['POST'])
-def assign_trainer_directly():
-    student_id = request.form.get('student_id')
-    trainer_id = request.form.get('trainer_id')
+@app.route('/assign_trainer/<int:apply_id>', methods=['GET', 'POST'])
+def assign_trainer(apply_id):
+    if request.method == 'POST':
+        # Handle the form submission (assign trainer to student)
+        trainer_id = request.form.get('trainer_id')
 
-    # Find the student and trainer in the database
-    student = Student.query.get(student_id)
-    trainer = Trainer.query.get(trainer_id)
+        # Find the student and faculty relationship
+        application = Apply.query.get_or_404(apply_id)
+        student_id = application.student_id
+        opportunity_id = application.opportunity_id
+        student = Student.query.get(student_id)
+        faculty_id = student.faculty_id  # Assuming the student already has a faculty assigned
 
-    if student and trainer:
-        # Assuming you have a relationship or a mechanism to assign the trainer to the student
-        student.trainer_id = trainer_id
+        # Create a new assignment
+        new_assignment = Assigned(
+            student_id=student_id,
+            faculty_id=faculty_id,
+            trainer_id=trainer_id,
+            opportunity_id=opportunity_id
+        )
+        db.session.add(new_assignment)
         db.session.commit()
         flash('Trainer assigned successfully!', 'success')
-    else:
-        flash('Failed to assign trainer. Please try again.', 'danger')
+        return redirect(url_for('HomePage_company'))
 
-    return redirect(url_for('HomePage_company'))
+    elif request.method == 'GET':
+        # Handle GET request, perhaps show a form to select a trainer
+        application = Apply.query.get_or_404(apply_id)
+        company = Company.query.get(application.opportunity.company_id)
+
+        # Get the list of trainers for this company
+        trainers = Trainer.query.filter_by(company_id=company.id).all()
+
+        return render_template('company/assign_trainer.html', application=application, trainers=trainers)
+
+
+
 
 
 @app.route('/accept_student/<int:apply_id>', methods=['POST'])
@@ -515,33 +534,6 @@ def reject_student(apply_id):
     flash('Student has been rejected.', 'warning')
     return redirect(url_for('HomePage_company'))  # Adjust this redirect as needed
 
-@app.route('/assign_trainer/<int:apply_id>', methods=['GET', 'POST'])
-def assign_trainer(apply_id):
-    application = Apply.query.get_or_404(apply_id)
-    company = Company.query.get(application.opportunity.company_id)
-
-    # Get the list of trainers for this company
-    trainers = Trainer.query.filter_by(company_id=company.id).all()
-
-    if request.method == 'POST':
-        trainer_id = request.form.get('trainer_id')
-        if trainer_id:
-            # Assign the selected trainer to the student
-            new_assignment = Assigned(
-                student_id=application.student_id,
-                faculty_id=None,  # Assign the faculty if needed
-                trainer_id=trainer_id,
-                opportunity_id=application.opportunity_id
-            )
-            db.session.add(new_assignment)
-            db.session.commit()
-
-            flash('Trainer assigned successfully!', 'success')
-            return redirect(url_for('HomePage_company'))
-        else:
-            flash('Please select a trainer.', 'danger')
-
-    return render_template('company/assign_trainer.html', application=application, trainers=trainers)
 
 #-------------------------> end company route <--------------------------------- 
 @app.route('/upload_document', methods=['POST'])
@@ -610,14 +602,19 @@ def approve_document(doc_id):
     document.approved_by_trainer = True
     document.approved_date = datetime.utcnow()
 
-    # Find the faculty supervising the student
-    assignment = Assigned.query.filter_by(student_id=document.student_id).first()
-    if assignment:
+    # Find the assignment linking the student to the faculty and trainer
+    assignment = Assigned.query.filter_by(student_id=document.student_id, trainer_id=document.trainer_id).first()
+    if assignment and assignment.faculty_id:
         document.faculty_id = assignment.faculty_id
-
+        print(f"Document approved. Faculty ID: {document.faculty_id}")
+    else:
+        print("No faculty found for this student or faculty not assigned.")
+    
     db.session.commit()
     flash('Document approved successfully.', 'success')
     return redirect(url_for('company_trainer'))
+
+
 
 
 
@@ -721,6 +718,7 @@ def faculty_documents():
         return redirect(url_for('login'))
 
     faculty_id = session['faculty']['FacID']
+    print(f"Faculty ID: {faculty_id}")  # Debug: print faculty ID
 
     # Fetch documents approved by the trainer for students supervised by this faculty
     approved_documents = (
@@ -729,9 +727,9 @@ def faculty_documents():
         .all()
     )
 
-    # Debugging output
+    # Debugging output to ensure documents are fetched
     for doc in approved_documents:
-        print(f"Document ID: {doc.id}, Document Name: {doc.doc_name}, Faculty ID: {doc.faculty_id}")
+        print(f"Document ID: {doc.id}, Document Name: {doc.doc_name}, Faculty ID: {doc.faculty_id}, Approved: {doc.approved_by_trainer}")
 
     return render_template('faculty/faculty_documents.html', approved_documents=approved_documents)
 
