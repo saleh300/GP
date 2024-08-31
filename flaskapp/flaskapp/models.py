@@ -58,9 +58,12 @@ class Opportunity(db.Model):
     OppCity = db.Column(db.String(50), nullable=False)
     OppJobTitle = db.Column(db.String(100), nullable=False)
     OppJobDesc = db.Column(db.Text, nullable=False)
+    open_date = db.Column(db.DateTime, nullable=False)
+    close_date = db.Column(db.DateTime, nullable=False)
 
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)
-    applications = db.relationship('Apply', backref='applied_opportunities')  # Ensure consistency with renamed backref
+    applications = db.relationship('Apply', backref='applied_opportunities', lazy=True)
+
 
 
 

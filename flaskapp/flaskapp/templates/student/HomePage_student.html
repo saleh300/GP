@@ -47,6 +47,7 @@
       </div>
     </nav>
 
+    
     <div class="welcome">
       <p>
         Welcome, <strong>
@@ -124,20 +125,31 @@
                     <div class="container">
                       <div class="row">
                         {% if opportunities %}
-                          {% for opportunity in opportunities %}
-                            <div class="col-md-3 mb-3">
-                              <div class="card custom-card-size">
-                                <img src="{{ url_for('static', filename='images/sdaia_logo.jpeg') }}" class="card-img-top" alt="Company Logo">
-                                <div class="card-body">
-                                  <h5 class="card-title">{{ opportunity.company.CompName }}</h5>
-                                  <p class="card-text">{{ opportunity.OppJobTitle }}</p>
-                                  <p class="card-text"><strong>Duration:</strong> {{ opportunity.OppDuration }} Months</p>
+                        {% if opportunities %}
+                        {% for opportunity in opportunities %}
+                          <div class="col-md-3 mb-3">
+                            <div class="card custom-card-size">
+                              <img src="{{ url_for('static', filename='images/sdaia_logo.jpeg') }}" class="card-img-top" alt="Company Logo">
+                              <div class="card-body">
+                                <h5 class="card-title">{{ opportunity.company.CompName }}</h5>
+                                <p class="card-text">{{ opportunity.OppJobTitle }}</p>
+                                <p class="card-text"><strong>Duration:</strong> {{ opportunity.OppDuration }} Months</p>
+                      
+                                <!-- Status Logic -->
+                                {% if opportunity.open_date > current_time %}
+                                  <p class="card-text"><strong>Status:</strong> Not Yet Opened</p>
+                                {% elif opportunity.close_date < current_time %}
+                                  <p class="card-text"><strong>Status:</strong> Closed</p>
+                                {% else %}
                                   <p class="card-text"><strong>Status:</strong> Open</p>
-                                  <a href="#" class="more-details-link" data-bs-toggle="modal" data-bs-target="#detailsModal{{ opportunity.id }}">More Details</a>
-                                </div>
+                                {% endif %}
+                      
+                                <a href="#" class="more-details-link" data-bs-toggle="modal" data-bs-target="#detailsModal{{ opportunity.id }}">More Details</a>
                               </div>
                             </div>
-                          {% endfor %}
+                          </div>
+                        {% endfor %}
+                      {% endif %}                      
                         {% else %}
                           <div class="col-12">
                             <div class="alert alert-warning text-center">
@@ -164,33 +176,70 @@
 </section>
 
 <!-- Modals for More Details -->
-<!-- Modals for More Details -->
 {% for opportunity in opportunities %}
-<div class="modal fade" id="detailsModal{{ opportunity.id }}" tabindex="-1" aria-labelledby="detailsModalLabel{{ opportunity.id }}" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="detailsModalLabel{{ opportunity.id }}">Job Details</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p><strong>Job Title:</strong> {{ opportunity.OppJobTitle }}</p>
-        <p><strong>Description:</strong> {{ opportunity.OppJobDesc }}</p>
-        <p><strong>Duration:</strong> {{ opportunity.OppDuration }} Months</p>
-        <p><strong>Status:</strong> Open</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <!-- Form for applying to the opportunity -->
-        <form action="{{ url_for('apply_opportunity', opportunity_id=opportunity.id) }}" method="POST">
-          <input type="hidden" name="student_id" value="{{ student['StudentID'] }}">
-          <button type="submit" class="btn btn-primary apply-btn">Apply</button>
-        </form>
-      </div>
+    <div class="col-md-3 mb-3">
+        <div class="card custom-card-size">
+            <img src="{{ url_for('static', filename='images/sdaia_logo.jpeg') }}" class="card-img-top" alt="Company Logo">
+            <div class="card-body">
+                <h5 class="card-title">{{ opportunity.company.CompName }}</h5>
+                <p class="card-text">{{ opportunity.OppJobTitle }}</p>
+                <p class="card-text"><strong>Duration:</strong> {{ opportunity.OppDuration }} Months</p>
+
+                <!-- Status Logic -->
+                {% if opportunity.open_date > current_time %}
+                    <p class="card-text"><strong>Status:</strong> Not Yet Opened</p>
+                {% elif opportunity.close_date < current_time %}
+                    <p class="card-text"><strong>Status:</strong> Closed</p>
+                {% else %}
+                    <p class="card-text"><strong>Status:</strong> Open</p>
+                {% endif %}
+
+                <p class="card-text"><strong>Application Period:</strong> {{ opportunity.open_date.strftime('%Y-%m-%d %H:%M') }} to {{ opportunity.close_date.strftime('%Y-%m-%d %H:%M') }}</p>
+                
+                <!-- Ensure data-bs-target is unique -->
+                <a href="#" class="more-details-link" data-bs-toggle="modal" data-bs-target="#detailsModal{{ opportunity.id }}">More Details</a>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
+
+    <!-- Modal Structure -->
+    <div class="modal fade" id="detailsModal{{ opportunity.id }}" tabindex="-1" aria-labelledby="detailsModalLabel{{ opportunity.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailsModalLabel{{ opportunity.id }}">Job Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Job Title:</strong> {{ opportunity.OppJobTitle }}</p>
+                    <p><strong>Description:</strong> {{ opportunity.OppJobDesc }}</p>
+                    <p><strong>Duration:</strong> {{ opportunity.OppDuration }} Months</p>
+                    <p><strong>Status:</strong>
+                        {% if opportunity.open_date > current_time %}
+                            Not Yet Opened
+                        {% elif opportunity.close_date < current_time %}
+                            Closed
+                        {% else %}
+                            Open
+                        {% endif %}
+                    </p>
+                    <p><strong>Application Period:</strong> {{ opportunity.open_date.strftime('%Y-%m-%d %H:%M') }} to {{ opportunity.close_date.strftime('%Y-%m-%d %H:%M') }}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <!-- Form for applying to the opportunity -->
+                    <form action="{{ url_for('apply_opportunity', opportunity_id=opportunity.id) }}" method="POST">
+                        <input type="hidden" name="student_id" value="{{ student['StudentID'] }}">
+                        <button type="submit" class="btn btn-primary apply-btn">Apply</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endfor %}
+
+
+
 
 
 <footer id="footer">

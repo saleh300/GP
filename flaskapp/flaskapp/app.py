@@ -10,6 +10,8 @@ from datetime import datetime
 from models import db, Student, Certificate, Project, Opportunity, Company, Faculty, Apply, Assigned, Experience, Trainer, Document
 from flask_admin.form import SecureForm
 from wtforms import SelectField
+from flask import request, session, redirect, url_for, flash
+from models import db, Opportunity
 
 app = Flask(__name__)
 app.secret_key = 'aoun_for_now'
@@ -193,7 +195,8 @@ def sign_up_student():
 def HomePage_student():
     student = session.get('student')
     opportunities = Opportunity.query.all() 
-    return render_template('student/HomePage_student.html', student=student, opportunities=opportunities)
+    current_time = datetime.utcnow()  # Get the current UTC time
+    return render_template('student/HomePage_student.html', student=student, opportunities=opportunities, current_time=current_time)
 
 @app.route('/profile')
 def profile():
@@ -406,7 +409,16 @@ def update_profile():
 @app.route('/apply/<int:opportunity_id>', methods=['POST'])
 def apply_opportunity(opportunity_id):
     student_id = request.form.get('student_id')
-    
+    opportunity = Opportunity.query.get(opportunity_id)
+
+    # Check if the application is within the allowed dates
+    if datetime.utcnow() < opportunity.open_date:
+        flash('Applications have not opened yet.', 'danger')
+        return redirect(url_for('HomePage_student'))
+    if datetime.utcnow() > opportunity.close_date:
+        flash('The application period has closed.', 'danger')
+        return redirect(url_for('HomePage_student'))
+
     # Check if the student has already applied to this opportunity
     existing_application = Apply.query.filter_by(student_id=student_id, opportunity_id=opportunity_id).first()
     
@@ -423,6 +435,7 @@ def apply_opportunity(opportunity_id):
         flash('Application submitted successfully!', 'success')
     
     return redirect(url_for('HomePage_student'))
+
 
 @app.route('/delete_application/<int:application_id>', methods=['POST'])
 def delete_application(application_id):
@@ -562,12 +575,19 @@ def offer_coop():
     job_title = request.form.get('jobTitle')
     location = request.form.get('location')
     duration = request.form.get('duration')
+    work_type = request.form.get('work_type')  # Assuming you have a field for work type
     job_description = request.form.get('jobDescription')
     
+    # Convert string dates from form into datetime objects
+    open_date = datetime.strptime(request.form.get('open_date'), '%Y-%m-%dT%H:%M')
+    close_date = datetime.strptime(request.form.get('close_date'), '%Y-%m-%dT%H:%M')
+
     # Assuming company_id is stored in the session, retrieve it
     company_id = session.get('company').get('CompanyID')
 
-
+    if not company_id:
+        flash('You need to log in as a company to offer a co-op.', 'danger')
+        return redirect(url_for('HomePage_company'))
 
     # Create a new Opportunity instance
     new_opportunity = Opportunity(
@@ -575,6 +595,8 @@ def offer_coop():
         OppCity=location,
         OppJobTitle=job_title,
         OppJobDesc=job_description,
+        open_date=open_date,
+        close_date=close_date,
         company_id=company_id
     )
 
@@ -584,6 +606,8 @@ def offer_coop():
 
     flash('Co-op opportunity offered successfully!', 'success')
     return redirect(url_for('HomePage_company'))
+
+
 
 
 
@@ -931,14 +955,9 @@ def logout():
 
 
 
-
-
-
-    
-
-
 if __name__ == '__main__':
     app.run(debug=True)
+
 
 
 

@@ -118,11 +118,22 @@
                           <option value="on-site">On-site</option>
                           <option value="remote-on-site">Remote and On-site</option>
                         </select>
-                      </div>          
+                      </div>
                       <div class="mb-3">
                         <label for="jobDescription" class="form-label">Job Description</label>
                         <textarea class="form-control" id="jobDescription" name="jobDescription" rows="4" required></textarea>
                       </div>
+                    
+                      <!-- New fields for application period -->
+                      <div class="mb-3">
+                        <label for="open_date" class="form-label">Application Open Date</label>
+                        <input type="datetime-local" class="form-control" id="open_date" name="open_date" required>
+                      </div>
+                      <div class="mb-3">
+                        <label for="close_date" class="form-label">Application Close Date</label>
+                        <input type="datetime-local" class="form-control" id="close_date" name="close_date" required>
+                      </div>
+                    
                       <button type="submit" class="btn btn-primary">Submit Offer</button>
                     </form>
                     
