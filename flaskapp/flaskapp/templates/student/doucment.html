@@ -11,134 +11,322 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/student/document.css') }}">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  
 
-
-
-<script src="https://kit.fontawesome.com/6503ba7c64.js" crossorigin="anonymous"></script>
-
+  <script src="https://kit.fontawesome.com/6503ba7c64.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
 </head>
 
 <body>
 
+<section id="title">
+  <div class="container-fluid">
 
-    <section id="title">
-      <div class="container-fluid">
+    <!-- Nav Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <a class="navbar-brand" href="{{ url_for('HomePage') }}">AOUN</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('HomePage_student') }}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('profile') }}">Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('doucment') }}">Documents</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('appliaction') }}">Applications</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('logout') }}"><i class="fa-solid fa-right-from-bracket" style="color: #000000;"></i></a>
+          </li>
+        </ul>
+      </div>
+    </nav>
 
-      <!-- Nav Bar -->
-
-      <nav class="navbar navbar-expand-lg navbar-dark">
-        <a class="navbar-brand" href="{{ url_for('HomePage') }}">AOUN</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('HomePage_student') }}">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('profile') }}">Profile</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('doucment') }}">Documents</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('appliaction') }}">Applications</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('logout') }}"><i class="fa-solid fa-right-from-bracket" style="color: #000000;"></i></a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-
-      <!-- Title -->
-      <hr class="styled-hr">
-      {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <div class="container mt-4">
-          {% for category, message in messages %}
-            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-              {{ message }}
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-          {% endfor %}
-        </div>
-      {% endif %}
+    <!-- Title -->
+    <hr class="styled-hr">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="container mt-4">
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
     {% endwith %}
 
-      <div class="row" style="background-color: white;">
-        <div class="container mt-5" style="padding: 20px;">
-            <!-- Progress Bar -->
-            <div class="progress-container">
-              <h3><label for="fileProgress" class="form-label">File Submission Progress</label></h3>
-              <div class="progress">
-                  <div class="progress-bar" role="progressbar" style="width: {{ progress_percentage }}%;" aria-valuenow="{{ progress_percentage }}" aria-valuemin="0" aria-valuemax="100">{{ progress_percentage }}%</div>
-              </div>
-          </div>
-            <hr class="styled-hr">
-            <!-- Accordion for File Submissions -->
-            <div class="accordion" id="accordionFlushExample">
-              <div class="accordion-item">
-                  <h2 class="accordion-header" id="flush-headingOne">
-                      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="true" aria-controls="flush-collapseOne">
-                          Week 1 Report 
-                          {% if student_documents and student_documents[0].status == 'Completed' %}
-                              - Completed
-                          {% endif %}
-                      </button>
-                  </h2>
-                  <div id="flush-collapseOne" class="accordion-collapse collapse show" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                      <div class="accordion-body">
-                          <form action="{{ url_for('upload_document') }}" method="POST" enctype="multipart/form-data">
-                              <div class="file-upload" style="margin-bottom: 15px;">
-                                  <label for="week1Report" class="form-label">Upload Week 1 Report</label>
-                                  <input class="form-control" type="file" id="week1Report" name="document">
-                              </div>
-                              <button type="submit" class="btn btn-primary" {% if student_documents and student_documents[0].status == 'Completed' %} disabled {% endif %}>Submit Report</button>
-                          </form>
-                      </div>
-                  </div>
-              </div>
-              <!-- Repeat for other weeks if needed -->
-               
-          </div>
-          
-            
-          
-          
-          
-        </div>
-    
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-
-         
+    <div class="row" style="background-color: white;">
+      <div class="container mt-5" style="padding: 20px;">
         
+        <!-- Progress Bar -->
+        <div class="progress-container">
+          <h3><label for="fileProgress" class="form-label">File Submission Progress</label></h3>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: {{ progress_percentage }}%;" aria-valuenow="{{ progress_percentage }}" aria-valuemin="0" aria-valuemax="100">{{ progress_percentage }}%</div>
+          </div>
+        </div>
+        
+        <hr class="styled-hr">
 
+        <!-- Accordion for File Submissions -->
+        <div class="accordion" id="accordionFlushExample">
+
+          <!-- Week 1 Report -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-headingOne">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="true" aria-controls="flush-collapseOne">
+                Week 1 Report 
+                {% if student_documents|length > 0 and student_documents[0].status == 'Completed' %}
+                    - Completed
+                {% endif %}
+              </button>
+            </h2>
+            <div id="flush-collapseOne" class="accordion-collapse collapse show" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+              <div class="accordion-body">
+                <form action="{{ url_for('upload_document') }}" method="POST" enctype="multipart/form-data">
+                  <div class="file-upload" style="margin-bottom: 15px;">
+                    <label for="week1Report" class="form-label">Upload Week 1 Report</label>
+                    <input class="form-control" type="file" id="week1Report" name="document">
+                  </div>
+                  <button type="submit" class="btn btn-primary" {% if student_documents|length > 0 and student_documents[0].status == 'Completed' %} disabled {% endif %}>Submit Report</button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Week 2 Report -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-headingTwo">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                Week 2 Report
+                {% if student_documents|length > 1 and student_documents[1].status == 'Completed' %}
+                    - Completed
+                {% endif %}
+              </button>
+            </h2>
+            <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+              <div class="accordion-body">
+                <form action="{{ url_for('upload_document') }}" method="POST" enctype="multipart/form-data">
+                  <div class="file-upload" style="margin-bottom: 15px;">
+                    <label for="week2Report" class="form-label">Upload Week 2 Report</label>
+                    <input class="form-control" type="file" id="week2Report" name="document">
+                  </div>
+                  <button type="submit" class="btn btn-primary" {% if student_documents|length > 1 and student_documents[1].status == 'Completed' %} disabled {% endif %}>Submit Report</button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Week 3 Report -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-headingThree">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                Week 3 Report
+                {% if student_documents|length > 2 and student_documents[2].status == 'Completed' %}
+                    - Completed
+                {% endif %}
+              </button>
+            </h2>
+            <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+              <div class="accordion-body">
+                <form action="{{ url_for('upload_document') }}" method="POST" enctype="multipart/form-data">
+                  <div class="file-upload" style="margin-bottom: 15px;">
+                    <label for="week3Report" class="form-label">Upload Week 3 Report</label>
+                    <input class="form-control" type="file" id="week3Report" name="document">
+                  </div>
+                  <button type="submit" class="btn btn-primary" {% if student_documents|length > 2 and student_documents[2].status == 'Completed' %} disabled {% endif %}>Submit Report</button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Week 4 Report -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-headingFour">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
+                Week 4 Report
+                {% if student_documents|length > 3 and student_documents[3].status == 'Completed' %}
+                    - Completed
+                {% endif %}
+              </button>
+            </h2>
+            <div id="flush-collapseFour" class="accordion-collapse collapse" aria-labelledby="flush-headingFour" data-bs-parent="#accordionFlushExample">
+              <div class="accordion-body">
+                <form action="{{ url_for('upload_document') }}" method="POST" enctype="multipart/form-data">
+                  <div class="file-upload" style="margin-bottom: 15px;">
+                    <label for="week4Report" class="form-label">Upload Week 4 Report</label>
+                    <input class="form-control" type="file" id="week4Report" name="document">
+                  </div>
+                  <button type="submit" class="btn btn-primary" {% if student_documents|length > 3 and student_documents[3].status == 'Completed' %} disabled {% endif %}>Submit Report</button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Week 5 Report -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-headingFive">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseFive">
+                Week 5 Report
+                {% if student_documents|length > 4 and student_documents[4].status == 'Completed' %}
+                    - Completed
+                {% endif %}
+              </button>
+            </h2>
+            <div id="flush-collapseFive" class="accordion-collapse collapse" aria-labelledby="flush-headingFive" data-bs-parent="#accordionFlushExample">
+              <div class="accordion-body">
+                <form action="{{ url_for('upload_document') }}" method="POST" enctype="multipart/form-data">
+                  <div class="file-upload" style="margin-bottom: 15px;">
+                    <label for="week5Report" class="form-label">Upload Week 5 Report</label>
+                    <input class="form-control" type="file" id="week5Report" name="document">
+                  </div>
+                  <button type="submit" class="btn btn-primary" {% if student_documents|length > 4 and student_documents[4].status == 'Completed' %} disabled {% endif %}>Submit Report</button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Week 6 Report -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-headingSix">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSix" aria-expanded="false" aria-controls="flush-collapseSix">
+                Week 6 Report
+                {% if student_documents|length > 5 and student_documents[5].status == 'Completed' %}
+                    - Completed
+                {% endif %}
+              </button>
+            </h2>
+            <div id="flush-collapseSix" class="accordion-collapse collapse" aria-labelledby="flush-headingSix" data-bs-parent="#accordionFlushExample">
+              <div class="accordion-body">
+                <form action="{{ url_for('upload_document') }}" method="POST" enctype="multipart/form-data">
+                  <div class="file-upload" style="margin-bottom: 15px;">
+                    <label for="week6Report" class="form-label">Upload Week 6 Report</label>
+                    <input class="form-control" type="file" id="week6Report" name="document">
+                  </div>
+                  <button type="submit" class="btn btn-primary" {% if student_documents|length > 5 and student_documents[5].status == 'Completed' %} disabled {% endif %}>Submit Report</button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Week 7 Report -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-headingSeven">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSeven" aria-expanded="false" aria-controls="flush-collapseSeven">
+                Week 7 Report
+                {% if student_documents|length > 6 and student_documents[6].status == 'Completed' %}
+                    - Completed
+                {% endif %}
+              </button>
+            </h2>
+            <div id="flush-collapseSeven" class="accordion-collapse collapse" aria-labelledby="flush-headingSeven" data-bs-parent="#accordionFlushExample">
+              <div class="accordion-body">
+                <form action="{{ url_for('upload_document') }}" method="POST" enctype="multipart/form-data">
+                  <div class="file-upload" style="margin-bottom: 15px;">
+                    <label for="week7Report" class="form-label">Upload Week 7 Report</label>
+                    <input class="form-control" type="file" id="week7Report" name="document">
+                  </div>
+                  <button type="submit" class="btn btn-primary" {% if student_documents|length > 6 and student_documents[6].status == 'Completed' %} disabled {% endif %}>Submit Report</button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Week 8 Report -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-headingEight">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseEight" aria-expanded="false" aria-controls="flush-collapseEight">
+                Week 8 Report
+                {% if student_documents|length > 7 and student_documents[7].status == 'Completed' %}
+                    - Completed
+                {% endif %}
+              </button>
+            </h2>
+            <div id="flush-collapseEight" class="accordion-collapse collapse" aria-labelledby="flush-headingEight" data-bs-parent="#accordionFlushExample">
+              <div class="accordion-body">
+                <form action="{{ url_for('upload_document') }}" method="POST" enctype="multipart/form-data">
+                  <div class="file-upload" style="margin-bottom: 15px;">
+                    <label for="week8Report" class="form-label">Upload Week 8 Report</label>
+                    <input class="form-control" type="file" id="week8Report" name="document">
+                  </div>
+                  <button type="submit" class="btn btn-primary" {% if student_documents|length > 7 and student_documents[7].status == 'Completed' %} disabled {% endif %}>Submit Report</button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Final Evaluation -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-headingEleven">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseEleven" aria-expanded="false" aria-controls="flush-collapseEleven">
+                Final Evaluation
+                {% if student_documents|length > 10 and student_documents[10].status == 'Completed' %}
+                    - Completed
+                {% endif %}
+              </button>
+            </h2>
+            <div id="flush-collapseEleven" class="accordion-collapse collapse" aria-labelledby="flush-headingEleven" data-bs-parent="#accordionFlushExample">
+              <div class="accordion-body">
+                <form action="{{ url_for('upload_document') }}" method="POST" enctype="multipart/form-data">
+                  <div class="file-upload" style="margin-bottom: 15px;">
+                    <label for="finalEvaluation" class="form-label">Upload Final Evaluation</label>
+                    <input class="form-control" type="file" id="finalEvaluation" name="document">
+                  </div>
+                  <button type="submit" class="btn btn-primary" {% if student_documents|length > 10 and student_documents[10].status == 'Completed' %} disabled {% endif %}>Submit Final Evaluation</button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Attendance Report -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-headingTwelve">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwelve" aria-expanded="false" aria-controls="flush-collapseTwelve">
+                Attendance Report
+                {% if student_documents|length > 11 and student_documents[11].status == 'Completed' %}
+                    - Completed
+                {% endif %}
+              </button>
+            </h2>
+            <div id="flush-collapseTwelve" class="accordion-collapse collapse" aria-labelledby="flush-headingTwelve" data-bs-parent="#accordionFlushExample">
+              <div class="accordion-body">
+                <form action="{{ url_for('upload_document') }}" method="POST" enctype="multipart/form-data">
+                  <div class="file-upload" style="margin-bottom: 15px;">
+                    <label for="attendanceReport" class="form-label">Upload Attendance Report</label>
+                    <input class="form-control" type="file" id="attendanceReport" name="document">
+                  </div>
+                  <button type="submit" class="btn btn-primary" {% if student_documents|length > 11 and student_documents[11].status == 'Completed' %} disabled {% endif %}>Submit Attendance Report</button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
 
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+
+    </div>
   </div>
-  </section>
+</section>
 
-  <!-- Footer -->
-
-  <footer id="footer">
-
-
-      <i class="soical-icon fa-brands fa-twitter"></i>
-      <i class="soical-icon fa-solid fa-envelope"></i>
-
-
-    <p>© Copyright 2024 AOUN</p>
-
-  </footer>
-
+<!-- Footer -->
+<footer id="footer">
+  <i class="soical-icon fa-brands fa-twitter"></i>
+  <i class="soical-icon fa-solid fa-envelope"></i>
+  <p>© Copyright 2024 AOUN</p>
+</footer>
 
 </body>
-
 </html>

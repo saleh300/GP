@@ -236,11 +236,14 @@ def doucment():
         return redirect(url_for('login'))
 
     student_id = session['student']['StudentID']
-    
-    # Fetch the student's documents from the database
     student_documents = Document.query.filter_by(student_id=student_id).all()
 
-    return render_template('student/doucment.html', student_documents=student_documents)
+    # Example calculation of progress percentage based on completed documents
+    total_documents = 10  # Assuming you expect 10 documents to be uploaded
+    completed_documents = sum(1 for doc in student_documents if doc.status == 'Completed')
+    progress_percentage = (completed_documents / total_documents) * 100 if total_documents > 0 else 0
+
+    return render_template('student/doucment.html', student_documents=student_documents, progress_percentage=progress_percentage)
 
 
 # faculty section
