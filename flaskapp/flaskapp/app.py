@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 from werkzeug.utils import secure_filename
 from flask_admin import Admin
+from flask_admin import AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
 from flask_migrate import Migrate
 from datetime import datetime
@@ -29,11 +30,103 @@ db.init_app(app)
 
 migrate = Migrate(app, db)
 
-# Initialize Flask-Admin
-admin = Admin(app, name='Aoun Admin', template_mode='bootstrap3')
 
 
 
+# admin dashboard 
+
+class MyAdminIndexView(AdminIndexView):
+    @expose('/', methods=['GET', 'POST'])
+    def index(self):
+        # Retrieve the search queries from the form
+        student_search_query = request.args.get('student_search_query', '').strip()
+        company_search_query = request.args.get('company_search_query', '').strip()
+        faculty_search_query = request.args.get('faculty_search_query', '').strip()
+
+        # Student search logic
+        if student_search_query:
+            students = Student.query.filter(
+                db.or_(
+                    Student.StudentID.like(f"%{student_search_query}%"),
+                    Student.StFName.like(f"%{student_search_query}%"),
+                    Student.StLName.like(f"%{student_search_query}%")
+                )
+            ).all()
+        else:
+            students = Student.query.all()
+
+        # Company search logic
+        if company_search_query:
+            companies = Company.query.filter(
+                db.or_(
+                    Company.id.like(f"%{company_search_query}%"),
+                    Company.CompName.like(f"%{company_search_query}%"),
+                    Company.CompEmail.like(f"%{company_search_query}%")
+                )
+            ).all()
+        else:
+            companies = Company.query.all()
+
+        # Faculty search logic
+        if faculty_search_query:
+            faculties = Faculty.query.filter(
+                db.or_(
+                    Faculty.FacID.like(f"%{faculty_search_query}%"),
+                    Faculty.FacFName.like(f"%{faculty_search_query}%"),
+                    Faculty.FacLName.like(f"%{faculty_search_query}%")
+                )
+            ).all()
+        else:
+            faculties = Faculty.query.all()
+
+        # Prepare faculty data with assigned students
+        faculty_data = []
+        for faculty in faculties:
+            assigned_students = Student.query.filter_by(faculty_id=faculty.FacID).all()
+            faculty_data.append({
+                'faculty': faculty,
+                'assigned_students': assigned_students
+            })
+
+        # Trainer query with assigned companies
+        trainers = Trainer.query.all()
+        trainer_data = []
+        for trainer in trainers:
+            company = Company.query.get(trainer.company_id)
+            trainer_data.append({
+                'trainer': trainer,
+                'company': company
+            })
+
+        # Count the total number of companies
+        total_companies = Company.query.count()
+
+        # Count the number of verified companies
+        verified_companies = Company.query.filter_by(verify=True).count()
+
+        # Count total students
+        total_students = Student.query.count()
+
+        # Count the number of students who have applied to opportunities
+        applied_students = Apply.query.distinct(Apply.student_id).count()
+
+        # Count the number of students who have been accepted
+        accepted_students = Apply.query.filter_by(status='Accepted').distinct(Apply.student_id).count()
+
+        # Pass the counts, students, companies, faculty, and trainer data to the template
+        return self.render('admin/dashboard.html', 
+                           total_companies=total_companies, 
+                           verified_companies=verified_companies, 
+                           students=students, 
+                           companies=companies, 
+                           total_students=total_students, 
+                           applied_students=applied_students, 
+                           accepted_students=accepted_students,
+                           student_search_query=student_search_query,
+                           company_search_query=company_search_query,
+                           faculty_search_query=faculty_search_query,
+                           faculty_data=faculty_data,
+                           trainer_data=trainer_data)
 
 
 
@@ -59,7 +152,10 @@ class StudentAdminView(ModelView):
         form = super(StudentAdminView, self).edit_form(obj)
         form.faculty_id.choices = [(f.FacID, f"{f.FacFName} {f.FacLName}") for f in Faculty.query.all()]
         return form
-    
+
+# Initialize Flask-Admin
+admin = Admin(app, name='Aoun Admin', template_mode='bootstrap3', index_view=MyAdminIndexView())
+
 # Add views for your models
 admin.add_view(StudentAdminView(Student, db.session))
 admin.add_view(ModelView(Certificate, db.session))
@@ -200,33 +296,9 @@ def HomePage_company():
 
     return render_template('company/HomePage_company.html', company=company, applied_students=applied_students, trainers=trainers, students=students)
 
-@app.route('/comp_profile')
-def comp_profile():
-    company_id = session.get('company').get('CompanyID')
-    company = Company.query.get(company_id)
-    
-    if not company:
-        flash('Company not found.')
-        return redirect(url_for('HomePage_company'))
-    
-    trainers = Trainer.query.filter_by(company_id=company_id).all()
-    return render_template('company/comp_profile.html',  company=company, trainers=trainers) 
 
-@app.route('/HomePage_trainer')
-def company_trainer():
-    if 'trainer' not in session:
-        flash('You must be logged in as a trainer to view this page.', 'danger')
-        return redirect(url_for('login'))
 
-    trainer_id = session['trainer']['TrainerID']
-    
-    # Fetch all students assigned to this trainer
-    assigned_students = db.session.query(Student).join(Assigned).filter(Assigned.trainer_id == trainer_id).all()
-    
-    # Fetch all documents assigned to this trainer that have not yet been approved
-    documents_to_approve = Document.query.filter_by(trainer_id=trainer_id, approved_by_trainer=False).all()
 
-    return render_template('company/trainer.html', students=assigned_students, documents=documents_to_approve)
 
 
 
@@ -360,6 +432,59 @@ def delete_application(application_id):
         flash('Application not found.', 'danger')
     return redirect(url_for('appliaction'))
 
+@app.route('/upload_document', methods=['POST'])
+def upload_document():
+    if 'student' not in session:
+        flash('You must be logged in as a student to upload documents.', 'danger')
+        return redirect(url_for('login'))
+
+    student_id = session['student']['StudentID']
+    
+    assignment = Assigned.query.filter_by(student_id=student_id).first()
+    
+    if not assignment or not assignment.trainer_id:
+        flash('No trainer assigned to you. Please contact your administrator.', 'danger')
+        return redirect(url_for('doucment'))
+
+    trainer_id = assignment.trainer_id
+
+    if 'document' not in request.files:
+        flash('No file part', 'danger')
+        return redirect(request.url)
+
+    file = request.files['document']
+    if file.filename == '':
+        flash('No selected file', 'danger')
+        return redirect(request.url)
+
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(file_path)
+
+        new_document = Document(
+            doc_name=filename,
+            doc_path=file_path,
+            student_id=student_id,
+            trainer_id=trainer_id,
+            status='Completed'  # Set the status to Completed when uploaded
+        )
+        db.session.add(new_document)
+        db.session.commit()
+
+        flash('Document uploaded successfully.', 'success')
+        return redirect(url_for('doucment'))
+
+    flash('File type not allowed.', 'danger')
+    return redirect(url_for('doucment'))
+
+
+
+
+def allowed_file(filename):
+    ALLOWED_EXTENSIONS = {'pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'}
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 #-------------------------> end student route <--------------------------------- 
 
 
@@ -416,6 +541,17 @@ def update_company_profile():
 
     return redirect(url_for('comp_profile'))
 
+@app.route('/comp_profile')
+def comp_profile():
+    company_id = session.get('company').get('CompanyID')
+    company = Company.query.get(company_id)
+    
+    if not company:
+        flash('Company not found.')
+        return redirect(url_for('HomePage_company'))
+    
+    trainers = Trainer.query.filter_by(company_id=company_id).all()
+    return render_template('company/comp_profile.html',  company=company, trainers=trainers) 
 
 @app.route('/offer_coop', methods=['POST'])
 def offer_coop():
@@ -536,61 +672,26 @@ def reject_student(apply_id):
 
 
 #-------------------------> end company route <--------------------------------- 
-@app.route('/upload_document', methods=['POST'])
-def upload_document():
-    if 'student' not in session:
-        flash('You must be logged in as a student to upload documents.', 'danger')
+
+
+
+#-------------------------> start trainer route <---------------------------------
+
+@app.route('/HomePage_trainer')
+def company_trainer():
+    if 'trainer' not in session:
+        flash('You must be logged in as a trainer to view this page.', 'danger')
         return redirect(url_for('login'))
 
-    student_id = session['student']['StudentID']
+    trainer_id = session['trainer']['TrainerID']
     
-    assignment = Assigned.query.filter_by(student_id=student_id).first()
+    # Fetch all students assigned to this trainer
+    assigned_students = db.session.query(Student).join(Assigned).filter(Assigned.trainer_id == trainer_id).all()
     
-    if not assignment or not assignment.trainer_id:
-        flash('No trainer assigned to you. Please contact your administrator.', 'danger')
-        return redirect(url_for('doucment'))
+    # Fetch all documents assigned to this trainer that have not yet been approved
+    documents_to_approve = Document.query.filter_by(trainer_id=trainer_id, approved_by_trainer=False).all()
 
-    trainer_id = assignment.trainer_id
-
-    if 'document' not in request.files:
-        flash('No file part', 'danger')
-        return redirect(request.url)
-
-    file = request.files['document']
-    if file.filename == '':
-        flash('No selected file', 'danger')
-        return redirect(request.url)
-
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(file_path)
-
-        new_document = Document(
-            doc_name=filename,
-            doc_path=file_path,
-            student_id=student_id,
-            trainer_id=trainer_id,
-            status='Completed'  # Set the status to Completed when uploaded
-        )
-        db.session.add(new_document)
-        db.session.commit()
-
-        flash('Document uploaded successfully.', 'success')
-        return redirect(url_for('doucment'))
-
-    flash('File type not allowed.', 'danger')
-    return redirect(url_for('doucment'))
-
-
-
-
-def allowed_file(filename):
-    ALLOWED_EXTENSIONS = {'pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'}
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
-
+    return render_template('company/trainer.html', students=assigned_students, documents=documents_to_approve)
 
 @app.route('/approve_document/<int:doc_id>', methods=['POST'])
 def approve_document(doc_id):
@@ -615,6 +716,7 @@ def approve_document(doc_id):
     return redirect(url_for('company_trainer'))
 
 
+#-------------------------> end trainer route <---------------------------------
 
 
 
@@ -733,6 +835,8 @@ def faculty_documents():
 
     return render_template('faculty/faculty_documents.html', approved_documents=approved_documents)
 
+#-------------------------> end faculty route <--------------------------------- 
+
 
 #-------------------------> strat Login - logout route <--------------------------------- 
 
@@ -821,6 +925,14 @@ def logout():
     return redirect(url_for('HomePage'))
 
 #-------------------------> end Login - logout route <--------------------------------- 
+
+
+
+
+
+
+    
+
 
 if __name__ == '__main__':
     app.run(debug=True)
