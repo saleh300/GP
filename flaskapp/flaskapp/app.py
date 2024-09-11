@@ -300,19 +300,15 @@ def HomePage_company():
     # Fetch students who have applied for opportunities in this company
     students = Student.query.filter(Student.applications.any(Apply.opportunity_id.in_([o.id for o in opportunities]))).all()
 
-    return render_template('company/HomePage_company.html', company=company, applied_students=applied_students, trainers=trainers, students=students)
-
-
-
-
-
-
-
-
-@app.route('/view_documents')
-def view_documents():
-    return render_template('company/view_documents.html') 
-
+    # Pass the opportunities to the template
+    return render_template(
+        'company/HomePage_company.html', 
+        company=company, 
+        applied_students=applied_students, 
+        trainers=trainers, 
+        students=students, 
+        opportunities=opportunities  # Pass the opportunities to the template
+    )
 
 
 #-------------------------> start student route <--------------------------------- 
@@ -338,7 +334,6 @@ def student_registration():
     db.session.commit()
 
     flash(f"Account created successfully for {first_name}",  'success')
-
 
  
     # Redirect to a success page or back to the form
@@ -436,17 +431,27 @@ def apply_opportunity(opportunity_id):
     
     return redirect(url_for('HomePage_student'))
 
+@app.route('/edit_opportunity/<int:opportunity_id>', methods=['POST'])
+def edit_opportunity(opportunity_id):
+    # Get the opportunity object from the database
+    opportunity = Opportunity.query.get_or_404(opportunity_id)
 
-@app.route('/delete_application/<int:application_id>', methods=['POST'])
-def delete_application(application_id):
-    application = Apply.query.get(application_id)
-    if application:
-        db.session.delete(application)
-        db.session.commit()
-        flash('Application deleted successfully.', 'success')
-    else:
-        flash('Application not found.', 'danger')
-    return redirect(url_for('appliaction'))
+    # Retrieve data from the form
+    opportunity.OppJobTitle = request.form.get('jobTitle')
+    opportunity.OppCity = request.form.get('location')
+    opportunity.OppDuration = request.form.get('duration')
+    opportunity.OppJobDesc = request.form.get('jobDescription')
+    
+    # Convert string dates from form into datetime objects
+    opportunity.open_date = datetime.strptime(request.form.get('open_date'), '%Y-%m-%dT%H:%M')
+    opportunity.close_date = datetime.strptime(request.form.get('close_date'), '%Y-%m-%dT%H:%M')
+
+    # Commit the changes to the database
+    db.session.commit()
+
+    flash('Opportunity updated successfully!', 'success')
+    return redirect(url_for('HomePage_company'))
+
 
 @app.route('/upload_document', methods=['POST'])
 def upload_document():
@@ -575,7 +580,6 @@ def offer_coop():
     job_title = request.form.get('jobTitle')
     location = request.form.get('location')
     duration = request.form.get('duration')
-    work_type = request.form.get('work_type')  # Assuming you have a field for work type
     job_description = request.form.get('jobDescription')
     
     # Convert string dates from form into datetime objects

@@ -40,9 +40,6 @@
               <a class="nav-link" href="{{ url_for('comp_profile') }}">Profile</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('view_documents') }}">Student Documents</a>
-            </li>
-            <li class="nav-item">
               <a class="nav-link" href="{{ url_for('logout') }}"><i class="fa-solid fa-right-from-bracket" style="color: #000000;"></i></a>
             </li>
           </ul>
@@ -77,12 +74,6 @@
       <!-- Title -->
       <hr class="styled-hr">
 
-        <div class="row" style="border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); background-color: #f9f9f9; padding: 20px;">
-          <!-- Button trigger modal -->
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" style="width: 18%;">
-            + offer Co-op 
-          </button>
-
           <!-- Modal -->
           <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -109,14 +100,6 @@
                           <option value="less-than-3-months"> Less than 3 Months </option>
                           <option value="3-6-months"> 3-6 Months </option>
                           <option value="over-6-months"> Over 6 Months </option>
-                        </select>
-                      </div>
-                      <div class="mb-3">
-                        <label for="work-type" class="form-label">Work Type</label>
-                        <select class="form-select" id="work-type" name="work_type" required>
-                          <option value="remote">Remote</option>
-                          <option value="on-site">On-site</option>
-                          <option value="remote-on-site">Remote and On-site</option>
                         </select>
                       </div>
                       <div class="mb-3">
@@ -204,66 +187,154 @@
                         <div class="table-responsive" >
                           <div class="table-wrapper" >
                              
-                                 
-                            <table class="table table-striped table-hover">
+                            <h3>Trainee Applications</h3>
+                            <div class="row" style="border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); background-color: #f9f9f9; padding: 20px;">    
+                              <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Student Name</th>                        
+                                        <th>Date Applied</th>
+                                        <th>Position</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for data in applied_students %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td> <!-- loop.index provides the 1-based index -->
+                                        <td>{{ data.student.StFName }} {{ data.student.StLName }}</td>
+                                        <td>{{ data.applied_date.strftime('%m/%d/%Y') }}</td>
+                                        <td>{{ data.opportunity.OppJobTitle }}</td>
+                                        <td>
+                                            <a href="#" class="text-decoration-underline" data-bs-toggle="modal" data-bs-target="#modal{{ data.student.StudentID }}">
+                                                More Info
+                                            </a>
+                                            
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="modal{{ data.student.StudentID }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalLabel{{ data.student.StudentID }}" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="modalLabel{{ data.student.StudentID }}">Student Profile</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="profile-container">
+                                                                <img src="{{ url_for('static', filename='uploads/' + data.student.StPic) }}" alt="Profile Picture" class="img-fluid rounded-circle mb-3" style="width: 100px;">
+                                                                <h6>Name: {{ data.student.StFName }} {{ data.student.StLName }}</h6>
+                                                                <p><strong>Email:</strong> {{ data.student.StEmail }}</p>
+                                                                <p><strong>Major:</strong> {{ data.student.Major }}</p>
+                                                                <p><strong>GPA:</strong> {{ data.student.GPA }}</p>
+                                                                <p><strong>Summary:</strong> A brief summary about the student...</p>
+                                                                <p><strong>Experience:</strong></p>
+                                                                <ul>
+                                                                    {% for exp in data.student.experiences %}
+                                                                    <li>{{ exp.ExpPosition }} at {{ exp.ExpCompName }} from {{ exp.StartDate.strftime('%m/%Y') }} to {% if exp.CurrentlyWorking %}Present{% else %}{{ exp.EndDate.strftime('%m/%Y') }}{% endif %}</li>
+                                                                    {% endfor %}
+                                                                </ul>
+                                                                <p><strong>Certificates:</strong></p>
+                                                                <ul>
+                                                                    {% for cert in data.student.certificates %}
+                                                                    <li>{{ cert.CerName }} - {{ cert.CerDetails }}</li>
+                                                                    {% endfor %}
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <form action="{{ url_for('accept_student', apply_id=data.application.id) }}" method="POST" style="display:inline;">
+                                                                <button type="submit" class="btn btn-primary">Accept</button>
+                                                            </form>
+                                                            <form action="{{ url_for('reject_student', apply_id=data.application.id) }}" method="POST" style="display:inline;">
+                                                                <button type="submit" class="btn btn-danger">Reject</button>
+                                                            </form>
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                              </table>
+                            </div>
+                          <!-- Existing content of the company homepage -->
+
+                          <!-- Add this section to display the company's offered positions -->
+                          <h3>Offered Positions</h3>
+                          <div class="row" style="border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); background-color: #f9f9f9; padding: 20px;">
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" style="width: 18%;">
+                              + offer Co-op 
+                            </button>
+                          <table class="table table-striped">
                               <thead>
                                   <tr>
-                                      <th>#</th>
-                                      <th>Student Name</th>                        
-                                      <th>Date Applied</th>
-                                      <th>Position</th>
-                                      <th>Actions</th>
+                                      <th>Job Title</th>
+                                      <th>Location</th>
+                                      <th>Duration</th>
+                                      <th>Open Date</th>
+                                      <th>Close Date</th>
+                                      <th>Actions</th> <!-- Add actions column -->
                                   </tr>
                               </thead>
                               <tbody>
-                                  {% for data in applied_students %}
+                                  {% for opportunity in opportunities %}
                                   <tr>
-                                      <td>{{ loop.index }}</td> <!-- loop.index provides the 1-based index -->
-                                      <td>{{ data.student.StFName }} {{ data.student.StLName }}</td>
-                                      <td>{{ data.applied_date.strftime('%m/%d/%Y') }}</td>
-                                      <td>{{ data.opportunity.OppJobTitle }}</td>
+                                      <td>{{ opportunity.OppJobTitle }}</td>
+                                      <td>{{ opportunity.OppCity }}</td>
+                                      <td>{{ opportunity.OppDuration }}</td>
+                                      <td>{{ opportunity.open_date.strftime('%Y-%m-%d') }}</td>
+                                      <td>{{ opportunity.close_date.strftime('%Y-%m-%d') }}</td>
                                       <td>
-                                          <a href="#" class="text-decoration-underline" data-bs-toggle="modal" data-bs-target="#modal{{ data.student.StudentID }}">
-                                              More Info
-                                          </a>
-                                          
+                                          <!-- Button to trigger edit modal -->
+                                          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editOpportunityModal{{ opportunity.id }}">
+                                              Edit
+                                          </button>
+
                                           <!-- Modal -->
-                                          <div class="modal fade" id="modal{{ data.student.StudentID }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalLabel{{ data.student.StudentID }}" aria-hidden="true">
+                                          <div class="modal fade" id="editOpportunityModal{{ opportunity.id }}" tabindex="-1" aria-labelledby="editOpportunityLabel{{ opportunity.id }}" aria-hidden="true">
                                               <div class="modal-dialog">
                                                   <div class="modal-content">
                                                       <div class="modal-header">
-                                                          <h5 class="modal-title" id="modalLabel{{ data.student.StudentID }}">Student Profile</h5>
+                                                          <h5 class="modal-title" id="editOpportunityLabel{{ opportunity.id }}">Edit Opportunity</h5>
                                                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                       </div>
                                                       <div class="modal-body">
-                                                          <div class="profile-container">
-                                                              <img src="{{ url_for('static', filename='uploads/' + data.student.StPic) }}" alt="Profile Picture" class="img-fluid rounded-circle mb-3" style="width: 100px;">
-                                                              <h6>Name: {{ data.student.StFName }} {{ data.student.StLName }}</h6>
-                                                              <p><strong>Email:</strong> {{ data.student.StEmail }}</p>
-                                                              <p><strong>Major:</strong> {{ data.student.Major }}</p>
-                                                              <p><strong>GPA:</strong> {{ data.student.GPA }}</p>
-                                                              <p><strong>Summary:</strong> A brief summary about the student...</p>
-                                                              <p><strong>Experience:</strong></p>
-                                                              <ul>
-                                                                  {% for exp in data.student.experiences %}
-                                                                  <li>{{ exp.ExpPosition }} at {{ exp.ExpCompName }} from {{ exp.StartDate.strftime('%m/%Y') }} to {% if exp.CurrentlyWorking %}Present{% else %}{{ exp.EndDate.strftime('%m/%Y') }}{% endif %}</li>
-                                                                  {% endfor %}
-                                                              </ul>
-                                                              <p><strong>Certificates:</strong></p>
-                                                              <ul>
-                                                                  {% for cert in data.student.certificates %}
-                                                                  <li>{{ cert.CerName }} - {{ cert.CerDetails }}</li>
-                                                                  {% endfor %}
-                                                              </ul>
-                                                          </div>
+                                                          <form method="POST" action="{{ url_for('edit_opportunity', opportunity_id=opportunity.id) }}">
+                                                              <div class="mb-3">
+                                                                  <label for="jobTitle" class="form-label">Job Title</label>
+                                                                  <input type="text" class="form-control" id="jobTitle" name="jobTitle" value="{{ opportunity.OppJobTitle }}" required>
+                                                              </div>
+                                                              <div class="mb-3">
+                                                                  <label for="location" class="form-label">Location</label>
+                                                                  <input type="text" class="form-control" id="location" name="location" value="{{ opportunity.OppCity }}" required>
+                                                              </div>
+                                                              <div class="mb-3">
+                                                                  <label for="duration" class="form-label">Duration</label>
+                                                                  <select class="form-select" id="duration" name="duration" required>
+                                                                      <option value="less-than-3-months" {% if opportunity.OppDuration == 'less-than-3-months' %}selected{% endif %}>Less than 3 Months</option>
+                                                                      <option value="3-6-months" {% if opportunity.OppDuration == '3-6-months' %}selected{% endif %}>3-6 Months</option>
+                                                                      <option value="over-6-months" {% if opportunity.OppDuration == 'over-6-months' %}selected{% endif %}>Over 6 Months</option>
+                                                                  </select>
+                                                              </div>
+                                                              <div class="mb-3">
+                                                                  <label for="jobDescription" class="form-label">Job Description</label>
+                                                                  <textarea class="form-control" id="jobDescription" name="jobDescription" rows="4" required>{{ opportunity.OppJobDesc }}</textarea>
+                                                              </div>
+                                                              <div class="mb-3">
+                                                                  <label for="open_date" class="form-label">Application Open Date</label>
+                                                                  <input type="datetime-local" class="form-control" id="open_date" name="open_date" value="{{ opportunity.open_date.strftime('%Y-%m-%dT%H:%M') }}" required>
+                                                              </div>
+                                                              <div class="mb-3">
+                                                                  <label for="close_date" class="form-label">Application Close Date</label>
+                                                                  <input type="datetime-local" class="form-control" id="close_date" name="close_date" value="{{ opportunity.close_date.strftime('%Y-%m-%dT%H:%M') }}" required>
+                                                              </div>
+                                                              <button type="submit" class="btn btn-success">Save Changes</button>
+                                                          </form>
                                                       </div>
                                                       <div class="modal-footer">
-                                                          <form action="{{ url_for('accept_student', apply_id=data.application.id) }}" method="POST" style="display:inline;">
-                                                              <button type="submit" class="btn btn-primary">Accept</button>
-                                                          </form>
-                                                          <form action="{{ url_for('reject_student', apply_id=data.application.id) }}" method="POST" style="display:inline;">
-                                                              <button type="submit" class="btn btn-danger">Reject</button>
-                                                          </form>
                                                           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                                       </div>
                                                   </div>
@@ -271,10 +342,17 @@
                                           </div>
                                       </td>
                                   </tr>
+                                  {% else %}
+                                  <tr>
+                                      <td colspan="6">No positions offered yet.</td>
+                                  </tr>
                                   {% endfor %}
                               </tbody>
                           </table>
-                          
+
+
+
+
                           
                           
                           
