@@ -152,6 +152,7 @@ class Document(db.Model):
     upload_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     approved_by_trainer = db.Column(db.Boolean, nullable=False, default=False)
     approved_date = db.Column(db.DateTime, nullable=True)
+    trainer_comment = db.Column(db.String(255), nullable=True)  # New field for comments
     status = db.Column(db.String(50), default='Pending')
     
     student_id = db.Column(db.Integer, db.ForeignKey('student.StudentID'), nullable=False)

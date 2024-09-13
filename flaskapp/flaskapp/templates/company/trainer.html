@@ -84,25 +84,30 @@
         </ul>
       </div>
       
-      <div class="container mt-4">
-        <h2>Documents Pending Approval</h2>
-        <ul class="list-group">
-            {% if documents %}
-                {% for document in documents %}
-                    <li class="list-group-item">
-                        <strong>{{ document.student.StFName }} {{ document.student.StLName }}:</strong> 
-                        {{ document.doc_name }} - 
-                        <a href="{{ url_for('uploaded_file', filename=document.doc_name) }}" target="_blank">View Document</a>
-                        <form action="{{ url_for('approve_document', doc_id=document.id) }}" method="POST" style="display:inline;">
-                            <button type="submit" class="btn btn-success btn-sm">Approve</button>
-                        </form>
-                    </li>
-                {% endfor %}
-            {% else %}
-                <p>No documents found.</p>
-            {% endif %}
-        </ul>
-      </div>
+      <!-- Trainer's Page: List of documents pending approval -->
+<div class="container mt-4">
+  <h2>Documents Pending Approval</h2>
+  <ul class="list-group">
+      {% if documents %}
+          {% for document in documents %}
+              <li class="list-group-item">
+                  <strong>{{ document.student.StFName }} {{ document.student.StLName }}:</strong> 
+                  {{ document.doc_name }} - 
+                  <a href="{{ url_for('uploaded_file', filename=document.doc_name) }}" target="_blank">View Document</a>
+                  <form action="{{ url_for('approve_document', doc_id=document.id) }}" method="POST" style="display:inline;">
+                      <textarea name="trainer_comment" class="form-control" placeholder="Add a comment"></textarea>
+                      <button type="submit" class="btn btn-success btn-sm mt-2">add Comment</button>
+                      <button type="submit" class="btn btn-primary btn-sm mt-2">Approve</button>
+                  </form>
+              </li>
+          {% endfor %}
+      {% else %}
+          <p>No documents found for approval.</p>
+      {% endif %}
+  </ul>
+</div>
+
+      
 
     </div>
 </section>

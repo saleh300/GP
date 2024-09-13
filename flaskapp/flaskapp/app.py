@@ -719,8 +719,8 @@ def company_trainer():
     # Fetch all students assigned to this trainer
     assigned_students = db.session.query(Student).join(Assigned).filter(Assigned.trainer_id == trainer_id).all()
     
-    # Fetch all documents assigned to this trainer that have not yet been approved
-    documents_to_approve = Document.query.filter_by(trainer_id=trainer_id, approved_by_trainer=False).all()
+    # Fetch all documents assigned to this trainer that have not yet been approved and are not commented
+    documents_to_approve = Document.query.filter_by(trainer_id=trainer_id, approved_by_trainer=False).filter(Document.status != 'Commented').all()
 
     return render_template('company/trainer.html', students=assigned_students, documents=documents_to_approve)
 
@@ -731,20 +731,30 @@ def approve_document(doc_id):
         return redirect(url_for('login'))
 
     document = Document.query.get_or_404(doc_id)
-    document.approved_by_trainer = True
-    document.approved_date = datetime.utcnow()
+    
+    # Check if the trainer added a comment
+    comment = request.form.get('trainer_comment')
+    
+    if comment:
+        # Update the document's status and add the comment
+        document.trainer_comment = comment
+        document.status = 'Commented'  # Set status to 'Commented'
+    else:
+        # If no comment, approve the document
+        document.approved_by_trainer = True
+        document.approved_date = datetime.utcnow()
+        document.status = 'Completed'  # Set status to 'Completed'
 
     # Find the assignment linking the student to the faculty and trainer
     assignment = Assigned.query.filter_by(student_id=document.student_id, trainer_id=document.trainer_id).first()
     if assignment and assignment.faculty_id:
         document.faculty_id = assignment.faculty_id
-        print(f"Document approved. Faculty ID: {document.faculty_id}")
-    else:
-        print("No faculty found for this student or faculty not assigned.")
     
     db.session.commit()
-    flash('Document approved successfully.', 'success')
+    flash('Document processed successfully.', 'success')
     return redirect(url_for('company_trainer'))
+
+
 
 
 #-------------------------> end trainer route <---------------------------------
