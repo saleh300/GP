@@ -154,6 +154,7 @@ class Document(db.Model):
     approved_date = db.Column(db.DateTime, nullable=True)
     trainer_comment = db.Column(db.String(255), nullable=True)  # New field for comments
     status = db.Column(db.String(50), default='Pending')
+    week_number = db.Column(db.Integer)  
     
     student_id = db.Column(db.Integer, db.ForeignKey('student.StudentID'), nullable=False)
     trainer_id = db.Column(db.Integer, db.ForeignKey('trainer.TrainerID'), nullable=False)

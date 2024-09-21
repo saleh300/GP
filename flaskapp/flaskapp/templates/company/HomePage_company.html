@@ -79,6 +79,7 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">offre co-op</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -115,11 +116,15 @@
                         <label for="close_date" class="form-label">Application Close Date</label>
                         <input type="datetime-local" class="form-control" id="close_date" name="close_date" required>
                       </div>
-                      <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Submit Offer</button>
-                      </div>
+                    
+                      <button type="submit" class="btn btn-primary">Submit Offer</button>
                     </form>
+                    
                   </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Save changes</button>
                 </div>
               </div>
             </div>
@@ -138,32 +143,7 @@
                 <div class="grid search">
                   <div class="grid-body">
                     <div class="row">
-                      <!-- BEGIN FILTERS -->
-                      <div class="col-md-3">
-                        <h2 class="grid-title">Filters</h2>
-                        <hr>
-    
-                        <!-- BEGIN FILTER BY CATEGORY -->
-                        <h4>By category:</h4>
-                        <div class="checkbox">
-                          <label><input type="checkbox" class="icheck"> Application</label>
-                        </div>
-                        <div class="checkbox">
-                          <label><input type="checkbox" class="icheck"> Design</label>
-                        </div>
-                        <div class="checkbox">
-                          <label><input type="checkbox" class="icheck"> Desktop</label>
-                        </div>
-                        <div class="checkbox">
-                          <label><input type="checkbox" class="icheck"> Management</label>
-                        </div>
-                        <div class="checkbox">
-                          <label><input type="checkbox" class="icheck"> Mobile</label>
-                        </div>
-                        <!-- END FILTER BY CATEGORY -->
-    
-                      </div>
-                      <!-- END FILTERS -->
+                      
                       <!-- BEGIN RESULT -->
                       <div class="col-md-9">
                         <hr>
@@ -256,6 +236,8 @@
                             </div>
                           <!-- Existing content of the company homepage -->
 
+                          <hr class="styled-hr">
+
                           <!-- Add this section to display the company's offered positions -->
                           <h3>Offered Positions</h3>
                           <div class="row" style="border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); background-color: #f9f9f9; padding: 20px;">
@@ -326,9 +308,11 @@
                                                                   <label for="close_date" class="form-label">Application Close Date</label>
                                                                   <input type="datetime-local" class="form-control" id="close_date" name="close_date" value="{{ opportunity.close_date.strftime('%Y-%m-%dT%H:%M') }}" required>
                                                               </div>
+                                                              <button type="submit" class="btn btn-success">Save Changes</button>
                                                           </form>
                                                       </div>
                                                       <div class="modal-footer">
+                                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                                       </div>
                                                   </div>
                                               </div>

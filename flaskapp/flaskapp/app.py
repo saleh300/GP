@@ -171,6 +171,32 @@ admin.add_view(ModelView(Assigned, db.session))
 admin.add_view(ModelView(Trainer, db.session))
 admin.add_view(ModelView(Document, db.session))
 
+@app.route('/delete_all_data')
+def delete_all_data():
+    try:
+        # Delete all data from each table
+        db.session.query(Student).delete()
+        db.session.query(Certificate).delete()
+        db.session.query(Project).delete()
+        db.session.query(Opportunity).delete()
+        db.session.query(Company).delete()
+        db.session.query(Faculty).delete()
+        db.session.query(Apply).delete()
+        db.session.query(Assigned).delete()
+        db.session.query(Experience).delete()
+        db.session.query(Trainer).delete()
+        db.session.query(Document).delete()
+
+        # Commit the changes to the database
+        db.session.commit()
+
+        flash('All data deleted successfully!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'An error occurred: {str(e)}', 'danger')
+
+    return redirect(url_for('HomePage'))
+
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
@@ -339,7 +365,16 @@ def student_registration():
     # Redirect to a success page or back to the form
     return redirect(url_for('HomePage'))
 
-
+@app.route('/delete_application/<int:application_id>', methods=['POST'])
+def delete_application(application_id):
+    application = Apply.query.get(application_id)
+    if application:
+        db.session.delete(application)
+        db.session.commit()
+        flash('Application deleted successfully.', 'success')
+    else:
+        flash('Application not found.', 'danger')
+    return redirect(url_for('appliaction'))
 
 
 @app.route('/update_profile', methods=['POST'])
@@ -453,8 +488,8 @@ def edit_opportunity(opportunity_id):
     return redirect(url_for('HomePage_company'))
 
 
-@app.route('/upload_document', methods=['POST'])
-def upload_document():
+@app.route('/upload_document/<int:week_number>', methods=['POST'])
+def upload_document(week_number):
     if 'student' not in session:
         flash('You must be logged in as a student to upload documents.', 'danger')
         return redirect(url_for('login'))
@@ -465,7 +500,7 @@ def upload_document():
     
     if not assignment or not assignment.trainer_id:
         flash('No trainer assigned to you. Please contact your administrator.', 'danger')
-        return redirect(url_for('doucment'))
+        return redirect(url_for('document'))
 
     trainer_id = assignment.trainer_id
 
@@ -483,14 +518,26 @@ def upload_document():
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
 
-        new_document = Document(
-            doc_name=filename,
-            doc_path=file_path,
-            student_id=student_id,
-            trainer_id=trainer_id,
-            status='Completed'  # Set the status to Completed when uploaded
-        )
-        db.session.add(new_document)
+        # Check if a document already exists for the student and the same week
+        existing_document = Document.query.filter_by(student_id=student_id, trainer_id=trainer_id, week_number=week_number).first()
+
+        if existing_document:
+            # Update the existing document
+            existing_document.doc_name = filename
+            existing_document.doc_path = file_path
+            existing_document.status = 'Completed'
+        else:
+            # Create a new document entry if none exists
+            new_document = Document(
+                doc_name=filename,
+                doc_path=file_path,
+                student_id=student_id,
+                trainer_id=trainer_id,
+                week_number=week_number,  # Store the week number
+                status='Completed'  # Set the status to Completed when uploaded
+            )
+            db.session.add(new_document)
+
         db.session.commit()
 
         flash('Document uploaded successfully.', 'success')
@@ -498,8 +545,6 @@ def upload_document():
 
     flash('File type not allowed.', 'danger')
     return redirect(url_for('doucment'))
-
-
 
 
 def allowed_file(filename):
@@ -969,8 +1014,30 @@ def logout():
 
 
 
+from sqlalchemy import text
+
+def setup_database():
+    with app.app_context():
+        with db.engine.connect() as connection:
+            # Check if the 'document' table has the necessary columns
+            query = text("PRAGMA table_info(document);")
+            result = connection.execute(query)
+            columns = [row[1] for row in result]  # Use index 1 to get the column names
+
+            # Add 'week_number' column if missing
+            if 'week_number' not in columns:
+                alter_table_query = text("""
+                ALTER TABLE document ADD COLUMN week_number INTEGER;
+                """)
+                connection.execute(alter_table_query)
+                print("Added 'week_number' column to 'document' table.")
+            else:
+                print("'week_number' column already exists.")
+
 if __name__ == '__main__':
+    setup_database()
     app.run(debug=True)
+
 
 
 
