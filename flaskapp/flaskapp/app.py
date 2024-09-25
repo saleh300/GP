@@ -21,7 +21,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Upload folder configuration
 app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'uploads')  # Use os.getcwd() to get the current working directory
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB max upload size
+
 
 # Ensure the uploads folder exists
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
@@ -31,8 +32,6 @@ if not os.path.exists(app.config['UPLOAD_FOLDER']):
 db.init_app(app)
 
 migrate = Migrate(app, db)
-
-
 
 
 # admin dashboard 
@@ -596,9 +595,32 @@ def update_company_profile():
         company.CompName = request.form['CompName']
         company.CompEmail = request.form['CompEmail']
         company.CompCity = request.form['CompCity']
-        company.CompNum = request.form['CompNum']  # Corrected this line
+        company.CompNum = request.form['CompNum']
         company.CompWebsite = request.form['CompWebsite']
         company.CompIndustry = request.form['CompIndustry']
+
+        # Handle the logo file upload
+        logo_file = request.files.get('CompLogo')
+        if logo_file:
+            filename = secure_filename(logo_file.filename)
+            logo_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+            # Print debug information
+            print(f"Received file: {logo_file}")
+            print(f"Saving file to: {logo_path}")
+            
+            # Check if the file is readable
+            if logo_file and logo_file.filename != '':
+                try:
+                    logo_file.save(logo_path)
+                    company.CompLogo = filename  # Save the logo filename in the database
+                    print(f"File saved successfully: {filename}")
+                except Exception as e:
+                    print(f"Error saving file: {str(e)}")
+            else:
+                print("No file uploaded or file is invalid")
+        else:
+            print("No file uploaded in the form")
 
         db.session.commit()
         flash('Company profile updated successfully!', 'success')
@@ -606,6 +628,10 @@ def update_company_profile():
         flash('Error: Company profile could not be updated.', 'danger')
 
     return redirect(url_for('comp_profile'))
+
+
+
+
 
 @app.route('/comp_profile')
 def comp_profile():
@@ -1014,28 +1040,7 @@ def logout():
 
 
 
-from sqlalchemy import text
-
-def setup_database():
-    with app.app_context():
-        with db.engine.connect() as connection:
-            # Check if the 'document' table has the necessary columns
-            query = text("PRAGMA table_info(document);")
-            result = connection.execute(query)
-            columns = [row[1] for row in result]  # Use index 1 to get the column names
-
-            # Add 'week_number' column if missing
-            if 'week_number' not in columns:
-                alter_table_query = text("""
-                ALTER TABLE document ADD COLUMN week_number INTEGER;
-                """)
-                connection.execute(alter_table_query)
-                print("Added 'week_number' column to 'document' table.")
-            else:
-                print("'week_number' column already exists.")
-
 if __name__ == '__main__':
-    setup_database()
     app.run(debug=True)
 
 

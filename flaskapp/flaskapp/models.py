@@ -102,6 +102,7 @@ class Company(db.Model):
     CompPass = db.Column(db.String(100), nullable=False)
     CompFile = db.Column(db.String(100), nullable=False)
     verify = db.Column(db.Boolean, nullable=True, default=False)
+    CompLogo = db.Column(db.String(100), nullable=True)
 
     opportunities = db.relationship('Opportunity', backref='company', lazy=True)
     # trainers backref is already defined in the Trainer model

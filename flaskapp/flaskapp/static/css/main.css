@@ -161,4 +161,47 @@ body {
   .soical-icon {
     margin: 20px 10px;
   }
+
+/* Floating Action Button (FAB) */
+.fab-button {
+  position: fixed;
+  bottom: 20px; /* Distance from the bottom of the screen */
+  right: 20px;  /* Distance from the right of the screen */
+  background-color: #007bff;
+  color: white;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease-in-out;
+  z-index: 999; /* Make sure it floats above other elements */
+}
+
+.fab-button:hover {
+  background-color: #0056b3;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  transform: translateY(-3px); /* Slight upward movement on hover */
+}
+
+.fab-button i {
+  font-size: 24px; /* Icon size */
+}
+
+/* Adjust for smaller screens */
+@media (max-width: 768px) {
+  .fab-button {
+      width: 50px;
+      height: 50px;
+      bottom: 15px; /* Slightly closer to the edges */
+      right: 15px;
+  }
+
+  .fab-button i {
+      font-size: 20px;
+  }
+}
+
   
