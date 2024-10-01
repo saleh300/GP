@@ -53,14 +53,26 @@
           {% endfor %}
         </div>
       {% endif %}
-    {% endwith %}
+      {% endwith %}
+      
       <div class="container rounded bg-white mt-5 mb-5">
         <div class="row">
+          <!-- Company Logo and Information -->
           <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-            <img class="rounded-circle mt-5" width="150px" src="{{ url_for('static', filename='uploads/' + company.CompLogo) }}" alt="Company Logo">
+            <!-- Check if company logo exists before displaying -->
+            {% if company.CompLogo %}
+              <img class="rounded-circle mt-5" width="150px" src="{{ url_for('static', filename='uploads/' ~ company.CompLogo) }}" alt="Company Logo">
+              <!-- Debugging -->
+              <p>Logo Path: {{ url_for('static', filename='uploads/' + company.CompLogo) }}</p>
+            {% else %}
+              <img class="rounded-circle mt-5" width="150px" src="{{ url_for('static', filename='images/default_company_logo.png') }}" alt="Default Company Logo">
+              <p>No logo uploaded, displaying default image.</p>
+            {% endif %}
             <span class="font-weight-bold">{{ company.CompName }}</span>
             <span class="text-black-50">{{ company.CompEmail }}</span>
-        </div>
+          </div>
+          
+          <!-- Company Details Form -->
           <div class="col-md-8 border-right">
             <div class="p-3 py-5">
                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -110,6 +122,7 @@
 
           <hr class="styled-hr">
 
+          <!-- Trainers Section -->
           <div class="col-md-4">
             <div class="p-3 py-5">
                 <div class="d-flex justify-content-between align-items-center experience">
@@ -167,7 +180,6 @@
                 {% endif %}
             </div>
         </div>
-        
         
         </div>
       </div>

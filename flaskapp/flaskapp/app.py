@@ -24,6 +24,11 @@ app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'uploads')  # Use os.get
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB max upload size
 
 
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 # Ensure the uploads folder exists
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
     os.makedirs(app.config['UPLOAD_FOLDER'])
@@ -587,7 +592,12 @@ def company_registration():
 
 @app.route('/update_company_profile', methods=['POST'])
 def update_company_profile():
-    company_id = session.get('company').get('CompanyID')
+    company_session = session.get('company')
+    if not company_session:
+        flash('Session expired or company not found.', 'danger')
+        return redirect(url_for('login'))
+
+    company_id = company_session.get('CompanyID')
     company = Company.query.filter_by(id=company_id).first()
 
     if company:
@@ -601,35 +611,35 @@ def update_company_profile():
 
         # Handle the logo file upload
         logo_file = request.files.get('CompLogo')
-        if logo_file:
-            filename = secure_filename(logo_file.filename)
-            logo_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        if logo_file and logo_file.filename != '':
+            if allowed_file(logo_file.filename):
+                filename = secure_filename(logo_file.filename)
+                logo_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 
-            # Print debug information
-            print(f"Received file: {logo_file}")
-            print(f"Saving file to: {logo_path}")
-            
-            # Check if the file is readable
-            if logo_file and logo_file.filename != '':
+                # Ensure the folder exists
+                if not os.path.exists(app.config['UPLOAD_FOLDER']):
+                    os.makedirs(app.config['UPLOAD_FOLDER'])
+
+                # Save the file and update the company logo
                 try:
                     logo_file.save(logo_path)
-                    company.CompLogo = filename  # Save the logo filename in the database
-                    print(f"File saved successfully: {filename}")
+                    company.CompLogo = filename  # Save filename in the database
+                    print(f"File saved at: {logo_path}")
                 except Exception as e:
                     print(f"Error saving file: {str(e)}")
+                    flash('Error saving the logo. Please try again.', 'danger')
+                    return redirect(url_for('comp_profile'))
             else:
-                print("No file uploaded or file is invalid")
+                flash('Invalid file type. Only images are allowed.', 'danger')
         else:
-            print("No file uploaded in the form")
+            print("No file uploaded or file is invalid")
 
-        db.session.commit()
+        db.session.commit()  # Commit changes to the database
         flash('Company profile updated successfully!', 'success')
     else:
         flash('Error: Company profile could not be updated.', 'danger')
 
     return redirect(url_for('comp_profile'))
-
-
 
 
 
