@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <title>Faculty Profile - AOUN</title>
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,900;1,900&family=Ubuntu&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
@@ -18,7 +19,11 @@
     <div class="container-fluid">
       <!-- Nav Bar -->
       <nav class="navbar navbar-expand-lg navbar-dark ">
-        <a class="navbar-brand" href="{{ url_for('HomePage') }}">AOUN</a>
+        <a class="navbar-brand" href="{{ url_for('HomePage') }}" style="display: flex; align-items: center;">
+          <!-- Logo added here -->
+          <img src="{{ url_for('static', filename='images/aounlogo.png') }}" alt="Website Logo" width="70" height="70" style="margin-right: 10px;">
+          <span>AOUN</span>
+        </a>    
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -86,7 +91,7 @@
                     </div>
                     <div class="col-md-12">
                       <label class="labels">Email</label>
-                      <input type="email" name="FacEmail" class="form-control" placeholder="Email" value="{{ faculty.FacEmail or '' }}" required>
+                      <input type="email" name="FacEmail" class="form-control" placeholder="Email" value="{{ faculty.FacEmail or '' }}" readonly>
                     </div>
                   </div>
                   <!-- You can add more fields specific to faculty here -->

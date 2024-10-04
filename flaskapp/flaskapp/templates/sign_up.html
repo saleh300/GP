@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
@@ -18,6 +19,15 @@
                 document.getElementById("facultyForm").style.display = "block";
             } else if (userType === "student") {
                 document.getElementById("studentForm").style.display = "block";
+            }
+        }
+
+        function togglePassword(id) {
+            const input = document.getElementById(id);
+            if (input.type === "password") {
+                input.type = "text";
+            } else {
+                input.type = "password";
             }
         }
     </script>
@@ -38,7 +48,11 @@
         <form id="companyForm" action="{{ url_for('company_registration') }}" style="display:none;" method="POST" enctype="multipart/form-data">
             <input type="text" id="CoName" name="CoName" placeholder="Company Name" required>
             <input type="email" id="CoEmail" name="CoEmail" placeholder="Email Address" required>
-            <input type="password" id="CoPass" name="CoPass" placeholder="Password" required>
+            <label for="CoPass">Password</label>
+            <input type="password" id="CoPass" name="CoPass" placeholder="Password" required minlength="8" 
+                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}" 
+                title="Must contain at least one number, one uppercase, one lowercase letter, one special character, and at least 8 characters">
+            <input type="checkbox" onclick="togglePassword('CoPass')"> Show Password
             <p class="training">Training Schedule File:</p>
             <input type="file" id="CoFile" name="CoFile" required>
             <button type="submit">Create Account</button>
@@ -51,8 +65,12 @@
             <input type="text" name="FacFName" placeholder="First Name" required>
             <input type="text" name="FacLName" placeholder="Last Name" required>
             <input type="email" name="FacEmail" placeholder="Email Address" required>
-            <input type="text" name="FacID" placeholder="Faculty ID" required>
-            <input type="password" name="FacPass" placeholder="Password" required>
+            <input type="text" name="FacID" placeholder="Faculty ID" required minlength="9" maxlength="9" pattern="\d{9}" title="Faculty ID must be exactly 9 digits">
+            <label for="FacPass">Password</label>
+            <input type="password" id="FacPass" name="FacPass" placeholder="Password" required minlength="8" 
+                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}" 
+                title="Must contain at least one number, one uppercase, one lowercase letter, one special character, and at least 8 characters">
+            <input type="checkbox" onclick="togglePassword('FacPass')"> Show Password
             <button type="submit">Create Account</button>
         </form>
 
@@ -62,8 +80,12 @@
             <input type="text" id="StuFName" name="StuFName" placeholder="First Name" required>
             <input type="text" id="StuLName" name="StuLName" placeholder="Last Name" required>
             <input type="email" id="StuEamil" name="StuEamil" placeholder="Email Address" required>
-            <input type="text" id="StuId" name="StuId" placeholder="Student ID" required>
-            <input type="password" id="StuPass" name="StuPass" placeholder="Password" required>
+            <input type="text" id="StuId" name="StuId" placeholder="Student ID" required minlength="9" maxlength="9" pattern="\d{9}" title="Student ID must be exactly 9 digits">
+            <label for="StuPass">Password</label>
+            <input type="password" id="StuPass" name="StuPass" placeholder="Password" required minlength="8" 
+                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}" 
+                title="Must contain at least one number, one uppercase, one lowercase letter, one special character, and at least 8 characters">
+            <input type="checkbox" onclick="togglePassword('StuPass')"> Show Password
             <button type="submit">Create Account</button>
         </form>
     </div>

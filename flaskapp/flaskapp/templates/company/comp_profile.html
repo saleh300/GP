@@ -21,7 +21,11 @@
     <div class="container-fluid">
       <!-- Nav Bar -->
       <nav class="navbar navbar-expand-lg navbar-dark">
-        <a class="navbar-brand" href="{{ url_for('HomePage') }}">AOUN</a>
+        <a class="navbar-brand" href="{{ url_for('HomePage') }}" style="display: flex; align-items: center;">
+          <!-- Logo added here -->
+          <img src="{{ url_for('static', filename='images/aounlogo.png') }}" alt="Website Logo" width="70" height="70" style="margin-right: 10px;">
+          <span>AOUN</span>
+        </a>    
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -94,11 +98,11 @@
                         </div>
                         <div class="col-md-6 mt-2">
                             <label class="labels">Contact Number</label>
-                            <input type="text" class="form-control" name="CompNum" placeholder="Contact Number" value="{{ company.CompNum }}" required>
+                            <input type="text" class="form-control" name="CompNum" placeholder="Contact Number" value="{{ company.CompNum }}" required minlength="10" maxlength="10" pattern="\d{10}" title="Contact must be exactly 10 digits">
                         </div>
                         <div class="col-md-6 mt-2">
                             <label class="labels">Email</label>
-                            <input type="email" class="form-control" name="CompEmail" placeholder="Email" value="{{ company.CompEmail }}">
+                            <input type="email" class="form-control" name="CompEmail" placeholder="Email" value="{{ company.CompEmail }}" readonly>
                         </div>
                         <div class="col-md-6 mt-2">
                             <label class="labels">Website</label>
@@ -146,8 +150,11 @@
                     </div>
                     <div class="col-md-12">
                         <label class="labels">Password</label>
-                        <input type="password" name="TraPass" class="form-control" placeholder="Password" value="" required>
+                        <input type="password" name="TraPass" class="form-control" placeholder="Password" value="" required minlength="8" 
+                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}" 
+                        title="Must contain at least one number, one uppercase, one lowercase letter, one special character, and at least 8 characters">
                     </div>
+                    <input type="checkbox" onclick="togglePassword('TraPass')"> Show Password
                     <div class="mt-3 text-center">
                         <button class="btn btn-primary profile-button" type="submit">Add Trainer</button>
                     </div>
