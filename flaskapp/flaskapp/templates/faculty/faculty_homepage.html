@@ -87,10 +87,31 @@
 
       <!-- Sections -->
       <hr class="styled-hr">
+      <!-- Approved Documents Section -->
+<h3>Approved Documents</h3>
+{% if approved_documents %}
+    <ul class="list-group">
+        {% for document in approved_documents %}
+            <li class="list-group-item">
+                <strong>Document Name:</strong> {{ document.doc_name }}<br>
+                <strong>Uploaded By:</strong> {{ document.student.StFName }} {{ document.student.StLName }}<br>
+                <strong>Week:</strong> {{ document.week_number }}<br>
+                <strong>Approval Date:</strong> {{ document.approved_date.strftime('%Y-%m-%d') if document.approved_date else 'Pending' }}
+                {% if document.trainer_comment %}
+                    <br><strong>Trainer Comment:</strong> {{ document.trainer_comment }}
+                {% endif %}
+                <br><a href="{{ url_for('uploaded_file', filename=document.doc_name) }}" class="btn btn-primary" download>Download</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No approved documents available.</p>
+{% endif %}
 
       
 
     </div>
+
   </section>
 
   <!-- Footer -->

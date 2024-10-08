@@ -48,7 +48,7 @@ class MyAdminIndexView(AdminIndexView):
         student_search_query = request.args.get('student_search_query', '').strip()
         company_search_query = request.args.get('company_search_query', '').strip()
         faculty_search_query = request.args.get('faculty_search_query', '').strip()
-
+        
         # Student search logic
         if student_search_query:
             students = Student.query.filter(
@@ -910,8 +910,16 @@ def faculty_homepage():
 
     # Query to fetch assigned students based on the faculty_id in the Student model
     assigned_students = Student.query.filter_by(faculty_id=faculty_id).all()
+    
+    # Query to fetch approved documents associated with this faculty member
+    approved_documents = Document.query.filter_by(faculty_id=faculty_id, approved_by_trainer=True).all()
 
-    return render_template('faculty/faculty_homepage.html', faculty=faculty, assigned_students=assigned_students)
+    return render_template(
+        'faculty/faculty_homepage.html', 
+        faculty=faculty, 
+        assigned_students=assigned_students, 
+        approved_documents=approved_documents
+    )
 
 
 @app.route('/update_faculty_profile', methods=['POST'])
