@@ -130,7 +130,6 @@
                         {% for opportunity in opportunities %}
                           <div class="col-md-3 mb-3">
                             <div class="card custom-card-size">
-                              <img src="{{ url_for('static', filename='images/sdaia_logo.jpeg') }}" class="card-img-top" alt="Company Logo">
                               <div class="card-body">
                                 <h5 class="card-title">{{ opportunity.company.CompName }}</h5>
                                 <p class="card-text">{{ opportunity.OppJobTitle }}</p>

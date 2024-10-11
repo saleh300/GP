@@ -609,33 +609,6 @@ def update_company_profile():
         company.CompWebsite = request.form['CompWebsite']
         company.CompIndustry = request.form['CompIndustry']
 
-        # Handle the logo file upload
-        logo_file = request.files.get('CompLogo')
-        if logo_file and logo_file.filename != '':
-            if allowed_file(logo_file.filename):
-                filename = secure_filename(logo_file.filename)
-                logo_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-
-                # Ensure the folder exists
-                if not os.path.exists(app.config['UPLOAD_FOLDER']):
-                    os.makedirs(app.config['UPLOAD_FOLDER'])
-
-                # Save the file and update the company logo
-                try:
-                    logo_file.save(logo_path)
-                    company.CompLogo = filename  # Save filename in the database
-                    print(f"File saved at: {logo_path}")
-                except Exception as e:
-                    print(f"Error saving file: {str(e)}")
-                    flash('Error saving the logo. Please try again.', 'danger')
-                    return redirect(url_for('comp_profile'))
-            else:
-                flash('Invalid file type. Only images are allowed.', 'danger')
-        else:
-            print("No file uploaded or file is invalid")
-
-        db.session.commit()  # Commit changes to the database
-        flash('Company profile updated successfully!', 'success')
     else:
         flash('Error: Company profile could not be updated.', 'danger')
 
