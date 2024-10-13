@@ -938,6 +938,30 @@ def faculty_documents():
 
     return render_template('faculty/faculty_documents.html', approved_documents=approved_documents)
 
+@app.route('/add_document_mark/<int:doc_id>', methods=['POST'])
+def add_document_mark(doc_id):
+    if 'faculty' not in session:
+        flash('Please log in to add marks.', 'danger')
+        return redirect(url_for('login'))
+    
+    document = Document.query.get_or_404(doc_id)
+    mark = request.form.get('mark')
+    max_mark = request.form.get('max_mark')
+
+    if mark.isdigit() and max_mark.isdigit():
+        document.mark = int(mark)
+        document.max_mark = int(max_mark)
+        document.is_marked = True  # Ensure this is set correctly
+        db.session.commit()
+        flash('Mark saved successfully!', 'success')
+    else:
+        flash('Invalid mark or maximum mark. Please enter numbers.', 'danger')
+
+    return redirect(url_for('faculty_homepage'))
+
+
+
+
 #-------------------------> end faculty route <--------------------------------- 
 
 

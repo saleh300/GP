@@ -92,9 +92,11 @@
                 Week 1 Report 
                 {% if student_documents|length > 0 and student_documents[0].status == 'Completed' %}
                     - Completed
+                    - Mark: {{ student_documents[0].mark if student_documents[0].mark is not none else 'Not marked yet' }} out of 10
                 {% endif %}
                 {% if student_documents|length > 0 and student_documents[0].trainer_comment %}
                     - Comment: {{ student_documents[0].trainer_comment }}
+                    
                 {% endif %}
               </button>
             </h2>
@@ -119,6 +121,8 @@
                 Week 2 Report
                 {% if student_documents|length > 1 and student_documents[1].status == 'Completed' %}
                     - Completed
+                    - Mark: {{ student_documents[1].mark if student_documents[1].mark is not none else 'Not marked yet' }} out of 10
+
                 {% endif %}
               </button>
             </h2>
@@ -142,6 +146,8 @@
                 Week 3 Report
                 {% if student_documents|length > 2 and student_documents[2].status == 'Completed' %}
                     - Completed
+                    - Mark: {{ student_documents[2].mark if student_documents[2].mark is not none else 'Not marked yet' }} out of 10
+
                 {% endif %}
               </button>
             </h2>
@@ -165,6 +171,8 @@
                 Week 4 Report
                 {% if student_documents|length > 3 and student_documents[3].status == 'Completed' %}
                     - Completed
+                    - Mark: {{ student_documents[3].mark if student_documents[3].mark is not none else 'Not marked yet' }} out of 10
+
                 {% endif %}
               </button>
             </h2>
@@ -188,6 +196,8 @@
                 Week 5 Report
                 {% if student_documents|length > 4 and student_documents[4].status == 'Completed' %}
                     - Completed
+                    - Mark: {{ student_documents[4].mark if student_documents[4].mark is not none else 'Not marked yet' }} out of 10
+
                 {% endif %}
               </button>
             </h2>
@@ -211,7 +221,8 @@
                 Week 6 Report
                 {% if student_documents|length > 5 and student_documents[5].status == 'Completed' %}
                     - Completed
-                {% endif %}
+                    - Mark: {{ student_documents[5].mark if student_documents[5].mark is not none else 'Not marked yet' }} out of 10
+                    {% endif %}
               </button>
             </h2>
             <div id="flush-collapseSix" class="accordion-collapse collapse" aria-labelledby="flush-headingSix" data-bs-parent="#accordionFlushExample">
@@ -234,7 +245,8 @@
                 Week 7 Report
                 {% if student_documents|length > 6 and student_documents[6].status == 'Completed' %}
                     - Completed
-                {% endif %}
+                    - Mark: {{ student_documents[6].mark if student_documents[6].mark is not none else 'Not marked yet' }} out of 10
+                    {% endif %}
               </button>
             </h2>
             <div id="flush-collapseSeven" class="accordion-collapse collapse" aria-labelledby="flush-headingSeven" data-bs-parent="#accordionFlushExample">
@@ -257,7 +269,8 @@
                 Week 8 Report
                 {% if student_documents|length > 7 and student_documents[7].status == 'Completed' %}
                     - Completed
-                {% endif %}
+                    - Mark: {{ student_documents[7].mark if student_documents[7].mark is not none else 'Not marked yet' }} out of 10
+                    {% endif %}
               </button>
             </h2>
             <div id="flush-collapseEight" class="accordion-collapse collapse" aria-labelledby="flush-headingEight" data-bs-parent="#accordionFlushExample">
@@ -280,7 +293,8 @@
                 Final Evaluation
                 {% if student_documents|length > 10 and student_documents[10].status == 'Completed' %}
                     - Completed
-                {% endif %}
+                    - Mark: {{ student_documents[10].mark if student_documents[10].mark is not none else 'Not marked yet' }} out of 10
+                    {% endif %}
               </button>
             </h2>
             <div id="flush-collapseEleven" class="accordion-collapse collapse" aria-labelledby="flush-headingEleven" data-bs-parent="#accordionFlushExample">
@@ -303,6 +317,7 @@
                 Attendance Report
                 {% if student_documents|length > 11 and student_documents[11].status == 'Completed' %}
                     - Completed
+                    - Mark: {{ student_documents[11].mark if student_documents[11].mark is not none else 'Not marked yet' }} out of 10
                 {% endif %}
               </button>
             </h2>

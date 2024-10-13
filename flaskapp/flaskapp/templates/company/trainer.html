@@ -110,7 +110,7 @@
               <li class="list-group-item">
                   <strong>{{ document.student.StFName }} {{ document.student.StLName }}:</strong> 
                   {{ document.doc_name }} - 
-                  <a href="{{ url_for('uploaded_file', filename=document.doc_name) }}" target="_blank">View Document</a>
+                  <a href="{{ url_for('uploaded_file', filename=document.doc_name) }}" class="btn btn-primary mt-2" download>Download</a>
                   <form action="{{ url_for('approve_document', doc_id=document.id) }}" method="POST" style="display:inline;">
                       <textarea name="trainer_comment" class="form-control" placeholder="Add a comment"></textarea>
                       <button type="submit" class="btn btn-success btn-sm mt-2">add Comment</button>

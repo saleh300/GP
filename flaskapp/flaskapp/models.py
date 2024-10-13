@@ -156,6 +156,8 @@ class Document(db.Model):
     trainer_comment = db.Column(db.String(255), nullable=True)  # New field for comments
     status = db.Column(db.String(50), default='Pending')
     week_number = db.Column(db.Integer)  
+    mark = db.Column(db.Integer, nullable=True)
+    is_marked = db.Column(db.Boolean, default=False)
     
     student_id = db.Column(db.Integer, db.ForeignKey('student.StudentID'), nullable=False)
     trainer_id = db.Column(db.Integer, db.ForeignKey('trainer.TrainerID'), nullable=False)

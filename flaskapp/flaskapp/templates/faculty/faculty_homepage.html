@@ -91,18 +91,44 @@
 <h3>Approved Documents</h3>
 {% if approved_documents %}
     <ul class="list-group">
-        {% for document in approved_documents %}
-            <li class="list-group-item">
-                <strong>Document Name:</strong> {{ document.doc_name }}<br>
-                <strong>Uploaded By:</strong> {{ document.student.StFName }} {{ document.student.StLName }}<br>
-                <strong>Week:</strong> {{ document.week_number }}<br>
-                <strong>Approval Date:</strong> {{ document.approved_date.strftime('%Y-%m-%d') if document.approved_date else 'Pending' }}
-                {% if document.trainer_comment %}
-                    <br><strong>Trainer Comment:</strong> {{ document.trainer_comment }}
-                {% endif %}
-                <br><a href="{{ url_for('uploaded_file', filename=document.doc_name) }}" class="btn btn-primary" download>Download</a>
-            </li>
-        {% endfor %}
+        <!-- faculty_homepage.html -->
+    {% for document in approved_documents %}
+    <li class="list-group-item">
+      {% for student in assigned_students %}
+                    <strong>ID:</strong> {{ student.StudentID }} - 
+                    <strong>Name:</strong> {{ student.StFName }} {{ student.StLName }} <br> 
+      {% endfor %}
+        <strong>Document Name:</strong> {{ document.doc_name }}<br>
+        <strong>Uploaded By:</strong> {{ document.student.StFName }} {{ document.student.StLName }}<br>
+        <strong>Week:</strong> {{ document.week_number }}<br>
+        <strong>Approval Date:</strong> {{ document.approved_date.strftime('%Y-%m-%d') if document.approved_date else 'Pending' }}
+
+        <!-- Mark input form -->
+        <!-- Mark input form -->
+        <form action="{{ url_for('add_document_mark', doc_id=document.id) }}" method="post" style="margin-top: 10px;">
+            <label for="mark">Mark:</label>
+            <input type="number" name="mark" value="{{ document.mark }}" min="0" max="100">
+
+            <label for="max_mark">Out of:</label>
+            <input type="number" name="max_mark" value="{{ document.max_mark }}" min="0" max="100">
+
+            <button type="submit" class="btn btn-secondary btn-sm">Save Mark</button>
+        </form>
+
+        <!-- Marked status indicator -->
+        <!-- Marked status indicator -->
+        {% if document.is_marked %}
+            <span class="badge bg-success mt-2">Marked</span>
+        {% else %}
+            <span class="badge bg-warning mt-2">Not Marked</span>
+        {% endif %}
+
+
+
+        <a href="{{ url_for('uploaded_file', filename=document.doc_name) }}" class="btn btn-primary mt-2" download>Download</a>
+    </li>
+    {% endfor %}
+
     </ul>
 {% else %}
     <p>No approved documents available.</p>
