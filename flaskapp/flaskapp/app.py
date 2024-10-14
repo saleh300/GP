@@ -609,6 +609,9 @@ def update_company_profile():
         company.CompWebsite = request.form['CompWebsite']
         company.CompIndustry = request.form['CompIndustry']
 
+        db.session.commit()  # Commit after making changes
+        flash('Profile updated successfully!', 'success')
+
     else:
         flash('Error: Company profile could not be updated.', 'danger')
 
