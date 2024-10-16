@@ -1,157 +1,231 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <title>AOUN</title>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{{ url_for('static', filename='images/favicon.ico') }}"
+    />
 
-<head>
-  <meta charset="utf-8">
-  <title>AOUN</title>
-  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,900;1,900&family=Ubuntu&display=swap"
+      rel="stylesheet"
+    />
 
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,900;1,900&family=Ubuntu&display=swap" rel="stylesheet">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/main.css') }}"
+    />
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <script
+      src="https://kit.fontawesome.com/6503ba7c64.js"
+      crossorigin="anonymous"
+    ></script>
 
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+      integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js"
+      integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK"
+      crossorigin="anonymous"
+    ></script>
+  </head>
 
-
-<script src="https://kit.fontawesome.com/6503ba7c64.js" crossorigin="anonymous"></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
-</head>
-
-<body>
-
-
+  <body>
     <section id="title">
       <div class="container-fluid">
+        <!-- Nav Bar -->
 
-      <!-- Nav Bar -->
-
-      <nav class="navbar navbar-expand-lg navbar-dark ">
-        <a class="navbar-brand" href="{{ url_for('HomePage') }}" style="display: flex; align-items: center;">
-          <!-- Logo added here -->
-          <img src="{{ url_for('static', filename='images/aounlogo.png') }}" alt="Website Logo" width="70" height="70" style="margin-right: 10px;">
-          <span>AOUN</span>
-        </a>    
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="#footer">Contact</a>
-            </li>
-          </ul>
-        </div>
-
-      </nav>
-
-      <!-- Title -->
-      <hr class="styled-hr">
-
-      {% with messages = get_flashed_messages() %}
-      {% if messages %}
-          <div class="alert alert-danger" role="alert">
-              {% for message in messages %}
-                  {{ message }}
-              {% endfor %}
+        <nav class="navbar navbar-expand-lg navbar-dark">
+          <a
+            class="navbar-brand"
+            href="{{ url_for('HomePage') }}"
+            style="display: flex; align-items: center"
+          >
+            <!-- Logo added here -->
+            <img
+              src="{{ url_for('static', filename='images/aounlogo.png') }}"
+              alt="Website Logo"
+              width="70"
+              height="70"
+              style="margin-right: 10px"
+            />
+            <span>AOUN</span>
+          </a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarTogglerDemo02"
+            aria-controls="navbarTogglerDemo02"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="#footer">Contact</a>
+              </li>
+            </ul>
           </div>
-      {% endif %}
-    {% endwith %}
+        </nav>
 
-      <div class="row">
-        <div class="col-lg-6">
-          <h1>Aoun help to managing co-op training for students and companies.</h1>
-        </div>
+        <!-- Title -->
+        <hr class="styled-hr" />
 
-        <div class="title-image-container col-lg-6">
-          <div class="Sign-in">
-            <form id="signInForm" method="POST" action="{{ url_for('login') }}">
-              <div class="form-group">
+        {% with messages = get_flashed_messages(with_categories=True) %} {% if
+        messages %} {% for category, message in messages %}
+        <div class="alert alert-{{ category }}" role="alert">{{ message }}</div>
+        {% endfor %} {% endif %} {% endwith %}
+
+        <div class="row">
+          <div class="col-lg-6">
+            <h1>
+              Aoun help to managing co-op training for students and companies.
+            </h1>
+          </div>
+
+          <div class="title-image-container col-lg-6">
+            <div class="Sign-in">
+              <form
+                id="signInForm"
+                method="POST"
+                action="{{ url_for('login') }}"
+              >
+                <div class="form-group">
                   <label for="userEmail">Email address</label>
-                  <input type="email" class="form-control" id="userEmail" name="email" placeholder="Enter email" required>
-              </div>
-              <div class="form-group">
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="userEmail"
+                    name="email"
+                    placeholder="Enter email"
+                    required
+                  />
+                </div>
+                <div class="form-group">
                   <label for="userPass">Password</label>
-                  <input type="password" class="form-control" id="userPass" name="password" placeholder="Password" required>
-              </div>
-              <p style="text-align: left; margin-top: 10px;">Select your role: </p>
-              <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="role" id="roleStudent" value="student" required>
-                  <label class="form-check-label" for="roleStudent">Student</label>
-              </div>
-              <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="role" id="roleFaculty" value="faculty" required>
-                  <label class="form-check-label" for="roleFaculty">Faculty</label>
-              </div>
-              <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="role" id="roleCompany" value="company" required>
-                  <label class="form-check-label" for="roleCompany">Company</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="role" id="roleTrainer" value="Trainer" required>
-                <label class="form-check-label" for="roleCompany">Trainer</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="userPass"
+                    name="password"
+                    placeholder="Password"
+                    required
+                  />
+                </div>
+                <p style="text-align: left; margin-top: 10px">
+                  Select your role:
+                </p>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="role"
+                    id="roleStudent"
+                    value="student"
+                    required
+                  />
+                  <label class="form-check-label" for="roleStudent"
+                    >Student</label
+                  >
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="role"
+                    id="roleFaculty"
+                    value="faculty"
+                    required
+                  />
+                  <label class="form-check-label" for="roleFaculty"
+                    >Faculty</label
+                  >
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="role"
+                    id="roleCompany"
+                    value="company"
+                    required
+                  />
+                  <label class="form-check-label" for="roleCompany"
+                    >Company</label
+                  >
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="role"
+                    id="roleTrainer"
+                    value="Trainer"
+                    required
+                  />
+                  <label class="form-check-label" for="roleCompany"
+                    >Trainer</label
+                  >
+                </div>
+                <button type="submit" class="btn btn-primary">Sign in</button>
+                <div class="signup" style="text-align: left; margin-top: 15px">
+                  You Don't Have An Account?
+                  <a href="{{ url_for('sign_up') }}">Sign Up</a>
+                </div>
+              </form>
             </div>
-              <button type="submit" class="btn btn-primary">Sign in</button>
-              <div class="signup" style="text-align: left; margin-top: 15px;">
-                  You Don't Have An Account? <a href="{{ url_for('sign_up') }}">Sign Up</a>
-              </div>
-          </form>
-          
-          
           </div>
-          
         </div>
-        
-       
-        
-        
-        
-
       </div>
+    </section>
 
-  </div>
-  </section>
+    <!-- Features -->
 
-  <!-- Features -->
-
-  <section id="features">
-
-    <div class="row">
-
-      <div class="features-box col-lg-4">
-        <i class="icon fa-solid fa-circle-check" style="color: #d4f1f9;"></i>
-        <h3>Easy to use.</h3>
-        <p>So easy to use, even your professors will love it.</p>
+    <section id="features">
+      <div class="row">
+        <div class="features-box col-lg-4">
+          <i class="icon fa-solid fa-circle-check" style="color: #d4f1f9"></i>
+          <h3>Easy to use.</h3>
+          <p>So easy to use, even your professors will love it.</p>
+        </div>
+        <div class="features-box col-lg-4">
+          <i class="icon fa-solid fa-bullseye" style="color: #d4f1f9"></i>
+          <h3>Elite Clientele</h3>
+          <p>
+            We partner with top universities and companies to bring you the best
+            opportunities.
+          </p>
+        </div>
+        <div class="features-box col-lg-4">
+          <i class="icon fa-solid fa-heart" style="color: #d4f1f9"></i>
+          <h3>Guaranteed to work.</h3>
+          <p>
+            Find the perfect co-op training opportunity or get comprehensive
+            support until you do.
+          </p>
+        </div>
       </div>
-      <div class="features-box col-lg-4">
-        <i class="icon fa-solid fa-bullseye" style="color: #d4f1f9;"></i>
-        <h3>Elite Clientele</h3>
-        <p>We partner with top universities and companies to bring you the best opportunities.</p>
-      </div>
-      <div class="features-box col-lg-4">
-        <i class="icon fa-solid fa-heart" style="color: #d4f1f9;"></i>
-        <h3>Guaranteed to work.</h3>
-        <p>Find the perfect co-op training opportunity or get comprehensive support until you do.</p>
-      </div>
+    </section>
+    <!-- Footer -->
 
-
-  </div>
-  </section>
-  <!-- Footer -->
-
-  <footer id="footer">
-
-
+    <footer id="footer">
       <i class="soical-icon fa-brands fa-twitter"></i>
       <i class="soical-icon fa-solid fa-envelope"></i>
 
-
-    <p>© Copyright 2024 AOUN</p>
-
-  </footer>
-
-
-</body>
-
+      <p>© Copyright 2024 AOUN</p>
+    </footer>
+  </body>
 </html>

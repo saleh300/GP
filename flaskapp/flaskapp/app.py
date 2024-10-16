@@ -221,12 +221,52 @@ def sign_up_student():
     
     return render_template('student/sign_up_student.html')
 
-@app.route('/HomePage_student')
+@app.route('/HomePage_student', methods=['GET', 'POST'])
 def HomePage_student():
     student = session.get('student')
-    opportunities = Opportunity.query.all() 
-    current_time = datetime.utcnow()  # Get the current UTC time
-    return render_template('student/HomePage_student.html', student=student, opportunities=opportunities, current_time=current_time)
+    current_time = datetime.utcnow()
+
+    # Retrieve search query, position filter, and status filter from the form
+    search_query = request.args.get('search_query', '').strip()
+    filter_category = request.args.get('filter_category', '').strip()
+    filter_status = request.args.get('filter_status', '').strip()
+
+    # Base query for opportunities
+    query = Opportunity.query
+
+    # Filter by job title or company name
+    if search_query:
+        query = query.join(Company).filter(
+            db.or_(
+                Opportunity.OppJobTitle.like(f"%{search_query}%"),
+                Company.CompName.like(f"%{search_query}%")
+            )
+        )
+
+    # Apply the position filter
+    if filter_category:
+        query = query.filter(Opportunity.OppJobTitle.like(f"%{filter_category}%"))
+
+    # Apply the status filter
+    if filter_status:
+        if filter_status == "Open":
+            query = query.filter(Opportunity.open_date <= current_time, Opportunity.close_date >= current_time)
+        elif filter_status == "Closed":
+            query = query.filter(Opportunity.close_date < current_time)
+        elif filter_status == "Not Yet Opened":
+            query = query.filter(Opportunity.open_date > current_time)
+
+    # Fetch the filtered opportunities
+    opportunities = query.all()
+
+    return render_template('student/HomePage_student.html', 
+                           student=student, 
+                           opportunities=opportunities, 
+                           current_time=current_time, 
+                           search_query=search_query, 
+                           filter_category=filter_category, 
+                           filter_status=filter_status)
+
 
 @app.route('/profile')
 def profile():
@@ -234,7 +274,7 @@ def profile():
     student = Student.query.filter_by(StudentID=student_id).first()
 
     if not student:
-        flash('Student not found.')
+        flash('Student not found.', 'danger')
         return redirect(url_for('HomePage_student'))
     
     certificates = Certificate.query.filter_by(student_id=student_id).all()
@@ -625,7 +665,7 @@ def comp_profile():
     company = Company.query.get(company_id)
     
     if not company:
-        flash('Company not found.')
+        flash('Company not found.', 'danger')
         return redirect(url_for('HomePage_company'))
     
     trainers = Trainer.query.filter_by(company_id=company_id).all()
@@ -988,7 +1028,7 @@ def login():
             }
             return redirect(url_for('HomePage_student'))
         else:
-            flash('Invalid credentials for student, please try again.')
+            flash('Invalid credentials for student, please try again.', 'danger')
             return redirect(url_for('HomePage'))
 
     elif role == 'company':
@@ -1006,7 +1046,7 @@ def login():
                 flash('Your account is under review. Please wait for verification.', 'warning')
                 return redirect(url_for('HomePage'))
         else:
-            flash('Invalid credentials for company, please try again.')
+            flash('Invalid credentials for company, please try again.', 'danger')
             return redirect(url_for('HomePage'))
     
     elif role == 'Trainer':  # Handle Trainer login
@@ -1020,7 +1060,7 @@ def login():
             }
             return redirect(url_for('company_trainer'))  # You'll need to create this route and template
         else:
-            flash('Invalid credentials for trainer, please try again.')
+            flash('Invalid credentials for trainer, please try again.', 'danger')
             return redirect(url_for('HomePage'))
 
     elif role == 'faculty':  # Handle Faculty login
@@ -1034,11 +1074,11 @@ def login():
             }
             return redirect(url_for('faculty_homepage'))  # You'll need to create this route and template
         else:
-            flash('Invalid credentials for faculty, please try again.')
+            flash('Invalid credentials for faculty, please try again.', 'danger')
             return redirect(url_for('HomePage'))
 
     else:
-        flash('Invalid role selected.')
+        flash('Invalid role selected.', 'danger')
         return redirect(url_for('HomePage'))
 
 

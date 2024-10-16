@@ -1,28 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{{ url_for('static', filename='images/favicon.ico') }}"
+    />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Assign Trainer</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
     <div class="container">
-        <h2 class="mt-4">Assign Trainer</h2>
-        <p>Select a trainer to assign to the student.</p>
-        <form method="POST">
-            <div class="form-group">
-                <label for="trainer_id">Choose a Trainer:</label>
-                <select name="trainer_id" class="form-control" required>
-                    <option value="">Select Trainer</option>
-                    {% for trainer in trainers %}
-                    <option value="{{ trainer.TrainerID }}">{{ trainer.TraFName }} {{ trainer.TraLName }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary mt-3">Assign Trainer</button>
-        </form>
+      <h2 class="mt-4">Assign Trainer</h2>
+      <p>Select a trainer to assign to the student.</p>
+      <form method="POST">
+        <div class="form-group">
+          <label for="trainer_id">Choose a Trainer:</label>
+          <select name="trainer_id" class="form-control" required>
+            <option value="">Select Trainer</option>
+            {% for trainer in trainers %}
+            <option value="{{ trainer.TrainerID }}">
+              {{ trainer.TraFName }} {{ trainer.TraLName }}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">
+          Assign Trainer
+        </button>
+      </form>
     </div>
-</body>
+  </body>
 </html>
