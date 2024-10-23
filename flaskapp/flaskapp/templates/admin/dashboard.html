@@ -152,24 +152,37 @@
                 <th>City</th>
                 <th>Industry</th>
                 <th>Verified</th>
+                <th>Traning Scheduel</th>
               </tr>
             </thead>
             <tbody>
-              {% if companies %} {% for company in companies %}
+              {% if companies %}
+              {% for company in companies %}
               <tr>
-                <td>{{ company.id }}</td>
-                <td>{{ company.CompName }}</td>
-                <td>{{ company.CompEmail }}</td>
-                <td>{{ company.CompCity }}</td>
-                <td>{{ company.CompIndustry }}</td>
-                <td>{{ 'Yes' if company.verify else 'No' }}</td>
+                  <td>{{ company.id }}</td>
+                  <td>{{ company.CompName }}</td>
+                  <td>{{ company.CompEmail }}</td>
+                  <td>{{ company.CompCity }}</td>
+                  <td>{{ company.CompIndustry }}</td>
+                  <td>{{ 'Yes' if company.verify else 'No' }}</td>
+                  <td>
+                      {% if company.CompFile %}
+                      <a href="{{ url_for('uploaded_file', filename=company.CompFile) }}" class="btn btn-sm btn-primary">
+                          Download
+                      </a>
+                      {% else %}
+                      No file
+                      {% endif %}
+                  </td>
               </tr>
-              {% endfor %} {% else %}
+              {% endfor %}
+              {% else %}
               <tr>
-                <td colspan="6" class="text-center">No companies found.</td>
+                  <td colspan="7" class="text-center">No companies found.</td>
               </tr>
               {% endif %}
-            </tbody>
+          </tbody>
+            
           </table>
         </div>
       </div>

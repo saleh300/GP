@@ -205,6 +205,7 @@ def delete_all_data():
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
+
 # homePage section
 @app.route("/")
 @app.route("/home")
@@ -539,12 +540,23 @@ def upload_document(week_number):
         return redirect(url_for('login'))
 
     student_id = session['student']['StudentID']
+
+
+    # Check if the student has been accepted into any co-op opportunity
+    accepted_application = Apply.query.filter_by(student_id=student_id, status='Accepted').first()
+
+    # If the student has not been accepted into any co-op, prevent them from uploading documents
+    if not accepted_application:
+        flash('You cannot upload documents until you are accepted into a co-op opportunity.', 'danger')
+        return redirect(url_for('doucment'))
     
     assignment = Assigned.query.filter_by(student_id=student_id).first()
     
+
+
     if not assignment or not assignment.trainer_id:
         flash('No trainer assigned to you. Please contact your administrator.', 'danger')
-        return redirect(url_for('document'))
+        return redirect(url_for('doucment'))
 
     trainer_id = assignment.trainer_id
 
