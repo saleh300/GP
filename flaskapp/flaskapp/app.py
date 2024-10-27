@@ -687,6 +687,12 @@ def comp_profile():
 def offer_coop():
     # Retrieve data from the form
     job_title = request.form.get('jobTitle')
+    other_job_title = request.form.get('otherJobTitle')  # Retrieve the custom job title
+
+    # If 'Other' is selected, use the value from the custom input
+    if job_title == 'Other':
+        job_title = other_job_title
+
     location = request.form.get('location')
     duration = request.form.get('duration')
     job_description = request.form.get('jobDescription')
